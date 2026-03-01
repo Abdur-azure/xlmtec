@@ -84,6 +84,7 @@ REQUIRED_FILES = [
     "tasks/todo.md",
     "tasks/lessons.md",
     "tasks/CONTEXT.md",
+    "tasks/roadmap.md",
 
     # Examples
     "examples/configs/lora_gpt2.yaml",

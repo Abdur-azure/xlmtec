@@ -8,6 +8,7 @@ Session state. Read both files at the start of every working session.
 |------|---------|
 | `todo.md` | Sprint-structured task list. Mark items `[x]` as you go. Includes sprint name, acceptance gate, and history of completed sprints. |
 | `lessons.md` | Accumulated patterns from corrections. Read before implementing anything — most bugs we've hit before are documented here. |
+| `roadmap.md` | Validated feature roadmap — 8 methods across fine-tuning, distillation, pruning. Update status column when a method ships. |
 
 ## Sprints so far
 
