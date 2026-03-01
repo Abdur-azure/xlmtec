@@ -169,3 +169,29 @@ Fix: define _IMPLEMENTED = {LORA, QLORA, FULL_FINETUNING, INSTRUCTION_TUNING, DP
 and only iterate that set. The test guards against regression on implemented methods,
 not against missing future implementations.
 Rule: when testing a factory, always scope iteration to the known-implemented set.
+
+## Pattern: Embed paths in YAML using .as_posix(), never raw str()
+Windows paths contain backslashes. Inside YAML double-quoted strings,
+\U, \s, \A etc. are invalid escape sequences → yaml.ScannerError.
+Fix: always use path.as_posix() when writing paths into YAML content.
+  WRONG: f'path: "{str(some_path)}"'
+  RIGHT: f'path: "{some_path.as_posix()}"'
+
+## Pattern: Update stale tests when an "unsupported" method becomes supported
+test_unsupported_method_raises used DPO to trigger NotImplementedError.
+DPO was added in Sprint 8 — test became stale and triggered MissingConfigError.
+After adding any new TrainingMethod: scan tests for ones that depend on it
+being unsupported and update them.
+
+## Pattern: Never call fixtures directly inside test bodies
+model_config() inside a test method raises "Fixture called directly" error.
+  WRONG: model_cfg = model_config()
+  RIGHT: model_cfg = ModelConfig(name="gpt2", load_in_4bit=True)
+Rule: if you need a fixture's value in a helper/loop, construct the object inline.
+
+## Pattern: Don't iterate all enum values when testing factory dispatch
+TrainingMethod has 21 aspirational enum values; factory only implements 5.
+Iterating all values hits NotImplementedError for unimplemented methods.
+Fix: define _IMPLEMENTED = {LORA, QLORA, FULL_FINETUNING, INSTRUCTION_TUNING, DPO}
+and only iterate that set.
+Rule: always scope iteration to the known-implemented set.

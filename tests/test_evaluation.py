@@ -6,9 +6,9 @@ import math
 
 import pytest
 
-from ..core.types import EvaluationMetric, EvaluationConfig
-from ..evaluation.metrics import RougeMetric, BleuMetric, MetricRegistry
-from ..evaluation.benchmarker import BenchmarkRunner, BenchmarkReport, EvaluationResult
+from finetune_cli.core.types import EvaluationMetric, EvaluationConfig
+from finetune_cli.evaluation.metrics import RougeMetric, BleuMetric, MetricRegistry
+from finetune_cli.evaluation.benchmarker import BenchmarkRunner, BenchmarkReport, EvaluationResult
 
 
 # ============================================================================

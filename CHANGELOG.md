@@ -4,6 +4,18 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.3.0] — Sprint 19: "Test Import Audit" — 2025-03-01
+
+### Fixed
+- `tests/test_recommend.py` — `from ..cli.main import app` → absolute import
+- `tests/test_evaluation.py` — all `from ..core` / `from ..evaluation` → absolute imports
+- `tests/test_instruction_trainer.py` — top-level and inline relative imports all → absolute
+- `tasks/lessons.md` — 4 new patterns: YAML path posix, stale unsupported-method tests,
+  fixture-called-directly, enum iteration scope
+- `pyproject.toml` — version 3.2.0 → 3.3.0
+
+---
+
 ## [3.2.0] — Sprint 18: "conftest Hardening" — 2025-02-28
 
 ### Fixed

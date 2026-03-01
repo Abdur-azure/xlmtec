@@ -7,8 +7,10 @@ No GPU required — training is mocked.
 import pytest
 from datasets import Dataset, DatasetDict
 
-from ..trainers.instruction_trainer import InstructionTrainer, format_instruction_dataset
-from ..core.types import TrainingConfig, TrainingMethod, LoRAConfig
+from finetune_cli.trainers.instruction_trainer import InstructionTrainer, format_instruction_dataset
+from finetune_cli.core.types import TrainingConfig, TrainingMethod, LoRAConfig
+from finetune_cli.trainers import TrainerFactory
+from finetune_cli.core.exceptions import MissingConfigError
 
 
 # ============================================================================
@@ -138,7 +140,6 @@ class TestInstructionTrainer:
             instruction_training_config, lora_config
         )
         ds_dict = DatasetDict({"train": instruction_dataset, "validation": instruction_dataset})
-        # Patch super().train to avoid full training loop
         import unittest.mock as mock
         with mock.patch.object(type(trainer).__bases__[0], "train", return_value=None):
             trainer.train(ds_dict)
@@ -147,7 +148,6 @@ class TestInstructionTrainer:
         self, mock_model, mock_tokenizer,
         instruction_training_config, lora_config
     ):
-        from ..trainers import TrainerFactory
         trainer = TrainerFactory.create(
             model=mock_model,
             tokenizer=mock_tokenizer,
@@ -156,9 +156,9 @@ class TestInstructionTrainer:
         )
         assert isinstance(trainer, InstructionTrainer)
 
-    def test_factory_requires_lora_config(self, mock_model, mock_tokenizer, instruction_training_config):
-        from ..trainers import TrainerFactory
-        from ..core.exceptions import MissingConfigError
+    def test_factory_requires_lora_config(
+        self, mock_model, mock_tokenizer, instruction_training_config
+    ):
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(
                 model=mock_model,

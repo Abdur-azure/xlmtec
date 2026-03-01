@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 from typer.testing import CliRunner
 
-from ..cli.main import app
+from finetune_cli.cli.main import app
 
 
 runner = CliRunner()
@@ -37,7 +37,6 @@ class TestRecommendCommand:
         mock_cfg.return_value = _mock_autoconfig(768, 12)
         result = runner.invoke(app, ["recommend", "gpt2"])
         assert result.exit_code == 0
-        # YAML block appears in output
         assert "method:" in result.output
 
     @patch("torch.cuda.is_available", return_value=False)
@@ -66,7 +65,6 @@ class TestRecommendCommand:
         result = runner.invoke(app, ["recommend", "gpt2", "--output", str(out_file)])
         assert result.exit_code == 0
         assert out_file.exists()
-        # Must be valid YAML that parses cleanly
         parsed = yaml.safe_load(out_file.read_text())
         assert "model" in parsed
         assert "training" in parsed
@@ -108,5 +106,4 @@ class TestRecommendCommand:
         mock_cfg.return_value = _mock_autoconfig(hidden=4096, layers=32)
         result = runner.invoke(app, ["recommend", "llama", "--vram", "24"])
         assert result.exit_code == 0
-        # With 24GB VRAM and large model → should recommend lora not qlora
         assert "lora" in result.output

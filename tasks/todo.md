@@ -6,6 +6,28 @@
 
 ---
 
+## Sprint 19: "Test Import Audit"
+
+- [x] tests/test_recommend.py — fix relative imports → absolute
+- [x] tests/test_evaluation.py — fix relative imports → absolute
+- [x] tests/test_instruction_trainer.py — fix relative imports → absolute (incl. inline from .. imports)
+- [x] tasks/lessons.md — 4 new patterns from this session
+- [x] pyproject.toml — bump 3.2.0 → 3.3.0
+- [x] CHANGELOG.md — Sprint 19 entry
+- [x] tasks/CONTEXT.md — Sprint 19 row
+- [x] CLAUDE.md — Sprint 19 row
+- [x] tasks/todo.md — Sprint 19 gate recorded
+
+---
+
+## Acceptance Gate
+pytest tests/ --co -q --ignore=tests/test_integration.py
+→ zero collection errors.
+pytest tests/ -v --ignore=tests/test_integration.py
+→ all green.
+
+---
+
 ## Sprint 18: "conftest Hardening"
 
 - [x] tests/conftest.py — remove torch import, pure MagicMock params, side_effect iterator fix
