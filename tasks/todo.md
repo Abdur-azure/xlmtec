@@ -6,6 +6,22 @@
 
 ---
 
+## Sprint 21: "Meta Sync"
+
+- [x] CLAUDE.md — sprint history rows 13-20 added, version 2.0.0 → 3.4.0, two new arch rules, trainer table
+- [x] audit_repo.py — fix 3 wrong trainer paths, add missing top-level files, fix CONTEXT.md paths
+- [x] CHANGELOG.md — Sprint 21 entry
+- [x] tasks/CONTEXT.md — Sprint 21 row
+- [x] tasks/todo.md — Sprint 21 gate recorded
+
+---
+
+## Acceptance Gate
+python audit_repo.py
+→ all required files present, no missing.
+
+---
+
 ## Sprint 20: "Import Audit Complete"
 
 - [x] tests/test_config.py — fix relative imports → absolute

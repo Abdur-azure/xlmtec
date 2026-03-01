@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.5.0] — Sprint 21: "Meta Sync" — 2025-03-01
+
+### Fixed
+- `CLAUDE.md` — sprint history frozen at Sprint 12 → updated through Sprint 21; version 2.0.0 → 3.4.0; added two new architecture rules (absolute imports, no real tensors); trainer table added; test commands updated
+- `audit_repo.py` — three trainer paths wrong (`trainers/` → `finetune_cli/trainers/`); added missing top-level files (`README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `audit_repo.py`, `.gitignore`); added `finetune_cli/data/pipeline.py`; CONTEXT.md paths corrected to `finetune_cli/` prefix
+- `pyproject.toml` — version 3.4.0 → 3.5.0
+
+---
+
 ## [3.4.0] — Sprint 20: "Import Audit Complete" — 2025-03-01
 
 ### Fixed

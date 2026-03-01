@@ -14,6 +14,14 @@ REQUIRED_FILES = [
     # Root
     "conftest.py",
     "pyproject.toml",
+    "audit_repo.py",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    ".github/workflows/ci.yml",
+    ".gitignore",
+
+    # Main package
     "finetune_cli/__init__.py",
 
     # Core
@@ -35,7 +43,14 @@ REQUIRED_FILES = [
     "finetune_cli/trainers/base.py",
     "finetune_cli/trainers/lora_trainer.py",
     "finetune_cli/trainers/qlora_trainer.py",
+    "finetune_cli/trainers/full_trainer.py",
+    "finetune_cli/trainers/instruction_trainer.py",
+    "finetune_cli/trainers/dpo_trainer.py",
     "finetune_cli/trainers/factory.py",
+
+    # Data
+    "finetune_cli/data/__init__.py",
+    "finetune_cli/data/pipeline.py",
 
     # Evaluation
     "finetune_cli/evaluation/__init__.py",
@@ -51,12 +66,24 @@ REQUIRED_FILES = [
     "tests/conftest.py",
     "tests/test_config.py",
     "tests/test_trainers.py",
+    "tests/test_full_trainer.py",
+    "tests/test_instruction_trainer.py",
+    "tests/test_qlora_trainer.py",
+    "tests/test_dpo_trainer.py",
     "tests/test_evaluation.py",
+    "tests/test_recommend.py",
+    "tests/test_cli_train.py",
+    "tests/test_merge.py",
+    "tests/test_evaluate.py",
+    "tests/test_benchmark.py",
+    "tests/test_upload.py",
+    "tests/test_data.py",
     "tests/test_integration.py",
 
     # Tasks
     "tasks/todo.md",
     "tasks/lessons.md",
+    "tasks/CONTEXT.md",
 
     # Examples
     "examples/configs/lora_gpt2.yaml",
@@ -66,36 +93,14 @@ REQUIRED_FILES = [
     "examples/configs/dpo.yaml",
     "examples/generate_sample_data.py",
 
-    # Trainers — Sprint 2
-    "trainers/full_trainer.py",
-    "trainers/instruction_trainer.py",
-    "trainers/dpo_trainer.py",
-
-    # Tests — Sprint 2+3
-    "tests/test_full_trainer.py",
-    "tests/test_instruction_trainer.py",
-    "tests/test_recommend.py",
-    "tests/test_cli_train.py",
-    "tests/test_merge.py",
-    "tests/test_dpo_trainer.py",
-    "tests/test_evaluate.py",
-    "tests/test_benchmark.py",
-    "tests/test_upload.py",
-    "tests/test_qlora_trainer.py",
-    "tests/test_data.py",
-
     # Context files
     "CLAUDE.md",
-    "core/CONTEXT.md",
-    "trainers/CONTEXT.md",
-    "data/CONTEXT.md",
-    "evaluation/CONTEXT.md",
-    "cli/CONTEXT.md",
+    "finetune_cli/core/CONTEXT.md",
+    "finetune_cli/trainers/CONTEXT.md",
+    "finetune_cli/data/CONTEXT.md",
+    "finetune_cli/evaluation/CONTEXT.md",
+    "finetune_cli/cli/CONTEXT.md",
     "tests/CONTEXT.md",
-    "tasks/CONTEXT.md",
-
-    # CI
-    ".github/workflows/ci.yml",
 ]
 
 root = Path(__file__).parent
