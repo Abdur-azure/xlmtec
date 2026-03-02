@@ -4,6 +4,30 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.6.0] — Sprint 23: "Response Distillation" — 2025-03-01
+
+### Added
+- `finetune_cli/trainers/response_distillation_trainer.py` — `ResponseDistillationTrainer`
+  extending `BaseTrainer`. Loads teacher (frozen, eval mode), runs KL divergence +
+  CE blended loss via internal `_DistillationTrainer` HF Trainer subclass.
+  Issues `ResourceWarning` for student models >1B params (dual-model VRAM concern).
+- `finetune_cli/core/types.py` — `DistillationConfig` frozen dataclass
+  (teacher_model_name, temperature=2.0, alpha=0.5).
+- `finetune_cli/trainers/factory.py` — `VANILLA_DISTILLATION` wired to
+  `ResponseDistillationTrainer`; `distillation_config` param added to `create()` and `train()`.
+- `finetune_cli/trainers/__init__.py` — `ResponseDistillationTrainer` exported.
+- `tests/test_response_distillation_trainer.py` — 12 unit tests: factory dispatch,
+  MissingConfigError, config stored, VRAM warning/no-warning, _setup_peft, train() flow,
+  eval_loss extracted, model saved, teacher frozen, teacher load failure → TrainingError.
+- `examples/configs/response_distillation.yaml` — runnable local config (gpt2 → gpt2-medium).
+- `tasks/roadmap.md` — Response Distillation marked ✅ Sprint 23.
+- `audit_repo.py` — new trainer, test file, example config registered.
+
+### Fixed (sprint-end checklist)
+- `pyproject.toml` — version 3.5.0 → 3.6.0
+
+---
+
 ## [3.5.0] — Sprint 21: "Meta Sync" — 2025-03-01
 
 ### Fixed

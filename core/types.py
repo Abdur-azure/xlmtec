@@ -108,6 +108,20 @@ class TokenizationConfig:
     add_special_tokens: bool = True
     return_attention_mask: bool = True
 
+@dataclass(frozen=True)
+class DistillationConfig:
+    """Configuration for knowledge distillation training.
+
+    Attributes:
+        teacher_model_name: HuggingFace model id of the teacher.
+        temperature: Softmax temperature for softening distributions.
+            Higher = softer targets. Recommended range: 2.0–6.0.
+        alpha: Distillation loss weight.
+            Loss = alpha * KL_loss + (1 - alpha) * CE_loss.
+    """
+    teacher_model_name: str
+    temperature: float = 2.0
+    alpha: float = 0.5
 
 @dataclass(frozen=True)
 class LoRAConfig:
@@ -118,7 +132,6 @@ class LoRAConfig:
     bias: Literal["none", "all", "lora_only"] = "none"
     fan_in_fan_out: bool = False
     init_lora_weights: Union[bool, Literal["gaussian", "loftq"]] = True
-
 
 @dataclass(frozen=True)
 class TrainingConfig:

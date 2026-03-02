@@ -6,6 +6,30 @@
 
 ---
 
+## Sprint 23: "Response Distillation"
+
+- [x] finetune_cli/trainers/response_distillation_trainer.py — ResponseDistillationTrainer, _DistillationTrainer (KL+CE loss), VRAM warning
+- [x] finetune_cli/core/types.py — DistillationConfig frozen dataclass added
+- [x] finetune_cli/trainers/factory.py — VANILLA_DISTILLATION wired, distillation_config param added
+- [x] finetune_cli/trainers/__init__.py — ResponseDistillationTrainer exported
+- [x] tests/test_response_distillation_trainer.py — 12 unit tests, no GPU, absolute imports
+- [x] examples/configs/response_distillation.yaml — runnable local config
+- [x] tasks/roadmap.md — Response Distillation marked ✅
+- [x] audit_repo.py — new files registered
+- [x] CHANGELOG.md — Sprint 23 entry
+- [x] tasks/CONTEXT.md — Sprint 23 row
+- [x] tasks/todo.md — Sprint 23 gate recorded
+
+---
+
+## Acceptance Gate
+pytest tests/test_response_distillation_trainer.py -v
+→ all 12 tests pass, no GPU.
+pytest tests/ --co -q --ignore=tests/test_integration.py
+→ zero collection errors.
+
+---
+
 ## Sprint 21: "Meta Sync"
 
 - [x] CLAUDE.md — sprint history rows 13-20 added, version 2.0.0 → 3.4.0, two new arch rules, trainer table

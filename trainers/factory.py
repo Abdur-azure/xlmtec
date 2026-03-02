@@ -18,7 +18,13 @@ from pathlib import Path
 from datasets import Dataset, DatasetDict
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import TrainingConfig, LoRAConfig, ModelConfig, TrainingMethod
+from ..core.types import (
+    TrainingConfig,
+    LoRAConfig,
+    ModelConfig,
+    DistillationConfig,
+    TrainingMethod,
+)
 from ..core.exceptions import MissingConfigError
 from .base import BaseTrainer, TrainingResult
 from .lora_trainer import LoRATrainer
@@ -26,6 +32,7 @@ from .qlora_trainer import QLoRATrainer
 from .full_trainer import FullFineTuner
 from .instruction_trainer import InstructionTrainer
 from .dpo_trainer import DPOTrainer, validate_dpo_dataset
+from .response_distillation_trainer import ResponseDistillationTrainer
 
 
 # ============================================================================
@@ -48,6 +55,7 @@ class TrainerFactory:
         training_config: TrainingConfig,
         lora_config: Optional[LoRAConfig] = None,
         model_config: Optional[ModelConfig] = None,
+        distillation_config: Optional[DistillationConfig] = None,
     ) -> BaseTrainer:
         """
         Instantiate the correct trainer.
@@ -56,8 +64,9 @@ class TrainerFactory:
             model: The (possibly quantized) model to fine-tune.
             tokenizer: Corresponding tokenizer.
             training_config: Core training hyper-parameters.
-            lora_config: Required for LORA / QLORA methods.
+            lora_config: Required for LORA / QLORA / INSTRUCTION_TUNING / DPO.
             model_config: Required for QLORA (to check quantization flags).
+            distillation_config: Required for VANILLA_DISTILLATION.
 
         Returns:
             A configured ``BaseTrainer`` subclass instance.
@@ -93,9 +102,17 @@ class TrainerFactory:
                 raise MissingConfigError("lora_config", "DPO training")
             return DPOTrainer(model, tokenizer, training_config, lora_config)
 
+        if method == TrainingMethod.VANILLA_DISTILLATION:
+            if distillation_config is None:
+                raise MissingConfigError("distillation_config", "response distillation")
+            return ResponseDistillationTrainer(
+                model, tokenizer, training_config, distillation_config
+            )
+
         raise NotImplementedError(
             f"Training method '{method.value}' is not yet implemented. "
-            f"Supported methods: lora, qlora, full_finetuning, instruction_tuning, dpo."
+            f"Supported methods: lora, qlora, full_finetuning, "
+            f"instruction_tuning, dpo, vanilla_distillation."
         )
 
     @staticmethod
@@ -106,6 +123,7 @@ class TrainerFactory:
         training_config: TrainingConfig,
         lora_config: Optional[LoRAConfig] = None,
         model_config: Optional[ModelConfig] = None,
+        distillation_config: Optional[DistillationConfig] = None,
     ) -> TrainingResult:
         """
         One-call convenience: create trainer and run training.
@@ -115,8 +133,9 @@ class TrainerFactory:
             tokenizer: Tokenizer.
             dataset: Train dataset or DatasetDict with 'train'/'validation'.
             training_config: Training hyper-parameters.
-            lora_config: Required for LoRA / QLoRA.
+            lora_config: Required for LoRA / QLoRA / Instruction / DPO.
             model_config: Required for QLoRA.
+            distillation_config: Required for vanilla distillation.
 
         Returns:
             ``TrainingResult`` with metrics and saved model path.
@@ -127,5 +146,6 @@ class TrainerFactory:
             training_config=training_config,
             lora_config=lora_config,
             model_config=model_config,
+            distillation_config=distillation_config,
         )
         return trainer.train(dataset)
