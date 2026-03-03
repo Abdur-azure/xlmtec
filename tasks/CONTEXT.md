@@ -37,6 +37,20 @@ Session state. Read both files at the start of every working session.
 | 23 | Response Distillation | DistillationConfig in core/types.py, ResponseDistillationTrainer, 12 tests, example config |
 | 24 | Feature Distillation | FeatureDistillationConfig, FeatureDistillationTrainer, 21 tests, layer helpers |
 | 23 | Response Distillation | ResponseDistillationTrainer, DistillationConfig, 12 tests, example config |
+| **25** | **TUI Foundation** | ⬜ Planned — FinetuneApp, HomeScreen, 6 CommandCards, `finetune-cli tui` |
+| **26** | **TUI Train & Recommend** | ⬜ Planned — Train + Recommend forms, Running + Result screens |
+| **27** | **TUI Evaluate, Benchmark, Merge** | ⬜ Planned — 3 more command screens |
+| **28** | **TUI Upload + Polish** | ⬜ Planned — Upload screen, app.css theme, docs/tui.md |
+
+## TUI Rule
+
+Sprints 25–28 are **additive only**. No existing file may be modified except:
+- `cli/main.py` — add the `tui` subcommand stub (Sprint 25)
+- `pyproject.toml` — add textual dependency + version bump (each sprint)
+- `audit_repo.py`, `CHANGELOG.md`, `CONTEXT.md`, `CLAUDE.md`, `tasks/todo.md` — sprint-end sync
+
+Everything else (`trainers/`, `core/`, `data/`, existing `tests/`) is **frozen** during TUI sprints.
+Verify at the start of every TUI sprint: `pytest tests/ --co -q --ignore=tests/test_integration.py` → 0 errors.
 
 ## Workflow
 

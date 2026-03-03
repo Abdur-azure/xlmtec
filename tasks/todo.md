@@ -1,3 +1,123 @@
+## ═══════════════════════════════════════════════════════════════
+## TUI SPRINTS 25–28  ⬜  NOT STARTED
+## Rule: Do NOT implement until reaching this block in sprint order.
+## Existing CLI, trainers, and tests must remain 100% untouched.
+## ═══════════════════════════════════════════════════════════════
+
+---
+
+## Sprint 28: "TUI Upload + Polish"  ⬜ NOT STARTED
+
+- [ ] finetune_cli/tui/screens/upload.py — model path, repo_id, token (masked), private toggle, merge-adapter option
+- [ ] Wire home Upload card → push upload screen
+- [ ] finetune_cli/tui/app.css — Textual CSS: consistent color theme across all screens
+- [ ] UX polish: footer keybinding bar on every screen (q=quit, esc=back, tab=next field)
+- [ ] UX polish: red border + inline error text on invalid form fields
+- [ ] UX polish: loading spinner overlay while Worker runs
+- [ ] UX polish: error screen with traceback on failed commands
+- [ ] tests/test_tui.py — upload form renders, token field masked, all 6 cards reachable
+- [ ] docs/tui.md — usage guide with ascii-art screenshots
+- [ ] audit_repo.py — all tui/ + docs/tui.md registered
+- [ ] CHANGELOG.md — Sprint 28 entry
+- [ ] tasks/CONTEXT.md — Sprint 28 row
+- [ ] CLAUDE.md — Sprint 28 row
+- [ ] pyproject.toml — bump to 3.11.0
+- [ ] tasks/todo.md — Sprint 28 gate recorded
+- [ ] tasks/roadmap.md — Sprint 28 marked ✅
+
+### Acceptance Gate
+```
+finetune-cli tui
+  → all 6 cards work end-to-end, consistent theme, token masked
+pytest tests/test_tui.py -v
+pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
+python audit_repo.py   → all tui/ files registered
+```
+
+---
+
+## Sprint 27: "TUI Evaluate, Benchmark, Merge"  ⬜ NOT STARTED
+
+- [ ] finetune_cli/tui/screens/evaluate.py — checkpoint Input, metrics Checkbox group, num-samples Input
+- [ ] finetune_cli/tui/screens/benchmark.py — base model Input, finetuned path Input, dataset Input, metrics Checkbox
+- [ ] finetune_cli/tui/screens/merge.py — adapter path Input, base model Input, output dir Input, dtype Select
+- [ ] Wire home Evaluate card → push evaluate screen
+- [ ] Wire home Benchmark card → push benchmark screen
+- [ ] Wire home Merge card → push merge screen
+- [ ] tests/test_tui.py — navigate to each of the 3 forms, all fields render, back nav works
+- [ ] CHANGELOG.md — Sprint 27 entry
+- [ ] tasks/CONTEXT.md — Sprint 27 row
+- [ ] CLAUDE.md — Sprint 27 row
+- [ ] pyproject.toml — bump to 3.10.0
+- [ ] tasks/todo.md — Sprint 27 gate recorded
+
+### Acceptance Gate
+```
+finetune-cli tui
+  → Evaluate, Benchmark, Merge cards all navigate to forms and back to home
+pytest tests/test_tui.py -v
+pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
+```
+
+---
+
+## Sprint 26: "TUI Train & Recommend"  ⬜ NOT STARTED
+
+- [ ] finetune_cli/tui/screens/running.py — Worker thread, live LogPanel, Ctrl+C cancel, elapsed timer label
+- [ ] finetune_cli/tui/screens/result.py — TrainingResult display, MetricTable, back-to-home Button
+- [ ] finetune_cli/tui/widgets/log_panel.py — scrolling RichLog widget, auto-scroll toggle
+- [ ] finetune_cli/tui/widgets/metric_table.py — DataTable widget rendering result fields
+- [ ] finetune_cli/tui/screens/train.py — model Input, method Select (all TrainingMethods), dataset Input, epochs Input, output Input; Submit → push running
+- [ ] finetune_cli/tui/screens/recommend.py — model Input, output path Input; Submit → push running
+- [ ] Wire home Train card → push train screen
+- [ ] Wire home Recommend card → push recommend screen
+- [ ] tests/test_tui.py — train form: fill all fields, submit → running screen; recommend form renders
+- [ ] CHANGELOG.md — Sprint 26 entry
+- [ ] tasks/CONTEXT.md — Sprint 26 row
+- [ ] CLAUDE.md — Sprint 26 row
+- [ ] pyproject.toml — bump to 3.9.0
+- [ ] tasks/todo.md — Sprint 26 gate recorded
+
+### Acceptance Gate
+```
+finetune-cli tui
+  → Train and Recommend: form → running screen → result screen → back to home
+pytest tests/test_tui.py -v
+pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
+```
+
+---
+
+## Sprint 25: "TUI Foundation"  ⬜ NOT STARTED
+
+- [ ] pyproject.toml — add textual>=0.52.0 to [project.dependencies]
+- [ ] finetune_cli/tui/__init__.py — empty package init
+- [ ] finetune_cli/tui/app.py — FinetuneApp(App), SCREENS dict, keybindings (q=quit, h/esc=home), on_mount → HomeScreen
+- [ ] finetune_cli/tui/screens/__init__.py — empty package init
+- [ ] finetune_cli/tui/screens/home.py — HomeScreen: 6 CommandCards in 2x3 grid, arrow key nav, enter to select (cards are non-functional stubs)
+- [ ] finetune_cli/tui/widgets/__init__.py — empty package init
+- [ ] finetune_cli/tui/widgets/command_card.py — CommandCard(Widget): label, description, hover highlight, click → post Message
+- [ ] cli/main.py — add `tui` subcommand (import FinetuneApp inside function, call App().run())
+- [ ] tests/test_tui.py — Pilot: app mounts without error, HomeScreen has 6 CommandCards, q key exits
+- [ ] audit_repo.py — register all new tui/ files
+- [ ] CHANGELOG.md — Sprint 25 entry
+- [ ] tasks/CONTEXT.md — Sprint 25 row
+- [ ] CLAUDE.md — Sprint 25 row
+- [ ] pyproject.toml — bump to 3.8.0
+- [ ] tasks/todo.md — Sprint 25 gate recorded
+- [ ] tasks/roadmap.md — Sprint 25 marked ✅
+
+### Acceptance Gate
+```
+pip install textual>=0.52.0
+finetune-cli tui
+  → home screen with 6 styled cards, arrow keys navigate, q exits
+pytest tests/test_tui.py -v   → Pilot tests pass headless
+pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
+```
+
+---
+
 ## Sprint 24: "Feature Distillation"
 
 - [x] finetune_cli/core/types.py — FeatureDistillationConfig frozen dataclass (step 0, per lessons.md)
