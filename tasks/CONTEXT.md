@@ -37,7 +37,7 @@ Session state. Read both files at the start of every working session.
 | 23 | Response Distillation | DistillationConfig in core/types.py, ResponseDistillationTrainer, 12 tests, example config |
 | 24 | Feature Distillation | FeatureDistillationConfig, FeatureDistillationTrainer, 21 tests, layer helpers |
 | 23 | Response Distillation | ResponseDistillationTrainer, DistillationConfig, 12 tests, example config |
-| **25** | **TUI Foundation** | ⬜ Planned — FinetuneApp, HomeScreen, 6 CommandCards, `finetune-cli tui` |
+| 25 | TUI Foundation | ✅ FinetuneApp, HomeScreen, 6 CommandCards, `finetune-cli tui`, 16 Pilot tests |
 | **26** | **TUI Train & Recommend** | ⬜ Planned — Train + Recommend forms, Running + Result screens |
 | **27** | **TUI Evaluate, Benchmark, Merge** | ⬜ Planned — 3 more command screens |
 | **28** | **TUI Upload + Polish** | ⬜ Planned — Upload screen, app.css theme, docs/tui.md |

@@ -4,6 +4,66 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.8.0] — Sprint 25: "TUI Foundation" — 2025-03-03
+
+### Added
+- `finetune_cli/tui/__init__.py` — TUI package.
+- `finetune_cli/tui/app.py` — `FinetuneApp(App)`: root Textual app, screen stack
+  management, global keybindings (q=quit, h/esc=go_home, ctrl+c=quit),
+  `on_mount` pushes HomeScreen, global CSS theme.
+- `finetune_cli/tui/screens/__init__.py` — screens package.
+- `finetune_cli/tui/screens/home.py` — `HomeScreen`: 6 `CommandCard` widgets in a
+  3×2 `Grid`, header with clock, subtitle bar, footer with keybinding hints.
+  `on_command_card_selected` stub (full routing Sprint 26+).
+- `finetune_cli/tui/widgets/__init__.py` — widgets package.
+- `finetune_cli/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable
+  styled card with label, description, icon, hover/focus CSS states.
+  Posts `CommandCard.Selected` message on click or Enter.
+- `finetune_cli/cli/main.py` — `tui` subcommand added (lazy import, graceful
+  ImportError message if textual not installed).
+- `tests/test_tui.py` — 10 Textual Pilot headless tests: app mounts, HomeScreen
+  is initial screen, 6 cards render, card IDs correct, cards focusable,
+  title/subtitle labels present, q exits, tab moves focus, escape stays on home,
+  click posts Selected message.
+- `tasks/roadmap.md` — TUI section added (Sprints 25–28 plan).
+- `tasks/todo.md` — TUI sprint checklists 25–28 added as not-started blocks.
+- `tasks/CONTEXT.md` — planned sprint rows 25–28 added + TUI Rule section.
+
+### Changed (sprint-end checklist)
+- `pyproject.toml` — textual>=0.52.0 added to dependencies; version 3.7.0 → 3.8.0.
+- `audit_repo.py` — all new tui/ files registered.
+
+---
+
+## [3.8.0] — Sprint 25: "TUI Foundation" — 2026-03-04
+
+### Added
+- `finetune_cli/tui/__init__.py` — TUI package init.
+- `finetune_cli/tui/app.py` — `FinetuneApp(App)` root Textual app. Global bindings:
+  `q`=quit, `h`/`escape`=home, `ctrl+c`=quit. `action_go_home()` pops all screens
+  above home. `run()` entry point called by CLI.
+- `finetune_cli/tui/screens/__init__.py` — screens package init.
+- `finetune_cli/tui/screens/home.py` — `HomeScreen`: 6 `CommandCard` widgets in a
+  3×2 CSS grid. Arrow-key nav (wraps), Tab/Shift+Tab, Enter to select. Sprint 25
+  shows a `notify()` stub — real screen push wired in Sprint 26+.
+- `finetune_cli/tui/widgets/__init__.py` — widgets package init.
+- `finetune_cli/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable card
+  with icon, bold label, description. Hover + focus border highlight via CSS.
+  Posts `CommandCard.Selected` on click or Enter. `can_focus = True`.
+- `cli/main.py` — `tui` subcommand added (lazy import of `FinetuneApp`, graceful
+  error if textual not installed).
+- `tests/test_tui.py` — 16 async Pilot tests (headless): app mounts, HomeScreen is
+  initial screen, title set, 6 cards rendered, card IDs correct, cards focusable,
+  title/subtitle labels present, q exits, tab moves focus, escape stays home,
+  right/down arrow navigate, click/enter don't crash, card_id matches attribute.
+- `pyproject.toml` — `textual>=0.52.0` added to dependencies;
+  `pytest-asyncio>=0.21.0` added to dev; `asyncio_mode = "auto"` added to pytest.
+
+### Changed
+- `pyproject.toml` — version 3.7.0 → 3.8.0
+
+---
+
 ## [3.7.0] — Sprint 24: "Feature Distillation" — 2025-03-02
 
 ### Added

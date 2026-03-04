@@ -54,7 +54,7 @@ Validated methods for commercial relevance. Build order: simplest → most compl
 
 | Sprint | Name | Status | Delivers |
 |--------|------|--------|----------|
-| 25 | TUI Foundation | ⬜ Not started | App skeleton, home screen, 6 cards, `finetune-cli tui` entry point |
+| 25 | TUI Foundation | ✅ Complete | App skeleton, home screen, 6 cards, `finetune-cli tui` entry point |
 | 26 | TUI Train & Recommend | ⬜ Not started | Form→Run→Result flow proven on 2 commands |
 | 27 | TUI Evaluate, Benchmark, Merge | ⬜ Not started | 3 more command screens reusing Sprint 26 patterns |
 | 28 | TUI Upload + Polish | ⬜ Not started | Final screen, CSS theme, UX polish, docs |

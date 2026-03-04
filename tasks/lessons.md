@@ -215,3 +215,34 @@ Rule: Step 1 of any new trainer sprint is always core/types.py — add the confi
 dataclass and verify `python -c "from finetune_cli.core.types import NewConfig"`
 passes BEFORE writing the trainer file.
 This is now step 0 in the trainer checklist, before even creating the trainer file.
+
+## Pattern: pyproject.toml build-backend must be "setuptools.build_meta"
+Using "setuptools.backends.legacy:build" causes BackendUnavailable on pip install -e .
+The correct value is always:
+  [build-system]
+  requires = ["setuptools>=68", "wheel"]
+  build-backend = "setuptools.build_meta"
+
+## Pattern: MagicMock.to() returns a new mock — chain methods lose configured attributes
+When a MagicMock has attributes set (e.g. t.config.num_hidden_layers = 24),
+calling t.to(device) returns a fresh MagicMock, losing all configured state.
+Fix: always add `t.to.return_value = t` when the code calls .to() on a mock object.
+Same rule applies to any method that should "return self" (e.g. .eval(), .train(),
+.cuda(), .cpu() — configure them explicitly if their return value is used).
+
+## Pattern: Textual 8.x — push_screen in on_mount must be awaited
+In Textual >=0.52, `push_screen()` returns a coroutine. Calling it synchronously
+in `on_mount` silently does nothing — HomeScreen never mounts, all queries return 0.
+Fix: make `on_mount` async and await the call:
+    async def on_mount(self) -> None:
+        await self.push_screen("home")
+
+## Pattern: Textual 8.x — use switch_screen for action_go_home, not pop loop
+`while len(screen_stack) > 1: pop_screen()` pops HomeScreen and leaves the
+blank _default screen. Use `self.switch_screen("home")` instead — it replaces
+the current screen with HomeScreen without touching the stack depth.
+
+## Pattern: Textual tests — use app.screen.query() not app.query() for screen widgets
+`app.query(Widget)` searches all screens including the blank _default screen.
+Use `app.screen.query(Widget)` to scope queries to the active screen.
+Also add a second `await pilot.pause()` after mount to let async screen pushes settle.

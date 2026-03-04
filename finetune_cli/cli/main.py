@@ -463,7 +463,28 @@ def merge(
     except Exception as exc:
         console.print(f"[red]Merge failed:[/red] {exc}")
         raise typer.Exit(code=1)
+    
+# ============================================================================
+# TUI  (Sprint 25)
+# ============================================================================
 
+
+@app.command()
+def tui() -> None:
+    """Launch the interactive Textual TUI for finetune-cli."""
+    try:
+        import textual  # noqa: F401 — check textual is present first
+    except ImportError:
+        from rich.console import Console
+        Console().print(
+            "[red]Error:[/red] Textual is not installed.\n"
+            "Install it with: [bold]pip install textual>=0.52.0[/bold]"
+        )
+        raise typer.Exit(code=1)
+
+    # Textual is present — import the app (real errors surface here)
+    from finetune_cli.tui.app import FinetuneApp
+    FinetuneApp().run()
 
 # ============================================================================
 # ENTRY POINT

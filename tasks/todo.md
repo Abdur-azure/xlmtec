@@ -1,5 +1,5 @@
 ## ═══════════════════════════════════════════════════════════════
-## TUI SPRINTS 25–28  ⬜  NOT STARTED
+## TUI SPRINTS 25–28  ✅  Sprint 25 COMPLETE
 ## Rule: Do NOT implement until reaching this block in sprint order.
 ## Existing CLI, trainers, and tests must remain 100% untouched.
 ## ═══════════════════════════════════════════════════════════════
@@ -8,22 +8,22 @@
 
 ## Sprint 28: "TUI Upload + Polish"  ⬜ NOT STARTED
 
-- [ ] finetune_cli/tui/screens/upload.py — model path, repo_id, token (masked), private toggle, merge-adapter option
-- [ ] Wire home Upload card → push upload screen
-- [ ] finetune_cli/tui/app.css — Textual CSS: consistent color theme across all screens
-- [ ] UX polish: footer keybinding bar on every screen (q=quit, esc=back, tab=next field)
-- [ ] UX polish: red border + inline error text on invalid form fields
-- [ ] UX polish: loading spinner overlay while Worker runs
-- [ ] UX polish: error screen with traceback on failed commands
-- [ ] tests/test_tui.py — upload form renders, token field masked, all 6 cards reachable
-- [ ] docs/tui.md — usage guide with ascii-art screenshots
-- [ ] audit_repo.py — all tui/ + docs/tui.md registered
-- [ ] CHANGELOG.md — Sprint 28 entry
-- [ ] tasks/CONTEXT.md — Sprint 28 row
-- [ ] CLAUDE.md — Sprint 28 row
-- [ ] pyproject.toml — bump to 3.11.0
-- [ ] tasks/todo.md — Sprint 28 gate recorded
-- [ ] tasks/roadmap.md — Sprint 28 marked ✅
+- [x] finetune_cli/tui/screens/upload.py — model path, repo_id, token (masked), private toggle, merge-adapter option
+- [x] Wire home Upload card → push upload screen
+- [x] finetune_cli/tui/app.css — Textual CSS: consistent color theme across all screens
+- [x] UX polish: footer keybinding bar on every screen (q=quit, esc=back, tab=next field)
+- [x] UX polish: red border + inline error text on invalid form fields
+- [x] UX polish: loading spinner overlay while Worker runs
+- [x] UX polish: error screen with traceback on failed commands
+- [x] tests/test_tui.py — upload form renders, token field masked, all 6 cards reachable
+- [x] docs/tui.md — usage guide with ascii-art screenshots
+- [x] audit_repo.py — all tui/ + docs/tui.md registered
+- [x] CHANGELOG.md — Sprint 28 entry
+- [x] tasks/CONTEXT.md — Sprint 28 row
+- [x] CLAUDE.md — Sprint 28 row
+- [x] pyproject.toml — bump to 3.11.0
+- [x] tasks/todo.md — Sprint 28 gate recorded
+- [x] tasks/roadmap.md — Sprint 28 marked ✅
 
 ### Acceptance Gate
 ```
@@ -88,24 +88,24 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 
 ---
 
-## Sprint 25: "TUI Foundation"  ⬜ NOT STARTED
+## Sprint 25: "TUI Foundation"  ✅ COMPLETE
 
-- [ ] pyproject.toml — add textual>=0.52.0 to [project.dependencies]
-- [ ] finetune_cli/tui/__init__.py — empty package init
-- [ ] finetune_cli/tui/app.py — FinetuneApp(App), SCREENS dict, keybindings (q=quit, h/esc=home), on_mount → HomeScreen
-- [ ] finetune_cli/tui/screens/__init__.py — empty package init
-- [ ] finetune_cli/tui/screens/home.py — HomeScreen: 6 CommandCards in 2x3 grid, arrow key nav, enter to select (cards are non-functional stubs)
-- [ ] finetune_cli/tui/widgets/__init__.py — empty package init
-- [ ] finetune_cli/tui/widgets/command_card.py — CommandCard(Widget): label, description, hover highlight, click → post Message
-- [ ] cli/main.py — add `tui` subcommand (import FinetuneApp inside function, call App().run())
-- [ ] tests/test_tui.py — Pilot: app mounts without error, HomeScreen has 6 CommandCards, q key exits
-- [ ] audit_repo.py — register all new tui/ files
-- [ ] CHANGELOG.md — Sprint 25 entry
-- [ ] tasks/CONTEXT.md — Sprint 25 row
-- [ ] CLAUDE.md — Sprint 25 row
-- [ ] pyproject.toml — bump to 3.8.0
-- [ ] tasks/todo.md — Sprint 25 gate recorded
-- [ ] tasks/roadmap.md — Sprint 25 marked ✅
+- [x] pyproject.toml — add textual>=0.52.0 to [project.dependencies]
+- [x] finetune_cli/tui/__init__.py — empty package init
+- [x] finetune_cli/tui/app.py — FinetuneApp(App), SCREENS dict, keybindings (q=quit, h/esc=home), on_mount → HomeScreen
+- [x] finetune_cli/tui/screens/__init__.py — empty package init
+- [x] finetune_cli/tui/screens/home.py — HomeScreen: 6 CommandCards in 2x3 grid, arrow key nav, enter to select (cards are non-functional stubs)
+- [x] finetune_cli/tui/widgets/__init__.py — empty package init
+- [x] finetune_cli/tui/widgets/command_card.py — CommandCard(Widget): label, description, hover highlight, click → post Message
+- [x] cli/main.py — add `tui` subcommand (import FinetuneApp inside function, call App().run())
+- [x] tests/test_tui.py — Pilot: app mounts without error, HomeScreen has 6 CommandCards, q key exits
+- [x] audit_repo.py — register all new tui/ files
+- [x] CHANGELOG.md — Sprint 25 entry
+- [x] tasks/CONTEXT.md — Sprint 25 row
+- [x] CLAUDE.md — Sprint 25 row
+- [x] pyproject.toml — bump to 3.8.0
+- [x] tasks/todo.md — Sprint 25 gate recorded
+- [x] tasks/roadmap.md — Sprint 25 marked ✅
 
 ### Acceptance Gate
 ```
