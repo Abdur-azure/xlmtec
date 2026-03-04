@@ -246,3 +246,26 @@ the current screen with HomeScreen without touching the stack depth.
 `app.query(Widget)` searches all screens including the blank _default screen.
 Use `app.screen.query(Widget)` to scope queries to the active screen.
 Also add a second `await pilot.pause()` after mount to let async screen pushes settle.
+
+## Pattern: Textual tests — update "stays on HomeScreen" card tests when cards get wired
+TestCommandCard click/enter tests assert `isinstance(app.screen, HomeScreen)`.
+Once a card is wired to a real screen (Sprint 26 wired Train + Recommend),
+those tests fail because the screen switches. Fix: use a still-stubbed card
+(e.g. #card-evaluate, #card-benchmark) for the "stays on home" assertion.
+Update these tests every sprint as more cards get wired.
+
+## Pattern: Textual tests — add double pause() after switch_screen + button clicks
+switch_screen() and button handlers are async. A single pause() isn't always
+enough for the screen transition to settle. Use double pause() after any
+switch_screen() call or button click that causes a screen change:
+    app.switch_screen(SomeScreen())
+    await pilot.pause()
+    await pilot.pause()
+
+## Pattern: Textual tests — call action_*() directly for validation tests
+Clicking a submit button goes through Textual's event system with async
+routing. In tests, if you need to assert the screen DIDN'T change after
+validation failure, call the action method directly on the screen instance:
+    screen.action_submit()   # bypasses event routing race
+    await pilot.pause()
+    assert isinstance(app.screen, SameScreen)

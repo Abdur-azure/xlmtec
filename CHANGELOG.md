@@ -4,6 +4,36 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.9.0] — Sprint 26: "TUI Train & Recommend" — 2026-03-04
+
+### Added
+- `finetune_cli/tui/widgets/log_panel.py` — `LogPanel`: scrolling `RichLog` widget,
+  `write_line()` + `clear()` helpers, auto-scroll reactive.
+- `finetune_cli/tui/widgets/metric_table.py` — `MetricTable`: `DataTable` widget
+  with `populate(dict)` helper for displaying result key/value pairs.
+- `finetune_cli/tui/screens/running.py` — `RunningScreen`: runs CLI command in
+  background thread via `@work(thread=True)`. Streams stdout/stderr to `LogPanel`.
+  Elapsed timer ticks every second. Cancel via button or q/Ctrl+C → home.
+  On finish → switches to `ResultScreen`.
+- `finetune_cli/tui/screens/result.py` — `ResultScreen`: success/failure banner,
+  `MetricTable` of results, Home + Quit buttons.
+- `finetune_cli/tui/screens/train.py` — `TrainScreen`: full form (model Input,
+  method Select with all 7 methods, dataset Input, epochs Input, lr Input, output
+  Input). Inline validation. Submit → `RunningScreen` with `finetune-cli train` cmd.
+- `finetune_cli/tui/screens/recommend.py` — `RecommendScreen`: model Input,
+  optional output path Input. Submit → `RunningScreen` with `finetune-cli recommend`.
+- `finetune_cli/tui/screens/home.py` — Train + Recommend cards now push real screens.
+  Evaluate/Benchmark/Merge/Upload show "coming in Sprint 27" toast stub.
+- `tests/test_tui.py` — 14 new Pilot tests: train card navigation, form fields
+  render, back button returns home, empty submit shows validation, recommend card
+  navigation, result screen success/failure, result home button. Total: 30 tests.
+
+### Changed
+- `pyproject.toml` — version 3.8.0 → 3.9.0
+- `audit_repo.py` — 6 new tui files registered.
+
+---
+
 ## [3.8.0] — Sprint 25: "TUI Foundation" — 2025-03-03
 
 ### Added

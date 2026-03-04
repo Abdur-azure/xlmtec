@@ -157,7 +157,9 @@ class TestCommandCard:
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
-            await pilot.click("#card-train")
+            # Use a stub card (evaluate) — stays on HomeScreen until Sprint 27
+            await pilot.click("#card-evaluate")
+            await pilot.pause()
             assert isinstance(app.screen, HomeScreen)
 
     @pytest.mark.asyncio
@@ -166,7 +168,11 @@ class TestCommandCard:
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
+            # Focus a stub card (benchmark) then press enter
+            app.screen.query_one("#card-benchmark").focus()
+            await pilot.pause()
             await pilot.press("enter")
+            await pilot.pause()
             assert isinstance(app.screen, HomeScreen)
 
     @pytest.mark.asyncio
@@ -177,3 +183,194 @@ class TestCommandCard:
             await pilot.pause()
             train_card = app.screen.query_one("#card-train", CommandCard)
             assert train_card.command_id == "train"
+
+
+# ============================================================================
+# Sprint 26 — Train & Recommend screens
+# ============================================================================
+
+from finetune_cli.tui.screens.train import TrainScreen          # noqa: E402
+from finetune_cli.tui.screens.recommend import RecommendScreen  # noqa: E402
+from finetune_cli.tui.screens.running import RunningScreen      # noqa: E402
+from finetune_cli.tui.screens.result import ResultScreen        # noqa: E402
+
+
+class TestTrainScreen:
+    """TrainScreen form renders and validates correctly."""
+
+    @pytest.mark.asyncio
+    async def test_train_card_navigates_to_train_screen(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            await pilot.click("#card-train")
+            await pilot.pause()
+            assert isinstance(app.screen, TrainScreen)
+
+    @pytest.mark.asyncio
+    async def test_train_screen_has_model_input(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(TrainScreen())
+            await pilot.pause()
+            assert len(app.screen.query("#input-model")) == 1
+
+    @pytest.mark.asyncio
+    async def test_train_screen_has_method_select(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(TrainScreen())
+            await pilot.pause()
+            assert len(app.screen.query("#select-method")) == 1
+
+    @pytest.mark.asyncio
+    async def test_train_screen_has_dataset_input(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(TrainScreen())
+            await pilot.pause()
+            assert len(app.screen.query("#input-dataset")) == 1
+
+    @pytest.mark.asyncio
+    async def test_train_back_button_returns_home(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            screen = TrainScreen()
+            app.switch_screen(screen)
+            await pilot.pause()
+            await pilot.pause()
+            # Call action directly — avoids button event async routing delay
+            screen.action_go_home()
+            await pilot.pause()
+            await pilot.pause()
+            assert isinstance(app.screen, HomeScreen)
+
+    @pytest.mark.asyncio
+    async def test_train_submit_empty_shows_validation(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            screen = TrainScreen()
+            app.switch_screen(screen)
+            await pilot.pause()
+            await pilot.pause()
+            # Call action directly — avoids button event routing race
+            screen.action_submit()
+            await pilot.pause()
+            # Validation blocked navigation — still on TrainScreen
+            assert isinstance(app.screen, TrainScreen)
+
+
+class TestRecommendScreen:
+    """RecommendScreen form renders and validates correctly."""
+
+    @pytest.mark.asyncio
+    async def test_recommend_card_navigates_to_recommend_screen(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            await pilot.click("#card-recommend")
+            await pilot.pause()
+            assert isinstance(app.screen, RecommendScreen)
+
+    @pytest.mark.asyncio
+    async def test_recommend_screen_has_model_input(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(RecommendScreen())
+            await pilot.pause()
+            assert len(app.screen.query("#input-model")) == 1
+
+    @pytest.mark.asyncio
+    async def test_recommend_screen_has_output_input(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(RecommendScreen())
+            await pilot.pause()
+            assert len(app.screen.query("#input-output")) == 1
+
+    @pytest.mark.asyncio
+    async def test_recommend_back_button_returns_home(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            screen = RecommendScreen()
+            app.switch_screen(screen)
+            await pilot.pause()
+            await pilot.pause()
+            screen.action_go_home()
+            await pilot.pause()
+            await pilot.pause()
+            assert isinstance(app.screen, HomeScreen)
+
+    @pytest.mark.asyncio
+    async def test_recommend_submit_empty_shows_validation(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            screen = RecommendScreen()
+            app.switch_screen(screen)
+            await pilot.pause()
+            await pilot.pause()
+            screen.action_submit()
+            await pilot.pause()
+            assert isinstance(app.screen, RecommendScreen)
+
+
+class TestResultScreen:
+    """ResultScreen displays correctly for success and failure."""
+
+    @pytest.mark.asyncio
+    async def test_result_screen_success_renders(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(ResultScreen(
+                success=True,
+                metrics={"Status": "✅ Success", "Duration": "00:12"},
+            ))
+            await pilot.pause()
+            assert isinstance(app.screen, ResultScreen)
+
+    @pytest.mark.asyncio
+    async def test_result_screen_failure_renders(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(ResultScreen(
+                success=False,
+                metrics={"Status": "❌ Failed", "Error": "test error"},
+            ))
+            await pilot.pause()
+            assert isinstance(app.screen, ResultScreen)
+
+    @pytest.mark.asyncio
+    async def test_result_home_button_returns_home(self):
+        app = FinetuneApp()
+        async with app.run_test(size=(120, 40)) as pilot:
+            await pilot.pause()
+            await pilot.pause()
+            app.switch_screen(ResultScreen(success=True, metrics={}))
+            await pilot.pause()
+            await pilot.click("#btn-home")
+            await pilot.pause()
+            assert isinstance(app.screen, HomeScreen)

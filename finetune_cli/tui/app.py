@@ -21,9 +21,8 @@ class FinetuneApp(App):
     TITLE = "finetune-cli"
     SUB_TITLE = "LLM Fine-Tuning Toolkit"
 
-    # All screens registered here so they can be pushed by name.
-    # Sprint 26-28 will add: train, evaluate, benchmark, merge, upload, recommend,
-    # running, result screens.
+    # Screens registered by name for push/switch by name.
+    # Sprint 27-28 will add: evaluate, benchmark, merge, upload.
     SCREENS = {
         "home": HomeScreen,
     }

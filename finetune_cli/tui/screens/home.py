@@ -93,16 +93,23 @@ class HomeScreen(Screen):
             cards[0].focus()
 
     def on_command_card_selected(self, event: CommandCard.Selected) -> None:
-        """Route card selection to the appropriate screen.
+        """Route card selection to the appropriate screen."""
+        # Screens wired so far
+        wired = {"train", "recommend"}
 
-        Sprint 25: shows a notification stub.
-        Sprint 26+ will push real command screens.
-        """
-        self.app.notify(
-            f"[bold]{event.command_id.capitalize()}[/bold] screen coming in Sprint 26",
-            title="Coming soon",
-            severity="information",
-        )
+        if event.command_id == "train":
+            from finetune_cli.tui.screens.train import TrainScreen
+            self.app.switch_screen(TrainScreen())
+        elif event.command_id == "recommend":
+            from finetune_cli.tui.screens.recommend import RecommendScreen
+            self.app.switch_screen(RecommendScreen())
+        else:
+            # Sprint 27+ will wire the remaining cards
+            self.app.notify(
+                f"[bold]{event.command_id.capitalize()}[/bold] screen coming in Sprint 27",
+                title="Coming soon",
+                severity="information",
+            )
 
     def on_key(self, event: events.Key) -> None:
         """Arrow key navigation across the 3-column card grid."""
