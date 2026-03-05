@@ -25,8 +25,6 @@ config = (
 )
 ```
 
-**Methods:**
-
 | Method | Key kwargs | Description |
 |--------|-----------|-------------|
 | `.with_model(name, **kwargs)` | `torch_dtype`, `load_in_4bit`, `load_in_8bit` | Set model config |
@@ -42,13 +40,9 @@ config = (
 Pydantic model holding the full pipeline config. Supports JSON and YAML I/O.
 
 ```python
-# Load from file
 config = PipelineConfig.from_yaml(Path("config.yaml"))
 config = PipelineConfig.from_json(Path("config.json"))
-
-# Save to file
 config.to_yaml(Path("config.yaml"))
-config.to_json(Path("config.json"))
 ```
 
 ---
@@ -85,19 +79,6 @@ result = prepare_dataset(
 # result["train"], result["validation"]
 ```
 
-### `DataPipeline`
-
-Stateful pipeline class — use when you need statistics or to save processed data.
-
-```python
-from finetune_cli.data import DataPipeline
-
-pipeline = DataPipeline(dataset_config, tokenization_config, tokenizer)
-dataset = pipeline.run(split_for_validation=False)
-stats = pipeline.get_statistics()   # {"num_samples": 1000, "avg_words": 42, ...}
-pipeline.save_processed(Path("./data/processed"))
-```
-
 ---
 
 ## Model Loading — `finetune_cli.models.loader`
@@ -126,12 +107,13 @@ result = TrainerFactory.train(
     tokenizer=tokenizer,
     dataset=dataset,
     training_config=config.training.to_config(),
-    lora_config=config.lora.to_config(),
+    lora_config=config.lora.to_config(),          # required for lora / qlora / instruction
+    distillation_config=distillation_config,       # required for vanilla_distillation
+    feature_distillation_config=fd_config,         # required for feature_distillation
 )
-# result.output_dir, result.train_loss, result.steps_completed
 ```
 
-### `LoRATrainer` / `QLoRATrainer` (direct use)
+### `LoRATrainer` / `QLoRATrainer` / `FullFineTuner` / `InstructionTrainer`
 
 ```python
 from finetune_cli.trainers import LoRATrainer
@@ -140,16 +122,143 @@ trainer = LoRATrainer(model, tokenizer, training_config, lora_config)
 result = trainer.train(dataset)
 ```
 
+### `DPOTrainer`
+
+Requires `pip install trl>=0.7.0`. Dataset must have `prompt`, `chosen`, `rejected` columns.
+
+```python
+from finetune_cli.trainers import DPOTrainer, validate_dpo_dataset
+
+validate_dpo_dataset(dataset)   # raises ValueError if columns are missing
+trainer = DPOTrainer(model, tokenizer, training_config, lora_config, beta=0.1)
+result = trainer.train(dataset)
+```
+
+`beta` controls preference shaping strength: lower (0.05–0.1) stays close to the reference model; higher (0.3–0.5) applies stronger shaping.
+
+### `ResponseDistillationTrainer`
+
+Student learns to match the output distribution of a larger teacher model (KL divergence + cross-entropy loss).
+
+```python
+from finetune_cli.core.types import DistillationConfig
+from finetune_cli.trainers import ResponseDistillationTrainer
+
+distillation_config = DistillationConfig(
+    teacher_model_name="gpt2-medium",
+    temperature=2.0,     # higher = softer teacher distribution
+    alpha=0.5,           # blend: alpha×KL + (1-alpha)×CE
+)
+trainer = ResponseDistillationTrainer(
+    model, tokenizer, training_config, distillation_config
+)
+result = trainer.train(dataset)
+```
+
+### `FeatureDistillationTrainer`
+
+Extends response distillation with MSE loss on intermediate hidden states for stronger layer-level supervision.
+
+```python
+from finetune_cli.core.types import FeatureDistillationConfig
+from finetune_cli.trainers import FeatureDistillationTrainer
+
+fd_config = FeatureDistillationConfig(
+    teacher_model_name="gpt2-medium",
+    temperature=2.0,
+    alpha=0.5,           # KL divergence weight
+    beta=0.3,            # hidden-state MSE weight
+    feature_layers=None, # None = auto-select 4 evenly-spaced layers
+)
+trainer = FeatureDistillationTrainer(
+    model, tokenizer, training_config, fd_config
+)
+result = trainer.train(dataset)
+```
+
+`feature_layers` accepts a list of student layer indices to supervise, e.g. `[0, 4, 8, 11]`. Each student layer is mapped to the proportionally corresponding teacher layer. Pass `None` for automatic selection.
+
 ### `TrainingResult`
 
-Frozen dataclass returned by all trainers.
+Frozen dataclass returned by all `BaseTrainer` subclasses.
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `output_dir` | `Path` | Where the adapter was saved |
-| `train_loss` | `float` | Final training loss |
-| `steps_completed` | `int` | Total training steps |
-| `elapsed_seconds` | `float` | Wall-clock training time |
+```python
+result.output_dir             # Path — where model/adapter was saved
+result.train_loss             # float
+result.eval_loss              # float | None
+result.epochs_completed       # int
+result.steps_completed        # int
+result.training_time_seconds  # float
+result.trainer_logs           # Dict[str, Any] — raw HF Trainer log history
+```
+
+---
+
+## Pruning — `finetune_cli.trainers`
+
+Pruners are **not** `BaseTrainer` subclasses — they transform a model in-place rather than training it.
+
+### `StructuredPruner`
+
+Soft structured pruning. Scores each attention head by mean absolute weight magnitude, then zeros the bottom `sparsity` fraction per layer. The model shape is unchanged.
+
+```python
+from pathlib import Path
+from finetune_cli.core.types import PruningConfig
+from finetune_cli.trainers import StructuredPruner
+
+pruning_config = PruningConfig(
+    output_dir=Path("./outputs/pruned"),
+    sparsity=0.3,           # fraction of heads to zero
+    method="heads",         # "heads" (default) or "ffn"
+    min_heads_per_layer=1,  # safety floor — never collapse a layer entirely
+)
+pruner = StructuredPruner(model, tokenizer, pruning_config)
+result = pruner.prune()
+
+result.output_dir              # Path
+result.original_param_count    # int
+result.zeroed_param_count      # int
+result.sparsity_achieved       # float
+result.heads_pruned_per_layer  # Dict[str, int] — layer name → heads zeroed
+result.pruning_time_seconds    # float
+```
+
+`method="heads"` targets the query-projection rows of each attention layer. `method="ffn"` targets the gate/fc1 neuron rows of each FFN layer.
+
+### `WandaPruner`
+
+WANDA (Weight AND Activation) unstructured pruning. Scores each weight by `|W_ij| × ‖X_j‖₂` where `X` is the input activation norm, then zeros the bottom `sparsity` fraction. Requires a calibration dataset for best results; falls back to magnitude-only scoring without one.
+
+```python
+from finetune_cli.core.types import WandaConfig
+from finetune_cli.trainers import WandaPruner
+import torch
+
+wanda_config = WandaConfig(
+    output_dir=Path("./outputs/wanda"),
+    sparsity=0.5,
+    n_calibration_samples=128,
+    calibration_seq_len=128,
+    use_row_wise=True,       # per-output-row threshold (recommended)
+    layer_types=None,        # None = auto (Linear + Conv1D)
+)
+
+# With calibration data (recommended)
+calib_ids = torch.load("calib_ids.pt")   # (N, seq_len) token id tensor
+pruner = WandaPruner(model, tokenizer, wanda_config)
+result = pruner.prune(calibration_input_ids=calib_ids)
+
+# Without calibration data (magnitude-only fallback)
+result = pruner.prune()
+
+result.output_dir           # Path
+result.original_param_count # int (total weights across all target layers)
+result.zeroed_param_count   # int
+result.sparsity_achieved    # float
+result.layers_pruned        # int — number of linear layers processed
+result.pruning_time_seconds # float
+```
 
 ---
 
@@ -158,236 +267,32 @@ Frozen dataclass returned by all trainers.
 ### `BenchmarkRunner`
 
 ```python
-from finetune_cli.evaluation import BenchmarkRunner
+from finetune_cli.evaluation.benchmarker import BenchmarkRunner
 from finetune_cli.core.types import EvaluationConfig, EvaluationMetric
 
-eval_cfg = EvaluationConfig(
+eval_config = EvaluationConfig(
     metrics=[EvaluationMetric.ROUGE_L, EvaluationMetric.BLEU],
-    num_samples=100,
-    generation_max_length=100,
+    num_samples=200,
 )
-runner = BenchmarkRunner(eval_cfg, tokenizer)
+runner = BenchmarkRunner(base_model, finetuned_model, tokenizer, eval_config)
+report = runner.run(dataset)
 
-# Single model score
-result = runner.evaluate(model, dataset, label="fine-tuned")
-print(result.scores)  # {"rougeL": 0.42, "bleu": 0.19}
-
-# Before/after comparison
-report = runner.run_comparison(base_model, ft_model, dataset)
-print(report.summary())
-print(report.improvements)  # {"rougeL": +0.12, "bleu": +0.07}
+report.summary()              # formatted string
+report.base_scores            # Dict[str, float]
+report.finetuned_scores       # Dict[str, float]
+report.delta                  # Dict[str, float] — improvement per metric
 ```
 
-### Available metrics
-
-| `EvaluationMetric` value | Class | Notes |
-|--------------------------|-------|-------|
-| `rouge1`, `rouge2`, `rougeL` | `RougeMetric` | Token overlap |
-| `bleu` | `BleuMetric` | N-gram precision (requires `nltk punkt`) |
-| `perplexity` | `PerplexityMetric` | Requires model |
-
----
-
-## DPO — `finetune_cli.trainers.dpo_trainer`
-
-### Dataset requirements
-
-DPO datasets must have exactly three string columns:
-
-| Column | Description |
-|--------|-------------|
-| `prompt` | The instruction or input context |
-| `chosen` | The preferred completion |
-| `rejected` | The dispreferred completion |
-
-### `validate_dpo_dataset`
+### Individual metrics
 
 ```python
-from finetune_cli.trainers import validate_dpo_dataset
+from finetune_cli.evaluation.metrics import RougeMetric, BleuMetric
+from finetune_cli.core.types import EvaluationMetric
 
-validate_dpo_dataset(dataset)
-# Raises DatasetError if prompt / chosen / rejected columns are missing
-```
-
-### `DPOTrainer`
-
-```python
-from finetune_cli.trainers import DPOTrainer
-
-trainer = DPOTrainer(
-    model=model,
-    tokenizer=tokenizer,
-    training_config=training_config,   # method must be TrainingMethod.DPO
-    lora_config=lora_config,
-    beta=0.1,                          # DPO temperature — lower = closer to reference
+metric = RougeMetric(EvaluationMetric.ROUGE_L)
+score = metric.compute(
+    predictions=["the quick brown fox"],
+    references=["the quick brown fox"],
 )
-result = trainer.train(dataset)
-```
-
-`beta` controls how far the fine-tuned policy can deviate from the reference model. Default `0.1` works well for most cases; increase toward `0.5` for more aggressive preference learning.
-
-**Requires:** `pip install trl>=0.7.0`
-
-### Via CLI
-
-```bash
-finetune-cli train --config examples/configs/dpo.yaml
-
-# or inline
-finetune-cli train \
-  --model gpt2 \
-  --hf-dataset Anthropic/hh-rlhf \
-  --method dpo \
-  --epochs 1
-```
-
----
-
-## Exceptions — `finetune_cli.core.exceptions`
-
-All exceptions inherit from `FineTuneError`.
-
-```python
-from finetune_cli.core.exceptions import (
-    InvalidConfigError,      # Bad config value
-    MissingConfigError,      # Required field absent
-    IncompatibleConfigError, # Conflicting options (e.g. fp16 + bf16)
-    DatasetNotFoundError,    # File path doesn't exist
-    EmptyDatasetError,       # Dataset loaded but has 0 rows
-    NoTextColumnsError,      # No string columns found
-    TrainingError,           # Training loop failure
-    ModelLoadError,          # Model download / load failed
-)
-```
-
----
-
-## Trainers — full reference
-
-### All training methods
-
-| `TrainingMethod` | Trainer class | Needs `lora_config` | Notes |
-|------------------|--------------|---------------------|-------|
-| `lora` | `LoRATrainer` | Yes | Default. Attaches LoRA adapters, freezes base. |
-| `qlora` | `QLoRATrainer` | Yes | 4-bit quantised base + LoRA. Set `load_in_4bit: true`. |
-| `instruction_tuning` | `InstructionTrainer` | Yes | Auto-formats `{instruction, input, response}` datasets. Skip if `input_ids` present. |
-| `full_finetuning` | `FullFineTuner` | No | Trains all parameters. VRAM warning for >1B param models. |
-
-### `FullFineTuner`
-
-```python
-from finetune_cli.trainers import FullFineTuner
-
-trainer = FullFineTuner(model, tokenizer, training_config)
-result = trainer.train(dataset)
-# Issues ResourceWarning if model has >1B parameters
-```
-
-### `InstructionTrainer`
-
-```python
-from finetune_cli.trainers import InstructionTrainer, format_instruction_dataset
-from datasets import Dataset
-
-# Format raw alpaca-style data
-raw = Dataset.from_list([
-    {"instruction": "Explain X.", "input": "", "response": "X is ..."},
-])
-formatted = format_instruction_dataset(raw)
-# formatted has a single "text" column with the alpaca prompt template
-
-# Or pass raw data directly — InstructionTrainer formats automatically
-trainer = InstructionTrainer(model, tokenizer, training_config, lora_config)
-result = trainer.train(raw)  # formats then trains
-```
-
----
-
-## CLI commands — reference
-
-### `finetune-cli train`
-
-```
-finetune-cli train [OPTIONS]
-
-Options:
-  --config, -c PATH        YAML/JSON config file (takes precedence over flags)
-  --model, -m TEXT         HuggingFace model id          [default: gpt2]
-  --dataset, -d PATH       Local dataset path
-  --hf-dataset TEXT        HuggingFace dataset id
-  --output, -o PATH        Output directory              [default: ./output]
-  --method TEXT            lora | qlora | instruction_tuning | full_finetuning
-  --lora-r INT             LoRA rank                     [default: 8]
-  --lora-alpha INT         LoRA alpha                    [default: 32]
-  --epochs, -e INT         Number of epochs              [default: 3]
-  --batch-size, -b INT     Per-device batch size         [default: 4]
-  --lr FLOAT               Learning rate                 [default: 2e-4]
-  --max-length INT         Max token length              [default: 512]
-  --4bit                   Load model in 4-bit (QLoRA)
-  --fp16                   Mixed precision FP16
-```
-
-### `finetune-cli merge`
-
-```
-finetune-cli merge ADAPTER_DIR OUTPUT_DIR [OPTIONS]
-
-Arguments:
-  ADAPTER_DIR   Path to saved LoRA adapter directory
-  OUTPUT_DIR    Directory to save the merged standalone model
-
-Options:
-  --base-model, -b TEXT    Base HuggingFace model id     [required]
-  --dtype TEXT             float32 | float16 | bfloat16  [default: float32]
-```
-
-The merged model runs without PEFT installed and is ready for direct inference or HuggingFace Hub upload.
-
-```bash
-finetune-cli merge ./outputs/gpt2_lora ./outputs/gpt2_merged \
-  --base-model gpt2 --dtype float16
-```
-
-### `finetune-cli recommend`
-
-```
-finetune-cli recommend MODEL [OPTIONS]
-
-Arguments:
-  MODEL         HuggingFace model id (e.g. gpt2, meta-llama/Llama-3.2-1B)
-
-Options:
-  --dataset, -d PATH       Optional local dataset path
-  --output, -o PATH        Save generated YAML config to file
-  --vram FLOAT             Available VRAM in GB (auto-detect if omitted)
-```
-
-Decision logic:
-
-| Model size | VRAM | Recommended method |
-|-----------|------|--------------------|
-| >7B | any | qlora, r=16, grad_ckpt |
-| >1B | ≥16GB | lora, r=16 |
-| >1B | <16GB | qlora, r=8, grad_ckpt |
-| >300M | ≥8GB | lora, r=8 |
-| >300M | <8GB | lora, r=4 |
-| ≤300M | ≥4GB | lora, r=8 |
-| ≤300M | <4GB | full_finetuning |
-
-```bash
-finetune-cli recommend gpt2 --output my_config.yaml
-finetune-cli train --config my_config.yaml
-```
-
-### `finetune-cli upload`
-
-```
-finetune-cli upload MODEL_PATH REPO_ID [OPTIONS]
-
-Options:
-  --token, -t TEXT         HF API token (or set HF_TOKEN env var)
-  --private                Make repository private
-  --message, -m TEXT       Commit message
-  --merge-adapter          Merge LoRA adapter before uploading
-  --base-model TEXT        Base model id (required with --merge-adapter)
+# score = 1.0
 ```

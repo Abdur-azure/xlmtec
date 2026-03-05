@@ -1,6 +1,6 @@
 # finetune-cli
 
-**Production-grade LLM fine-tuning from the command line.**
+**Production-grade LLM fine-tuning, distillation, and pruning from the command line.**
 
 [![CI](https://github.com/Abdur-azure/finetune_cli/actions/workflows/ci.yml/badge.svg)](https://github.com/Abdur-azure/finetune_cli/actions)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org)
@@ -10,7 +10,7 @@
 
 ## What it does
 
-`finetune-cli` is a modular Python framework for fine-tuning large language models. It wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, and a composable trainer stack — all fully tested.
+`finetune-cli` is a modular Python framework for fine-tuning, distilling, and pruning large language models. It wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.
 
 ---
 
@@ -33,102 +33,79 @@ python examples/generate_sample_data.py
 # 2. Not sure which method to use? Ask
 finetune-cli recommend gpt2 --output my_config.yaml
 
-# 3. Train
+# 3. Train with the generated config
 finetune-cli train --config my_config.yaml
 
-# or use a ready-made example config
+# 4. Or use a ready-made config
 finetune-cli train --config examples/configs/lora_gpt2.yaml
+
+# 5. Launch the interactive TUI
+finetune-cli tui
 ```
 
 ---
 
-## Commands
+## CLI commands
 
 | Command | What it does |
 |---------|-------------|
-| `finetune-cli train` | Fine-tune using a YAML config or inline flags |
+| `finetune-cli train` | Fine-tune using a YAML config or inline flags (LoRA / QLoRA / Full / Instruction / DPO / Distillation) |
 | `finetune-cli evaluate` | Score a saved checkpoint (ROUGE, BLEU, Perplexity) |
 | `finetune-cli benchmark` | Before/after comparison: base vs fine-tuned |
-| `finetune-cli upload` | Push adapter or merged model to HuggingFace Hub |
 | `finetune-cli merge` | Merge LoRA adapter into base model → standalone model |
+| `finetune-cli upload` | Push adapter or merged model to HuggingFace Hub |
 | `finetune-cli recommend` | Inspect model size + VRAM, output optimal YAML config |
+| `finetune-cli prune` | Structured pruning — zero lowest-magnitude attention heads |
+| `finetune-cli wanda` | WANDA unstructured pruning — zero weights by \|W\|×activation score |
+| `finetune-cli tui` | Interactive Textual TUI — all commands via a terminal UI |
 
 ---
 
 ## Training methods
 
-| Method | Flag | VRAM | Best for |
-|--------|------|------|---------|
-| LoRA | `--method lora` | Medium | General purpose (default) |
-| QLoRA | `--method qlora` | Low | Large models on consumer GPU |
-| Instruction tuning | `--method instruction_tuning` | Medium | Alpaca-style `{instruction, input, response}` data |
-| Full fine-tuning | `--method full_finetuning` | High | Small models, maximum adaptation |
+| Method | Flag | Notes |
+|--------|------|-------|
+| LoRA | `--method lora` | Default. Adapter-based, memory-efficient |
+| QLoRA | `--method qlora` | 4-bit quantised LoRA — large models on limited VRAM |
+| Full Fine-Tuning | `--method full_finetuning` | All parameters — small models only |
+| Instruction Tuning | `--method instruction_tuning` | Alpaca-style `{instruction, input, response}` data |
+| DPO | `--method dpo` | Direct Preference Optimization — requires `pip install trl` |
+| Response Distillation | `--method vanilla_distillation` | Student mimics teacher logits (KL + CE loss) |
+| Feature Distillation | `--method feature_distillation` | Student mimics teacher hidden states (MSE + KL + CE) |
 
 ---
 
-## Usage examples
+## Pruning commands
 
-### Train with flags
 ```bash
-finetune-cli train \
-  --model gpt2 \
-  --dataset ./data/sample.jsonl \
-  --method lora \
-  --epochs 3 \
-  --output ./outputs/gpt2_lora
-```
+# Structured pruning — zero lowest-magnitude attention heads
+finetune-cli prune ./outputs/gpt2_lora \
+    --output ./outputs/gpt2_pruned \
+    --sparsity 0.3 \
+    --method heads
 
-### Train with a config file (recommended for reproducibility)
-```bash
-finetune-cli train --config examples/configs/lora_gpt2.yaml
-```
-
-### Instruction tuning (alpaca-style data)
-```bash
-finetune-cli train --config examples/configs/instruction_tuning.yaml
-```
-
-### Full fine-tuning (small models only)
-```bash
-finetune-cli train --config examples/configs/full_finetuning.yaml
-```
-
-### Evaluate a trained model
-```bash
-finetune-cli evaluate ./outputs/gpt2_lora \
-  --dataset ./data/sample.jsonl \
-  --metrics rougeL,bleu
-```
-
-### Merge adapter into standalone model
-```bash
-finetune-cli merge ./outputs/gpt2_lora ./outputs/gpt2_merged \
-  --base-model gpt2 \
-  --dtype float16
-```
-
-### Upload to HuggingFace Hub
-```bash
-# Upload adapter only
-finetune-cli upload ./outputs/gpt2_lora my-username/gpt2-lora
-
-# Upload merged standalone model
-finetune-cli upload ./outputs/gpt2_lora my-username/gpt2-merged \
-  --merge-adapter --base-model gpt2
+# WANDA unstructured pruning — weight × activation scoring, zero-shot
+finetune-cli wanda ./outputs/gpt2_lora \
+    --output ./outputs/gpt2_wanda \
+    --sparsity 0.5 \
+    --dataset ./data/sample.jsonl
 ```
 
 ---
 
 ## Example configs
 
-All configs in `examples/configs/` point to data generated by `generate_sample_data.py` and run out of the box.
-
 | Config | Method | Model | Data |
 |--------|--------|-------|------|
 | `lora_gpt2.yaml` | LoRA | GPT-2 | `data/sample.jsonl` |
+| `qlora_llama.yaml` | QLoRA | LLaMA-3.2-1B | HF Hub (needs token) |
 | `instruction_tuning.yaml` | Instruction | GPT-2 | `data/instructions.jsonl` |
 | `full_finetuning.yaml` | Full | GPT-2 | `data/sample.jsonl` |
-| `qlora_llama.yaml` | QLoRA | LLaMA-3.2-1B | HF Hub (needs token) |
+| `dpo.yaml` | DPO | GPT-2 | `data/dpo_sample.jsonl` |
+| `response_distillation.yaml` | Response Distillation | GPT-2 (student) ← GPT-2-medium | `data/sample.jsonl` |
+| `feature_distillation.yaml` | Feature Distillation | GPT-2 (student) ← GPT-2-medium | `data/sample.jsonl` |
+| `structured_pruning.yaml` | Structured Pruning | GPT-2 | — |
+| `wanda.yaml` | WANDA Pruning | GPT-2 | `data/sample.jsonl` (calibration) |
 
 ---
 
@@ -153,7 +130,11 @@ config = (
 
 model, tokenizer = load_model_and_tokenizer(config.model.to_config())
 dataset = prepare_dataset(config.dataset.to_config(), config.tokenization.to_config(), tokenizer)
-result = TrainerFactory.train(model, tokenizer, dataset, config.training.to_config(), config.lora.to_config())
+result = TrainerFactory.train(
+    model, tokenizer, dataset,
+    config.training.to_config(),
+    config.lora.to_config(),
+)
 print(f"Done. Loss: {result.train_loss:.4f}  →  {result.output_dir}")
 ```
 
@@ -161,9 +142,10 @@ print(f"Done. Loss: {result.train_loss:.4f}  →  {result.output_dir}")
 
 ## Docs
 
-- [Usage Guide](docs/usage.md) — all commands with examples
-- [Configuration Reference](docs/configuration.md) — YAML config fields
-- [API Reference](docs/api.md) — Python API
+- [Usage Guide](docs/usage.md) — all 9 commands with examples
+- [Configuration Reference](docs/configuration.md) — YAML config fields for all methods
+- [API Reference](docs/api.md) — Python API for all trainers and pruners
+- [TUI Guide](docs/tui.md) — interactive terminal interface
 - [Architecture](docs/ARCHITECTURE.md) — module design
 - [Contributing](CONTRIBUTING.md) — how to add trainers or commands
 
@@ -175,7 +157,7 @@ print(f"Done. Loss: {result.train_loss:.4f}  →  {result.output_dir}")
 # Unit tests (no GPU needed)
 pytest tests/ -v --ignore=tests/test_integration.py
 
-# Integration tests (CPU ok, ~30s)
+# Integration tests (CPU ok, ~30s — downloads GPT-2 once)
 pytest tests/test_integration.py -v -s
 
 # Full suite
@@ -188,7 +170,8 @@ pytest tests/ -v
 
 | Aspect | Status |
 |--------|--------|
-| Tests | 70+ unit + integration, all green |
+| Version | 3.13.0 |
+| Tests | 200+ unit + integration, all green |
 | CI | pytest on Python 3.10 / 3.11 / 3.12 |
 | Platform | Windows / macOS / Linux |
-| Version | 2.3.0 |
+| License | MIT |

@@ -1,8 +1,8 @@
 # finetune-cli
 
-**Production-grade LLM fine-tuning from the command line.**
+**Production-grade LLM fine-tuning, distillation, and pruning from the command line.**
 
-`finetune-cli` is a modular Python framework for fine-tuning large language models using LoRA and QLoRA. It provides a type-safe configuration system, a composable trainer stack, a benchmarking pipeline, and a clean CLI — all fully tested and CI-verified.
+`finetune-cli` is a modular Python framework that wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.
 
 ---
 
@@ -14,56 +14,81 @@ git clone https://github.com/Abdur-azure/finetune_cli.git
 cd finetune_cli
 pip install -e .
 
-# Fine-tune GPT-2 on a local dataset
-finetune-cli train --model gpt2 --dataset ./data.jsonl --epochs 3
+# Generate sample data (no network required)
+python examples/generate_sample_data.py
 
-# Or use a config file (recommended)
+# Fine-tune GPT-2 with LoRA
 finetune-cli train --config examples/configs/lora_gpt2.yaml
+
+# Or use the interactive TUI
+finetune-cli tui
 ```
 
 ---
 
 ## What's included
 
+### CLI commands
+
+| Command | Description |
+|---------|-------------|
+| `finetune-cli train` | Fine-tune with LoRA / QLoRA / Full / Instruction / DPO / Distillation |
+| `finetune-cli evaluate` | Score a checkpoint — ROUGE, BLEU, Perplexity |
+| `finetune-cli benchmark` | Before/after comparison report |
+| `finetune-cli merge` | Merge LoRA adapter into base model |
+| `finetune-cli upload` | Push model or adapter to HuggingFace Hub |
+| `finetune-cli recommend` | Inspect model + VRAM, output optimal YAML config |
+| `finetune-cli prune` | Structured pruning — zero lowest-magnitude attention heads |
+| `finetune-cli wanda` | WANDA unstructured pruning — weight × activation scoring |
+| `finetune-cli tui` | Interactive Textual TUI — all commands via terminal UI |
+
+### Training methods
+
+| Method | Class | Sprint |
+|--------|-------|--------|
+| LoRA | `LoRATrainer` | 2 |
+| QLoRA | `QLoRATrainer` | 2 |
+| Full Fine-Tuning | `FullFineTuner` | 2 |
+| Instruction Tuning | `InstructionTrainer` | 2 |
+| DPO | `DPOTrainer` | 8 |
+| Response Distillation | `ResponseDistillationTrainer` | 23 |
+| Feature Distillation | `FeatureDistillationTrainer` | 24 |
+
+### Pruning
+
+| Method | Class | Algorithm |
+|--------|-------|-----------|
+| Structured Pruning | `StructuredPruner` | Zero lowest-magnitude attention head rows per layer |
+| WANDA | `WandaPruner` | Zero weights by \|W_ij\| × \|\|X_j\|\|₂ score |
+
+### Core components
+
 | Component | Description |
 |-----------|-------------|
-| `finetune_cli train` | LoRA / QLoRA training with auto-detected target modules |
-| `finetune_cli evaluate` | ROUGE, BLEU, Perplexity scoring on a saved checkpoint |
-| `finetune_cli benchmark` | Before/after comparison report with delta indicators |
-| `finetune_cli upload` | Push adapter or merged model to HuggingFace Hub |
-| `ConfigBuilder` | Fluent Python API for building validated pipeline configs |
+| `ConfigBuilder` | Fluent Python API for building validated `PipelineConfig` |
 | `DataPipeline` | Loads JSON/JSONL/CSV/Parquet/HF datasets, tokenizes, splits |
-| `TrainerFactory` | Single entry point — selects trainer for lora / qlora / instruction_tuning / full_finetuning |
+| `TrainerFactory` | Single entry point — selects trainer from `TrainingMethod` enum |
 | `BenchmarkRunner` | Model-agnostic evaluation with comparison reports |
-| `finetune_cli merge` | Merge LoRA adapter into base model → standalone model |
-| `finetune_cli recommend` | Inspect model size + VRAM, output optimal YAML config |
-| `DPOTrainer` | Direct Preference Optimization on prompt/chosen/rejected datasets (requires trl) |
 
 ---
 
 ## Navigation
 
 - **[Installation](installation.md)** — requirements, GPU setup, HuggingFace login
-- **[Usage Guide](usage.md)** — all CLI subcommands with examples
-- **[Configuration](configuration.md)** — YAML config reference and parameter guide
-- **[API Reference](api.md)** — Python API for programmatic use
-- **[Examples](examples.md)** — common workflows and recipes
+- **[Usage Guide](usage.md)** — all 9 CLI commands with examples
+- **[Configuration](configuration.md)** — YAML config reference for all methods
+- **[API Reference](api.md)** — Python API for trainers, pruners, and data pipeline
+- **[TUI Guide](tui.md)** — interactive terminal interface walkthrough
 - **[Troubleshooting](troubleshooting.md)** — OOM, NaN loss, dataset errors
-
----
-
-## Migrating from v1?
-
-See [CHANGELOG.md](https://github.com/Abdur-azure/finetune_cli/blob/main/CHANGELOG.md) for the full v1 → v2 migration guide.
-
-!!! note "v1 is deprecated"
-    Running `python finetune_cli.py` will display a migration message. The v1 interactive wizard has been replaced by the `finetune-cli` subcommands documented here.
 
 ---
 
 ## Project status
 
-- **Version:** 2.8.0
-- **Tests:** 124+ unit tests + integration tests (all green)
-- **CI:** pytest matrix across Python 3.10 / 3.11 / 3.12
-- **License:** MIT
+| Aspect | Status |
+|--------|--------|
+| **Version** | 3.13.0 |
+| **Tests** | 200+ unit + integration (all green, no GPU required for unit suite) |
+| **CI** | pytest matrix — Python 3.10 / 3.11 / 3.12 |
+| **Platform** | Windows / macOS / Linux |
+| **License** | MIT |
