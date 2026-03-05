@@ -601,10 +601,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#lora-default-general-purpose" class="md-nav__link">
+  <a href="#lora-general-purpose-adapter-fine-tuning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LoRA (default — general purpose)
+        LoRA — general purpose adapter fine-tuning
       
     </span>
   </a>
@@ -612,10 +612,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#qlora-4-bit-large-models-on-limited-vram" class="md-nav__link">
+  <a href="#qlora-4-bit-quantised-large-models-on-limited-vram" class="md-nav__link">
     <span class="md-ellipsis">
       
-        QLoRA (4-bit — large models on limited VRAM)
+        QLoRA — 4-bit quantised, large models on limited VRAM
       
     </span>
   </a>
@@ -626,7 +626,7 @@
   <a href="#instruction-tuning-alpaca-style-instruction-input-response-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Instruction tuning (alpaca-style {instruction, input, response} data)
+        Instruction tuning — alpaca-style {instruction, input, response} data
       
     </span>
   </a>
@@ -637,7 +637,7 @@
   <a href="#full-fine-tuning-all-parameters-small-models-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Full fine-tuning (all parameters — small models only)
+        Full fine-tuning — all parameters, small models only
       
     </span>
   </a>
@@ -645,10 +645,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dpo-direct-preference-optimization-prompt-chosen-rejected-data" class="md-nav__link">
+  <a href="#dpo-direct-preference-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DPO (Direct Preference Optimization — {prompt, chosen, rejected} data)
+        DPO — Direct Preference Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-distillation-student-mimics-teacher-logits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Distillation — student mimics teacher logits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-distillation-student-mimics-teacher-hidden-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Distillation — student mimics teacher hidden states
       
     </span>
   </a>
@@ -660,27 +682,16 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#all-train-flags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All train flags
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommend-get-an-optimal-config" class="md-nav__link">
+  <a href="#evaluate-score-a-checkpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        recommend — Get an optimal config
+        evaluate — Score a checkpoint
       
     </span>
   </a>
@@ -688,10 +699,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merge-merge-adapter-into-standalone-model" class="md-nav__link">
+  <a href="#benchmark-beforeafter-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
-        merge — Merge adapter into standalone model
+        benchmark — Before/after comparison
       
     </span>
   </a>
@@ -699,21 +710,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#evaluate-score-a-saved-checkpoint" class="md-nav__link">
+  <a href="#merge-merge-adapter-into-base-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        evaluate — Score a saved checkpoint
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#benchmark-compare-base-vs-fine-tuned" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        benchmark — Compare base vs fine-tuned
+        merge — Merge adapter into base model
       
     </span>
   </a>
@@ -732,30 +732,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-dataset-formats" class="md-nav__link">
+  <a href="#recommend-get-an-optimal-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported dataset formats
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Supported dataset formats">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#column-requirements-by-method" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Column requirements by method
+        recommend — Get an optimal config
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#prune-structured-attention-head-pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prune — Structured attention-head pruning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wanda-wanda-unstructured-pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wanda — WANDA unstructured pruning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tui-interactive-terminal-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tui — Interactive terminal UI
+      
+    </span>
+  </a>
   
 </li>
       
@@ -889,10 +905,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#lora-default-general-purpose" class="md-nav__link">
+  <a href="#lora-general-purpose-adapter-fine-tuning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LoRA (default — general purpose)
+        LoRA — general purpose adapter fine-tuning
       
     </span>
   </a>
@@ -900,10 +916,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#qlora-4-bit-large-models-on-limited-vram" class="md-nav__link">
+  <a href="#qlora-4-bit-quantised-large-models-on-limited-vram" class="md-nav__link">
     <span class="md-ellipsis">
       
-        QLoRA (4-bit — large models on limited VRAM)
+        QLoRA — 4-bit quantised, large models on limited VRAM
       
     </span>
   </a>
@@ -914,7 +930,7 @@
   <a href="#instruction-tuning-alpaca-style-instruction-input-response-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Instruction tuning (alpaca-style {instruction, input, response} data)
+        Instruction tuning — alpaca-style {instruction, input, response} data
       
     </span>
   </a>
@@ -925,7 +941,7 @@
   <a href="#full-fine-tuning-all-parameters-small-models-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Full fine-tuning (all parameters — small models only)
+        Full fine-tuning — all parameters, small models only
       
     </span>
   </a>
@@ -933,10 +949,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dpo-direct-preference-optimization-prompt-chosen-rejected-data" class="md-nav__link">
+  <a href="#dpo-direct-preference-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DPO (Direct Preference Optimization — {prompt, chosen, rejected} data)
+        DPO — Direct Preference Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-distillation-student-mimics-teacher-logits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Distillation — student mimics teacher logits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-distillation-student-mimics-teacher-hidden-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Distillation — student mimics teacher hidden states
       
     </span>
   </a>
@@ -948,27 +986,16 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#all-train-flags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All train flags
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommend-get-an-optimal-config" class="md-nav__link">
+  <a href="#evaluate-score-a-checkpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        recommend — Get an optimal config
+        evaluate — Score a checkpoint
       
     </span>
   </a>
@@ -976,10 +1003,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#merge-merge-adapter-into-standalone-model" class="md-nav__link">
+  <a href="#benchmark-beforeafter-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
-        merge — Merge adapter into standalone model
+        benchmark — Before/after comparison
       
     </span>
   </a>
@@ -987,21 +1014,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#evaluate-score-a-saved-checkpoint" class="md-nav__link">
+  <a href="#merge-merge-adapter-into-base-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        evaluate — Score a saved checkpoint
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#benchmark-compare-base-vs-fine-tuned" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        benchmark — Compare base vs fine-tuned
+        merge — Merge adapter into base model
       
     </span>
   </a>
@@ -1020,30 +1036,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-dataset-formats" class="md-nav__link">
+  <a href="#recommend-get-an-optimal-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported dataset formats
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Supported dataset formats">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#column-requirements-by-method" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Column requirements by method
+        recommend — Get an optimal config
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#prune-structured-attention-head-pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prune — Structured attention-head pruning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wanda-wanda-unstructured-pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wanda — WANDA unstructured pruning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tui-interactive-terminal-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tui — Interactive terminal UI
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1068,33 +1100,24 @@
 
 
 <h1 id="usage-guide">Usage Guide<a class="headerlink" href="#usage-guide" title="Permanent link">&para;</a></h1>
-<p>This guide covers all six <code>finetune-cli</code> commands with real examples.</p>
+<p>Complete guide to all <code>finetune-cli</code> commands with real examples.</p>
 <hr />
 <h2 id="5-minute-quickstart">5-minute quickstart<a class="headerlink" href="#5-minute-quickstart" title="Permanent link">&para;</a></h2>
-<p><strong>Step 1 — Install:</strong></p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Abdur-azure/finetune_cli.git
+<div class="codehilite"><pre><span></span><code><span class="c1"># 1. Install</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Abdur-azure/finetune_cli.git
 <span class="nb">cd</span><span class="w"> </span>finetune_cli
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div>
 
-<p><strong>Step 2 — Generate sample data (no network required):</strong></p>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>examples/generate_sample_data.py
+<span class="c1"># 2. Generate sample data (no network required)</span>
+python<span class="w"> </span>examples/generate_sample_data.py
 <span class="c1"># Creates:</span>
 <span class="c1">#   data/sample.jsonl          (500 rows, causal LM)</span>
 <span class="c1">#   data/instructions.jsonl    (300 rows, alpaca format)</span>
 <span class="c1">#   data/dpo_sample.jsonl      (200 rows, prompt/chosen/rejected)</span>
-</code></pre></div>
 
-<p><strong>Step 3 — Not sure which method to use? Ask:</strong></p>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>recommend<span class="w"> </span>gpt2<span class="w"> </span>--output<span class="w"> </span>my_config.yaml
+<span class="c1"># 3. Not sure which method to use? Ask</span>
+finetune-cli<span class="w"> </span>recommend<span class="w"> </span>gpt2<span class="w"> </span>--output<span class="w"> </span>my_config.yaml
 finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>my_config.yaml
-</code></pre></div>
-
-<p><strong>Step 4 — Or use a ready-made config:</strong></p>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/lora_gpt2.yaml
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/instruction_tuning.yaml
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/full_finetuning.yaml
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/dpo.yaml<span class="w">        </span><span class="c1"># requires: pip install trl&gt;=0.7.0</span>
 </code></pre></div>
 
 <hr />
@@ -1120,16 +1143,28 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 <td>Before/after comparison: base vs fine-tuned</td>
 </tr>
 <tr>
-<td><code>finetune-cli upload</code></td>
-<td>Push adapter or merged model to HuggingFace Hub</td>
-</tr>
-<tr>
 <td><code>finetune-cli merge</code></td>
 <td>Merge LoRA adapter into base model — standalone model</td>
 </tr>
 <tr>
+<td><code>finetune-cli upload</code></td>
+<td>Push adapter or merged model to HuggingFace Hub</td>
+</tr>
+<tr>
 <td><code>finetune-cli recommend</code></td>
 <td>Inspect model size + VRAM, output optimal YAML config</td>
+</tr>
+<tr>
+<td><code>finetune-cli prune</code></td>
+<td>Structured attention-head pruning — no retraining required</td>
+</tr>
+<tr>
+<td><code>finetune-cli wanda</code></td>
+<td>WANDA unstructured pruning — weight × activation scoring</td>
+</tr>
+<tr>
+<td><code>finetune-cli tui</code></td>
+<td>Interactive Textual TUI — all commands via terminal UI</td>
 </tr>
 </tbody>
 </table>
@@ -1149,18 +1184,20 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 </code></pre></div>
 
 <h3 id="training-methods">Training methods<a class="headerlink" href="#training-methods" title="Permanent link">&para;</a></h3>
-<h4 id="lora-default-general-purpose">LoRA (default — general purpose)<a class="headerlink" href="#lora-default-general-purpose" title="Permanent link">&para;</a></h4>
+<h4 id="lora-general-purpose-adapter-fine-tuning">LoRA — general purpose adapter fine-tuning<a class="headerlink" href="#lora-general-purpose-adapter-fine-tuning" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span>--model<span class="w"> </span>gpt2<span class="w"> </span>--dataset<span class="w"> </span>./data/sample.jsonl<span class="w"> </span>--method<span class="w"> </span>lora<span class="w"> </span>--epochs<span class="w"> </span><span class="m">3</span>
+<span class="c1"># or: finetune-cli train --config examples/configs/lora_gpt2.yaml</span>
 </code></pre></div>
 
-<h4 id="qlora-4-bit-large-models-on-limited-vram">QLoRA (4-bit — large models on limited VRAM)<a class="headerlink" href="#qlora-4-bit-large-models-on-limited-vram" title="Permanent link">&para;</a></h4>
+<h4 id="qlora-4-bit-quantised-large-models-on-limited-vram">QLoRA — 4-bit quantised, large models on limited VRAM<a class="headerlink" href="#qlora-4-bit-quantised-large-models-on-limited-vram" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>meta-llama/Llama-3.2-1B<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dataset<span class="w"> </span>./data/sample.jsonl<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--method<span class="w"> </span>qlora<span class="w"> </span>--4bit<span class="w"> </span>--fp16<span class="w"> </span>--epochs<span class="w"> </span><span class="m">2</span>
+<span class="c1"># or: finetune-cli train --config examples/configs/qlora_llama.yaml</span>
 </code></pre></div>
 
-<h4 id="instruction-tuning-alpaca-style-instruction-input-response-data">Instruction tuning (alpaca-style <code>{instruction, input, response}</code> data)<a class="headerlink" href="#instruction-tuning-alpaca-style-instruction-input-response-data" title="Permanent link">&para;</a></h4>
+<h4 id="instruction-tuning-alpaca-style-instruction-input-response-data">Instruction tuning — alpaca-style <code>{instruction, input, response}</code> data<a class="headerlink" href="#instruction-tuning-alpaca-style-instruction-input-response-data" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>gpt2<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dataset<span class="w"> </span>./data/instructions.jsonl<span class="w"> </span><span class="se">\</span>
@@ -1168,7 +1205,7 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 <span class="c1"># or: finetune-cli train --config examples/configs/instruction_tuning.yaml</span>
 </code></pre></div>
 
-<h4 id="full-fine-tuning-all-parameters-small-models-only">Full fine-tuning (all parameters — small models only)<a class="headerlink" href="#full-fine-tuning-all-parameters-small-models-only" title="Permanent link">&para;</a></h4>
+<h4 id="full-fine-tuning-all-parameters-small-models-only">Full fine-tuning — all parameters, small models only<a class="headerlink" href="#full-fine-tuning-all-parameters-small-models-only" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>gpt2<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dataset<span class="w"> </span>./data/sample.jsonl<span class="w"> </span><span class="se">\</span>
@@ -1177,312 +1214,244 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 </code></pre></div>
 
 <blockquote>
-<p><strong>Warning:</strong> Full fine-tuning trains every parameter. Only safe on models ≤300M params
-unless you have 24GB+ VRAM. Run <code>finetune-cli recommend</code> first if unsure.</p>
+<p><strong>Warning:</strong> Full fine-tuning trains every parameter. Only safe on models ≤300M params unless you have 24GB+ VRAM.</p>
 </blockquote>
-<h4 id="dpo-direct-preference-optimization-prompt-chosen-rejected-data">DPO (Direct Preference Optimization — <code>{prompt, chosen, rejected}</code> data)<a class="headerlink" href="#dpo-direct-preference-optimization-prompt-chosen-rejected-data" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>trl&gt;<span class="o">=</span><span class="m">0</span>.7.0<span class="w">   </span><span class="c1"># one-time</span>
-
-finetune-cli<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
+<h4 id="dpo-direct-preference-optimization">DPO — Direct Preference Optimization<a class="headerlink" href="#dpo-direct-preference-optimization" title="Permanent link">&para;</a></h4>
+<p>Requires <code>pip install trl&gt;=0.7.0</code>. Dataset must have <code>prompt</code>, <code>chosen</code>, <code>rejected</code> columns.</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>gpt2<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dataset<span class="w"> </span>./data/dpo_sample.jsonl<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--method<span class="w"> </span>dpo<span class="w"> </span>--lr<span class="w"> </span>5e-5<span class="w"> </span>--epochs<span class="w"> </span><span class="m">1</span>
+<span class="w">  </span>--method<span class="w"> </span>dpo<span class="w"> </span>--epochs<span class="w"> </span><span class="m">1</span>
 <span class="c1"># or: finetune-cli train --config examples/configs/dpo.yaml</span>
 </code></pre></div>
 
-<h3 id="all-train-flags">All <code>train</code> flags<a class="headerlink" href="#all-train-flags" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--config</code></td>
-<td>—</td>
-<td>YAML or JSON config file (overrides all flags)</td>
-</tr>
-<tr>
-<td><code>--model</code></td>
-<td><code>gpt2</code></td>
-<td>HuggingFace model id</td>
-</tr>
-<tr>
-<td><code>--dataset</code></td>
-<td>—</td>
-<td>Path to local dataset file</td>
-</tr>
-<tr>
-<td><code>--hf-dataset</code></td>
-<td>—</td>
-<td>HuggingFace dataset id</td>
-</tr>
-<tr>
-<td><code>--output</code></td>
-<td><code>./output</code></td>
-<td>Output directory</td>
-</tr>
-<tr>
-<td><code>--method</code></td>
-<td><code>lora</code></td>
-<td><code>lora</code> / <code>qlora</code> / <code>instruction_tuning</code> / <code>full_finetuning</code> / <code>dpo</code></td>
-</tr>
-<tr>
-<td><code>--lora-r</code></td>
-<td><code>8</code></td>
-<td>LoRA rank</td>
-</tr>
-<tr>
-<td><code>--lora-alpha</code></td>
-<td><code>32</code></td>
-<td>LoRA alpha</td>
-</tr>
-<tr>
-<td><code>--lora-dropout</code></td>
-<td><code>0.1</code></td>
-<td>LoRA dropout</td>
-</tr>
-<tr>
-<td><code>--epochs</code></td>
-<td><code>3</code></td>
-<td>Training epochs</td>
-</tr>
-<tr>
-<td><code>--batch-size</code></td>
-<td><code>4</code></td>
-<td>Per-device batch size</td>
-</tr>
-<tr>
-<td><code>--lr</code></td>
-<td><code>2e-4</code></td>
-<td>Learning rate</td>
-</tr>
-<tr>
-<td><code>--max-length</code></td>
-<td><code>512</code></td>
-<td>Max token sequence length</td>
-</tr>
-<tr>
-<td><code>--max-samples</code></td>
-<td>—</td>
-<td>Limit dataset to N samples</td>
-</tr>
-<tr>
-<td><code>--4bit</code></td>
-<td>off</td>
-<td>Load model in 4-bit (QLoRA)</td>
-</tr>
-<tr>
-<td><code>--fp16</code></td>
-<td>off</td>
-<td>Mixed precision FP16</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="recommend-get-an-optimal-config"><code>recommend</code> — Get an optimal config<a class="headerlink" href="#recommend-get-an-optimal-config" title="Permanent link">&para;</a></h2>
-<p>Inspects model parameter count and available VRAM, outputs a ready-to-use YAML config.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Print to stdout</span>
-finetune-cli<span class="w"> </span>recommend<span class="w"> </span>gpt2
-
-<span class="c1"># Save and train</span>
-finetune-cli<span class="w"> </span>recommend<span class="w"> </span>gpt2<span class="w"> </span>--output<span class="w"> </span>my_config.yaml
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>my_config.yaml
+<h4 id="response-distillation-student-mimics-teacher-logits">Response Distillation — student mimics teacher logits<a class="headerlink" href="#response-distillation-student-mimics-teacher-logits" title="Permanent link">&para;</a></h4>
+<p>Student (smaller model) is trained to match the output distribution of a larger teacher via KL divergence + cross-entropy loss. No labelled data required beyond the training corpus.</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/response_distillation.yaml
 </code></pre></div>
 
-<p>Decision logic:</p>
-<table>
-<thead>
-<tr>
-<th>Model size</th>
-<th>VRAM</th>
-<th>Recommended method</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>&gt; 7B</td>
-<td>any</td>
-<td>qlora + grad checkpoint</td>
-</tr>
-<tr>
-<td>&gt; 1B</td>
-<td>≥ 16 GB</td>
-<td>lora, r=16</td>
-</tr>
-<tr>
-<td>&gt; 1B</td>
-<td>&lt; 16 GB</td>
-<td>qlora, r=8</td>
-</tr>
-<tr>
-<td>≤ 300M</td>
-<td>≥ 4 GB</td>
-<td>lora, r=8</td>
-</tr>
-<tr>
-<td>≤ 300M</td>
-<td>&lt; 4 GB</td>
-<td>full_finetuning</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="merge-merge-adapter-into-standalone-model"><code>merge</code> — Merge adapter into standalone model<a class="headerlink" href="#merge-merge-adapter-into-standalone-model" title="Permanent link">&para;</a></h2>
-<p>Bakes a LoRA adapter into its base model, saving a standard HuggingFace model
-that runs without PEFT installed.</p>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>merge<span class="w"> </span>./output/lora<span class="w"> </span>./output/merged<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--base-model<span class="w"> </span>gpt2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--dtype<span class="w"> </span>float16
+<p>Config key fields:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vanilla_distillation</span>
+<span class="nt">distillation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">teacher_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2-medium</span>
+<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">      </span><span class="c1"># higher = softer teacher distribution</span>
+<span class="w">  </span><span class="nt">alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">            </span><span class="c1"># blend: 0.5 KL + 0.5 CE</span>
 </code></pre></div>
 
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--base-model</code></td>
-<td>required</td>
-<td>HuggingFace base model id</td>
-</tr>
-<tr>
-<td><code>--dtype</code></td>
-<td><code>float32</code></td>
-<td><code>float32</code> / <code>float16</code> / <code>bfloat16</code></td>
-</tr>
-</tbody>
-</table>
-<p>Use merge when:
-- Sharing the model publicly (no PEFT dependency for inference)
-- Deploying to servers that don't support PEFT
-- Reducing inference latency (no adapter overhead)</p>
-<p>Typical merge → upload workflow:</p>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>merge<span class="w"> </span>./output/lora<span class="w"> </span>./output/merged<span class="w"> </span>--base-model<span class="w"> </span>gpt2<span class="w"> </span>--dtype<span class="w"> </span>float16
-finetune-cli<span class="w"> </span>upload<span class="w"> </span>./output/merged<span class="w"> </span>username/my-gpt2
+<h4 id="feature-distillation-student-mimics-teacher-hidden-states">Feature Distillation — student mimics teacher hidden states<a class="headerlink" href="#feature-distillation-student-mimics-teacher-hidden-states" title="Permanent link">&para;</a></h4>
+<p>Extends response distillation with an MSE loss on intermediate hidden states, giving stronger layer-level supervision.</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/feature_distillation.yaml
+</code></pre></div>
+
+<p>Config key fields:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature_distillation</span>
+<span class="nt">feature_distillation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">teacher_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2-medium</span>
+<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">            </span><span class="c1"># KL weight</span>
+<span class="w">  </span><span class="nt">beta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w">             </span><span class="c1"># MSE hidden-state weight</span>
+<span class="w">  </span><span class="nt">feature_layers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">  </span><span class="c1"># null = auto-select 4 evenly-spaced layers</span>
 </code></pre></div>
 
 <hr />
-<h2 id="evaluate-score-a-saved-checkpoint"><code>evaluate</code> — Score a saved checkpoint<a class="headerlink" href="#evaluate-score-a-saved-checkpoint" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model-path<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--dataset<span class="w"> </span>./test.jsonl<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--metrics<span class="w"> </span>rougeL,bleu
-</code></pre></div>
-
-<p>Output:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Results</span><span class="o">:</span>
-<span class="w">  </span><span class="n">rougeL</span><span class="w">               </span><span class="mf">0.4231</span>
-<span class="w">  </span><span class="n">bleu</span><span class="w">                 </span><span class="mf">0.1876</span>
-</code></pre></div>
-
-<hr />
-<h2 id="benchmark-compare-base-vs-fine-tuned"><code>benchmark</code> — Compare base vs fine-tuned<a class="headerlink" href="#benchmark-compare-base-vs-fine-tuned" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>benchmark<span class="w"> </span>gpt2<span class="w"> </span>./output<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--dataset<span class="w"> </span>./test.jsonl<span class="w"> </span><span class="se">\</span>
+<h2 id="evaluate-score-a-checkpoint"><code>evaluate</code> — Score a checkpoint<a class="headerlink" href="#evaluate-score-a-checkpoint" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>evaluate<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dataset<span class="w"> </span>./data/sample.jsonl<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--metrics<span class="w"> </span>rougeL,bleu<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--num-samples<span class="w"> </span><span class="m">200</span>
 </code></pre></div>
 
-<p>Output:</p>
-<div class="codehilite"><pre><span></span><code>Metric       Base      Fine-tuned   Delta
-rougeL       0.3012    0.4231       ▲ 0.1219
-bleu         0.1204    0.1876       ▲ 0.0672
+<p>Available metrics: <code>rouge1</code>, <code>rouge2</code>, <code>rougeL</code>, <code>bleu</code>, <code>perplexity</code>.</p>
+<hr />
+<h2 id="benchmark-beforeafter-comparison"><code>benchmark</code> — Before/after comparison<a class="headerlink" href="#benchmark-beforeafter-comparison" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>benchmark<span class="w"> </span>gpt2<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dataset<span class="w"> </span>./data/sample.jsonl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--metrics<span class="w"> </span>rougeL,bleu
+</code></pre></div>
+
+<p>Outputs a side-by-side table: base model scores vs fine-tuned scores with delta indicators.</p>
+<hr />
+<h2 id="merge-merge-adapter-into-base-model"><code>merge</code> — Merge adapter into base model<a class="headerlink" href="#merge-merge-adapter-into-base-model" title="Permanent link">&para;</a></h2>
+<p>Produces a standalone model with no PEFT dependency — ready for direct inference.</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>merge<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span>./outputs/gpt2_merged<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--base-model<span class="w"> </span>gpt2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dtype<span class="w"> </span>float16
 </code></pre></div>
 
 <hr />
 <h2 id="upload-push-to-huggingface-hub"><code>upload</code> — Push to HuggingFace Hub<a class="headerlink" href="#upload-push-to-huggingface-hub" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Upload LoRA adapter</span>
-finetune-cli<span class="w"> </span>upload<span class="w"> </span>./output<span class="w"> </span>username/my-model<span class="w"> </span>--token<span class="w"> </span><span class="nv">$HF_TOKEN</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Adapter only</span>
+finetune-cli<span class="w"> </span>upload<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--repo<span class="w"> </span>username/gpt2-lora-finetuned<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--token<span class="w"> </span><span class="nv">$HF_TOKEN</span>
 
-<span class="c1"># Merge then upload (recommended for sharing)</span>
-finetune-cli<span class="w"> </span>upload<span class="w"> </span>./output<span class="w"> </span>username/my-model<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--merge-adapter<span class="w"> </span>--base-model<span class="w"> </span>gpt2<span class="w"> </span>--token<span class="w"> </span><span class="nv">$HF_TOKEN</span>
+<span class="c1"># Merge adapter before upload</span>
+finetune-cli<span class="w"> </span>upload<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--repo<span class="w"> </span>username/gpt2-merged<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--token<span class="w"> </span><span class="nv">$HF_TOKEN</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--merge-adapter<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--base-model<span class="w"> </span>gpt2
 
 <span class="c1"># Private repository</span>
-finetune-cli<span class="w"> </span>upload<span class="w"> </span>./output<span class="w"> </span>username/my-model<span class="w"> </span>--private
+finetune-cli<span class="w"> </span>upload<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--repo<span class="w"> </span>username/gpt2-private<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--private
 </code></pre></div>
 
-<p>Set <code>HF_TOKEN</code> in your environment to avoid passing <code>--token</code> each time:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HF_TOKEN</span><span class="o">=</span>hf_...
+<p><code>HF_TOKEN</code> can also be set as an environment variable — the <code>--token</code> flag is then optional.</p>
+<hr />
+<h2 id="recommend-get-an-optimal-config"><code>recommend</code> — Get an optimal config<a class="headerlink" href="#recommend-get-an-optimal-config" title="Permanent link">&para;</a></h2>
+<p>Inspects the model's parameter count and your available VRAM, then writes a ready-to-use YAML config.</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>recommend<span class="w"> </span>gpt2<span class="w"> </span>--output<span class="w"> </span>my_config.yaml
 </code></pre></div>
 
 <hr />
-<h2 id="supported-dataset-formats">Supported dataset formats<a class="headerlink" href="#supported-dataset-formats" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Extension</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>JSON Lines</td>
-<td><code>.jsonl</code></td>
-<td>One JSON object per line — recommended</td>
-</tr>
-<tr>
-<td>JSON</td>
-<td><code>.json</code></td>
-<td>Array of objects</td>
-</tr>
-<tr>
-<td>CSV</td>
-<td><code>.csv</code></td>
-<td>Auto-detects text columns</td>
-</tr>
-<tr>
-<td>Parquet</td>
-<td><code>.parquet</code></td>
-<td>Columnar format</td>
-</tr>
-<tr>
-<td>Plain text</td>
-<td><code>.txt</code></td>
-<td>One sample per line</td>
-</tr>
-<tr>
-<td>HuggingFace Hub</td>
-<td>—</td>
-<td>Any public dataset via <code>--hf-dataset</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="column-requirements-by-method">Column requirements by method<a class="headerlink" href="#column-requirements-by-method" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Required columns</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>lora</code>, <code>qlora</code>, <code>full_finetuning</code></td>
-<td>Any string column (auto-detected)</td>
-</tr>
-<tr>
-<td><code>instruction_tuning</code></td>
-<td><code>instruction</code>, <code>input</code> (optional), <code>response</code></td>
-</tr>
-<tr>
-<td><code>dpo</code></td>
-<td><code>prompt</code>, <code>chosen</code>, <code>rejected</code></td>
-</tr>
-</tbody>
-</table>
-<p>Generate offline sample data for all methods:</p>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>examples/generate_sample_data.py
+<h2 id="prune-structured-attention-head-pruning"><code>prune</code> — Structured attention-head pruning<a class="headerlink" href="#prune-structured-attention-head-pruning" title="Permanent link">&para;</a></h2>
+<p>Soft structured pruning: scores each attention head by mean absolute weight magnitude, then zeros the lowest-scoring fraction. No retraining required. The model shape is unchanged — it runs with any standard HuggingFace inference stack.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Prune 30% of attention heads (default)</span>
+finetune-cli<span class="w"> </span>prune<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>./outputs/gpt2_pruned<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sparsity<span class="w"> </span><span class="m">0</span>.3
+
+<span class="c1"># Prune FFN neurons instead of attention heads</span>
+finetune-cli<span class="w"> </span>prune<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>./outputs/gpt2_pruned<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sparsity<span class="w"> </span><span class="m">0</span>.3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--method<span class="w"> </span>ffn
+
+<span class="c1"># Keep at least 2 heads per layer (prevent collapse)</span>
+finetune-cli<span class="w"> </span>prune<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>./outputs/gpt2_pruned<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sparsity<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--min-heads<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--sparsity</code></td>
+<td><code>0.3</code></td>
+<td>Fraction of heads to zero (0.0–1.0)</td>
+</tr>
+<tr>
+<td><code>--method</code></td>
+<td><code>heads</code></td>
+<td><code>heads</code> or <code>ffn</code></td>
+</tr>
+<tr>
+<td><code>--min-heads</code></td>
+<td><code>1</code></td>
+<td>Minimum heads kept per layer</td>
+</tr>
+</tbody>
+</table>
+<p>Sparsity guidance: <code>0.1</code> = light, <code>0.3</code> = moderate (recommended), <code>0.5</code> = aggressive.</p>
+<p>After pruning, evaluate with:</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>benchmark<span class="w"> </span>gpt2<span class="w"> </span>./outputs/gpt2_pruned<span class="w"> </span>--dataset<span class="w"> </span>./data/sample.jsonl
+</code></pre></div>
+
+<hr />
+<h2 id="wanda-wanda-unstructured-pruning"><code>wanda</code> — WANDA unstructured pruning<a class="headerlink" href="#wanda-wanda-unstructured-pruning" title="Permanent link">&para;</a></h2>
+<p>WANDA (Weight AND Activation) scores each weight by <code>|W_ij| × ‖X_j‖₂</code> where <code>X</code> is the input activation norm collected on a small calibration dataset. Weights with the lowest scores are zeroed. No gradient pass or retraining is required.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># With calibration dataset (recommended — uses activation norms)</span>
+finetune-cli<span class="w"> </span>wanda<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>./outputs/gpt2_wanda<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sparsity<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dataset<span class="w"> </span>./data/sample.jsonl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--n-samples<span class="w"> </span><span class="m">128</span>
+
+<span class="c1"># Without calibration data (falls back to magnitude-only scoring)</span>
+finetune-cli<span class="w"> </span>wanda<span class="w"> </span>./outputs/gpt2_lora<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>./outputs/gpt2_wanda<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sparsity<span class="w"> </span><span class="m">0</span>.5
+</code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--sparsity</code></td>
+<td><code>0.5</code></td>
+<td>Fraction of weights to zero per layer (0.0–1.0)</td>
+</tr>
+<tr>
+<td><code>--dataset</code></td>
+<td>none</td>
+<td>Calibration <code>.jsonl</code>/<code>.txt</code> file</td>
+</tr>
+<tr>
+<td><code>--n-samples</code></td>
+<td><code>128</code></td>
+<td>Number of calibration forward passes</td>
+</tr>
+<tr>
+<td><code>--seq-len</code></td>
+<td><code>128</code></td>
+<td>Token sequence length for calibration</td>
+</tr>
+<tr>
+<td><code>--row-wise/--global</code></td>
+<td>row-wise</td>
+<td>Per-row threshold vs global threshold</td>
+</tr>
+</tbody>
+</table>
+<p>Sparsity guidance: <code>0.3</code> = light, <code>0.5</code> = standard (matches original WANDA paper on LLaMA/OPT), <code>0.6+</code> = aggressive.</p>
+<p><strong>WANDA vs Structured Pruning:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>WANDA</th>
+<th>Structured Pruning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Granularity</td>
+<td>Unstructured (individual weights)</td>
+<td>Structured (whole heads/neurons)</td>
+</tr>
+<tr>
+<td>Calibration</td>
+<td>Recommended (uses activations)</td>
+<td>Not needed</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>Higher (more surgical)</td>
+<td>Simpler, no activation tracking</td>
+</tr>
+<tr>
+<td>Score</td>
+<td>|W| × ‖activation‖</td>
+<td>Mean |W| per head</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tui-interactive-terminal-ui"><code>tui</code> — Interactive terminal UI<a class="headerlink" href="#tui-interactive-terminal-ui" title="Permanent link">&para;</a></h2>
+<p>Launches a full Textual TUI with 8 screens covering all commands. No flags needed.</p>
+<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>tui
+</code></pre></div>
+
+<p>Navigation: arrow keys or mouse, <code>Tab</code> between fields, <code>Enter</code> to submit, <code>Esc</code>/<code>h</code> to go back, <code>q</code> to quit.</p>
+<p>See <a href="../tui/">TUI Guide</a> for full documentation with screenshots.</p>
 
 
 

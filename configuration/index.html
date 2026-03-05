@@ -371,33 +371,94 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#full-config-structure" class="md-nav__link">
+  <a href="#common-sections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Full config structure
+        Common sections
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Common sections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tokenization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lora
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#lora-parameter-guide" class="md-nav__link">
+  <a href="#method-specific-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LoRA parameter guide
+        Method-specific config
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="LoRA parameter guide">
+    <nav class="md-nav" aria-label="Method-specific config">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rank-r" class="md-nav__link">
+  <a href="#lora_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rank (r)
+        LoRA
       
     </span>
   </a>
@@ -405,10 +466,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alpha-lora_alpha" class="md-nav__link">
+  <a href="#qlora" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alpha (lora_alpha)
+        QLoRA
       
     </span>
   </a>
@@ -416,10 +477,110 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#target-modules" class="md-nav__link">
+  <a href="#full-fine-tuning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Target modules
+        Full fine-tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruction-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instruction tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPO
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distillation-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distillation config
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distillation config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#response-distillation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Distillation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-distillation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Distillation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pruning-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning config
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pruning config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structured-pruning-finetune-cli-prune" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Pruning (finetune-cli prune)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wanda-pruning-finetune-cli-wanda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WANDA Pruning (finetune-cli wanda)
       
     </span>
   </a>
@@ -444,10 +605,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-experiment-cpu-friendly" class="md-nav__link">
+  <a href="#quick-cpu-experiment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick experiment (CPU-friendly)
+        Quick CPU experiment
       
     </span>
   </a>
@@ -458,7 +619,7 @@
   <a href="#balanced-quality-8gb-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Balanced quality (8GB GPU)
+        Balanced quality — 8GB GPU
       
     </span>
   </a>
@@ -466,10 +627,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#large-model-on-limited-vram-qlora" class="md-nav__link">
+  <a href="#large-model-limited-vram-qlora" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Large model on limited VRAM (QLoRA)
+        Large model — limited VRAM (QLoRA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distillation-student-teacher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distillation — student ← teacher
       
     </span>
   </a>
@@ -478,67 +650,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dpo-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DPO configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="DPO configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#beta-parameter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        beta parameter
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dataset-columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dataset columns
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generating-a-config-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generating a config file
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#json-vs-yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JSON vs YAML
-      
-    </span>
-  </a>
   
 </li>
       
@@ -766,33 +877,94 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#full-config-structure" class="md-nav__link">
+  <a href="#common-sections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Full config structure
+        Common sections
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Common sections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tokenization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lora
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#lora-parameter-guide" class="md-nav__link">
+  <a href="#method-specific-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LoRA parameter guide
+        Method-specific config
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="LoRA parameter guide">
+    <nav class="md-nav" aria-label="Method-specific config">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rank-r" class="md-nav__link">
+  <a href="#lora_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rank (r)
+        LoRA
       
     </span>
   </a>
@@ -800,10 +972,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alpha-lora_alpha" class="md-nav__link">
+  <a href="#qlora" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alpha (lora_alpha)
+        QLoRA
       
     </span>
   </a>
@@ -811,10 +983,110 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#target-modules" class="md-nav__link">
+  <a href="#full-fine-tuning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Target modules
+        Full fine-tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruction-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instruction tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPO
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distillation-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distillation config
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distillation config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#response-distillation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Distillation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-distillation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Distillation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pruning-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning config
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pruning config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structured-pruning-finetune-cli-prune" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Pruning (finetune-cli prune)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wanda-pruning-finetune-cli-wanda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WANDA Pruning (finetune-cli wanda)
       
     </span>
   </a>
@@ -839,10 +1111,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-experiment-cpu-friendly" class="md-nav__link">
+  <a href="#quick-cpu-experiment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick experiment (CPU-friendly)
+        Quick CPU experiment
       
     </span>
   </a>
@@ -853,7 +1125,7 @@
   <a href="#balanced-quality-8gb-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Balanced quality (8GB GPU)
+        Balanced quality — 8GB GPU
       
     </span>
   </a>
@@ -861,10 +1133,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#large-model-on-limited-vram-qlora" class="md-nav__link">
+  <a href="#large-model-limited-vram-qlora" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Large model on limited VRAM (QLoRA)
+        Large model — limited VRAM (QLoRA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distillation-student-teacher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distillation — student ← teacher
       
     </span>
   </a>
@@ -873,67 +1156,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dpo-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DPO configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="DPO configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#beta-parameter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        beta parameter
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dataset-columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dataset columns
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generating-a-config-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Generating a config file
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#json-vs-yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JSON vs YAML
-      
-    </span>
-  </a>
   
 </li>
       
@@ -958,145 +1180,359 @@
 
 
 <h1 id="configuration-reference">Configuration Reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h1>
-<p><code>finetune-cli</code> uses YAML (or JSON) config files for reproducible, shareable training runs. Every flag available on the CLI maps to a field in the config file.</p>
+<p>All YAML config fields for every training method, distillation mode, and pruning command.</p>
 <hr />
-<h2 id="full-config-structure">Full config structure<a class="headerlink" href="#full-config-structure" title="Permanent link">&para;</a></h2>
+<h2 id="common-sections">Common sections<a class="headerlink" href="#common-sections" title="Permanent link">&para;</a></h2>
+<p>Every config file that uses <code>finetune-cli train</code> shares these top-level sections.</p>
+<h3 id="model"><code>model</code><a class="headerlink" href="#model" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gpt2&quot;</span><span class="w">                 </span><span class="c1"># HuggingFace model id</span>
-<span class="w">  </span><span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;auto&quot;</span><span class="w">               </span><span class="c1"># auto | cpu | cuda | mps</span>
-<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float32&quot;</span><span class="w">       </span><span class="c1"># float32 | float16 | bfloat16 | auto</span>
-<span class="w">  </span><span class="nt">load_in_4bit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1"># QLoRA — quantize base model</span>
-<span class="w">  </span><span class="nt">load_in_8bit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1"># 8-bit inference mode</span>
-<span class="w">  </span><span class="nt">trust_remote_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gpt2&quot;</span><span class="w">            </span><span class="c1"># HuggingFace model id or local path</span>
+<span class="w">  </span><span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;auto&quot;</span><span class="w">          </span><span class="c1"># &quot;auto&quot; | &quot;cpu&quot; | &quot;cuda&quot;</span>
+<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float32&quot;</span><span class="w">  </span><span class="c1"># &quot;float32&quot; | &quot;float16&quot; | &quot;bfloat16&quot;</span>
+<span class="w">  </span><span class="nt">load_in_4bit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># true for QLoRA</span>
+<span class="w">  </span><span class="nt">load_in_8bit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
 
-<span class="nt">dataset</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;local_file&quot;</span><span class="w">         </span><span class="c1"># local_file | huggingface_hub</span>
-<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./data/train.jsonl&quot;</span><span class="w">   </span><span class="c1"># file path or HF dataset id</span>
-<span class="w">  </span><span class="nt">split</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;train&quot;</span>
-<span class="w">  </span><span class="nt">max_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">            </span><span class="c1"># null = use all</span>
+<h3 id="dataset"><code>dataset</code><a class="headerlink" href="#dataset" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local_file</span><span class="w">      </span><span class="c1"># local_file | huggingface_hub | csv | parquet</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data/sample.jsonl</span>
+<span class="w">  </span><span class="nt">max_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">       </span><span class="c1"># null = use all</span>
+<span class="w">  </span><span class="nt">text_columns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">      </span><span class="c1"># null = auto-detect</span>
 <span class="w">  </span><span class="nt">shuffle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
-<span class="w">  </span><span class="nt">text_columns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">           </span><span class="c1"># null = auto-detect</span>
+</code></pre></div>
 
-<span class="nt">tokenization</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512</span>
+<h3 id="tokenization"><code>tokenization</code><a class="headerlink" href="#tokenization" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">tokenization</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
 <span class="w">  </span><span class="nt">truncation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">padding</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;max_length&quot;</span><span class="w">        </span><span class="c1"># max_length | longest | do_not_pad</span>
-<span class="w">  </span><span class="nt">add_special_tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">return_attention_mask</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">padding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max_length</span><span class="w">     </span><span class="c1"># &quot;max_length&quot; | &quot;longest&quot; | false</span>
+</code></pre></div>
 
-<span class="nt">training</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;lora&quot;</span><span class="w">               </span><span class="c1"># lora | qlora</span>
-<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./output&quot;</span>
+<h3 id="training"><code>training</code><a class="headerlink" href="#training" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lora</span><span class="w">            </span><span class="c1"># see methods below</span>
+<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./outputs/run</span>
 <span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
 <span class="w">  </span><span class="nt">gradient_accumulation_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0002</span>
-<span class="w">  </span><span class="nt">weight_decay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.01</span>
+<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0e-4</span>
 <span class="w">  </span><span class="nt">warmup_ratio</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="w">  </span><span class="nt">lr_scheduler_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cosine&quot;</span>
+<span class="w">  </span><span class="nt">lr_scheduler_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cosine</span>
 <span class="w">  </span><span class="nt">fp16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">bf16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">logging_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">  </span><span class="nt">save_strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;epoch&quot;</span><span class="w">       </span><span class="c1"># no | epoch | steps</span>
-<span class="w">  </span><span class="nt">evaluation_strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no&quot;</span><span class="w">    </span><span class="c1"># no | epoch | steps</span>
 <span class="w">  </span><span class="nt">gradient_checkpointing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
-
-<span class="nt">lora</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                         </span><span class="c1"># rank — higher = more capacity + VRAM</span>
-<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span><span class="w">               </span><span class="c1"># scaling factor (typical: 2× r)</span>
-<span class="w">  </span><span class="nt">lora_dropout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">         </span><span class="c1"># null = auto-detect</span>
-<span class="w">  </span><span class="nt">bias</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="w">                 </span><span class="c1"># none | all | lora_only</span>
-<span class="w">  </span><span class="nt">init_lora_weights</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-
-<span class="nt">evaluation</span><span class="p">:</span><span class="w">                    </span><span class="c1"># optional</span>
-<span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;rougeL&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;bleu&quot;</span>
-<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
-<span class="w">  </span><span class="nt">num_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
-<span class="w">  </span><span class="nt">generation_max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
-<span class="w">  </span><span class="nt">generation_temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
-<span class="w">  </span><span class="nt">generation_top_p</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
-<span class="w">  </span><span class="nt">generation_do_sample</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">save_strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">epoch</span><span class="w">    </span><span class="c1"># &quot;epoch&quot; | &quot;steps&quot; | &quot;no&quot;</span>
+<span class="w">  </span><span class="nt">logging_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </code></pre></div>
 
-<hr />
-<h2 id="lora-parameter-guide">LoRA parameter guide<a class="headerlink" href="#lora-parameter-guide" title="Permanent link">&para;</a></h2>
-<h3 id="rank-r">Rank (<code>r</code>)<a class="headerlink" href="#rank-r" title="Permanent link">&para;</a></h3>
-<p>Controls how many parameters LoRA adds. Higher rank = more expressive but more VRAM.</p>
+<h3 id="lora"><code>lora</code><a class="headerlink" href="#lora" title="Permanent link">&para;</a></h3>
+<p>Used by: <code>lora</code>, <code>qlora</code>, <code>instruction_tuning</code>, <code>dpo</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">lora</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                    </span><span class="c1"># rank — higher = more expressive, more memory</span>
+<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">          </span><span class="c1"># scale factor (rule of thumb: 2× r)</span>
+<span class="w">  </span><span class="nt">lora_dropout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
+<span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">    </span><span class="c1"># null = auto-detect; or [&quot;c_attn&quot;, &quot;c_proj&quot;]</span>
+<span class="w">  </span><span class="nt">bias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+</code></pre></div>
+
+<p><strong>Target module guidance:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Rank</th>
-<th>Parameters added</th>
-<th>VRAM overhead</th>
-<th>Best for</th>
+<th>Model family</th>
+<th>Recommended <code>target_modules</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>4</td>
-<td>~0.1%</td>
-<td>Minimal</td>
-<td>Quick experiments</td>
+<td>GPT-2</td>
+<td><code>["c_attn", "c_proj"]</code></td>
 </tr>
 <tr>
-<td>8</td>
-<td>~0.2%</td>
-<td>Low</td>
-<td>General purpose (default)</td>
+<td>LLaMA / Mistral</td>
+<td><code>["q_proj", "k_proj", "v_proj", "o_proj"]</code></td>
 </tr>
 <tr>
-<td>16</td>
-<td>~0.4%</td>
-<td>Medium</td>
-<td>Domain adaptation</td>
+<td>BERT</td>
+<td><code>["query", "value"]</code></td>
 </tr>
 <tr>
-<td>32+</td>
-<td>~0.8%+</td>
-<td>High</td>
-<td>Maximum adaptation</td>
+<td>Auto</td>
+<td><code>null</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="alpha-lora_alpha">Alpha (<code>lora_alpha</code>)<a class="headerlink" href="#alpha-lora_alpha" title="Permanent link">&para;</a></h3>
-<p>Scaling factor for the LoRA update. Rule of thumb: <strong>alpha = 2× r</strong>.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Conservative (less aggressive update)</span>
-<span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">  </span><span class="c1"># with r: 8</span>
-
-<span class="c1"># Standard</span>
-<span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span><span class="w">  </span><span class="c1"># with r: 8</span>
-
-<span class="c1"># Aggressive (more aggressive update, may need lower lr)</span>
-<span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span><span class="w">  </span><span class="c1"># with r: 8</span>
+<hr />
+<h2 id="method-specific-config">Method-specific config<a class="headerlink" href="#method-specific-config" title="Permanent link">&para;</a></h2>
+<h3 id="lora_1">LoRA<a class="headerlink" href="#lora_1" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lora</span>
+<span class="nt">lora</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 </code></pre></div>
 
-<h3 id="target-modules">Target modules<a class="headerlink" href="#target-modules" title="Permanent link">&para;</a></h3>
-<p>Set to <code>null</code> for auto-detection. Override when auto-detection misses layers:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># GPT-2</span>
-<span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;c_attn&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;c_proj&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="c1"># LLaMA / Mistral</span>
-<span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;q_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;k_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;v_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;o_proj&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="c1"># BERT</span>
-<span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;query&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;value&quot;</span><span class="p p-Indicator">]</span>
+<p>Full example: <code>examples/configs/lora_gpt2.yaml</code></p>
+<h3 id="qlora">QLoRA<a class="headerlink" href="#qlora" title="Permanent link">&para;</a></h3>
+<p>Requires <code>model.load_in_4bit: true</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meta-llama/Llama-3.2-1B</span>
+<span class="w">  </span><span class="nt">load_in_4bit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span>
+<span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qlora</span>
+<span class="w">  </span><span class="nt">fp16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">gradient_checkpointing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">lora</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+<span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;q_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;k_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;v_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;o_proj&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 
+<p>Full example: <code>examples/configs/qlora_llama.yaml</code></p>
+<h3 id="full-fine-tuning">Full fine-tuning<a class="headerlink" href="#full-fine-tuning" title="Permanent link">&para;</a></h3>
+<p>No <code>lora</code> section required. Use only on small models (≤300M params) or with ≥24GB VRAM.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full_finetuning</span>
+<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-5</span>
+<span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</code></pre></div>
+
+<p>Full example: <code>examples/configs/full_finetuning.yaml</code></p>
+<h3 id="instruction-tuning">Instruction tuning<a class="headerlink" href="#instruction-tuning" title="Permanent link">&para;</a></h3>
+<p>Dataset must have <code>instruction</code>, <code>input</code> (optional), and <code>response</code> columns (alpaca format).</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data/instructions.jsonl</span>
+<span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">instruction_tuning</span>
+<span class="nt">lora</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+</code></pre></div>
+
+<p>Full example: <code>examples/configs/instruction_tuning.yaml</code></p>
+<h3 id="dpo">DPO<a class="headerlink" href="#dpo" title="Permanent link">&para;</a></h3>
+<p>Requires <code>pip install trl&gt;=0.7.0</code>. Dataset must have <code>prompt</code>, <code>chosen</code>, <code>rejected</code> columns.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data/dpo_sample.jsonl</span>
+<span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dpo</span>
+<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0e-5</span>
+<span class="nt">lora</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+</code></pre></div>
+
+<p><code>beta</code> (preference shaping strength, default <code>0.1</code>) is set via the Python API:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">DPOTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">training_config</span><span class="p">,</span> <span class="n">lora_config</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Full example: <code>examples/configs/dpo.yaml</code></p>
+<hr />
+<h2 id="distillation-config">Distillation config<a class="headerlink" href="#distillation-config" title="Permanent link">&para;</a></h2>
+<h3 id="response-distillation">Response Distillation<a class="headerlink" href="#response-distillation" title="Permanent link">&para;</a></h3>
+<p>Student model is trained to match the teacher's output distribution. Uses KL divergence blended with cross-entropy loss. No labelled data required beyond the training corpus.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vanilla_distillation</span>
+<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./outputs/response_distillation</span>
+<span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-4</span>
+
+<span class="nt">distillation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">teacher_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2-medium</span><span class="w">   </span><span class="c1"># any HuggingFace model id</span>
+<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span><span class="w">                  </span><span class="c1"># higher = softer probability distribution</span>
+<span class="w">  </span><span class="nt">alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                        </span><span class="c1"># loss = alpha×KL + (1-alpha)×CE</span>
+</code></pre></div>
+
+<p><strong>Tuning guide:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>temperature</code></td>
+<td>Higher (2–4) softens teacher logits, shares more relative probability across tokens</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td>1.0 = pure KL distillation; 0.0 = pure CE (standard training); 0.5 = balanced</td>
+</tr>
+</tbody>
+</table>
+<p>Full example: <code>examples/configs/response_distillation.yaml</code></p>
+<h3 id="feature-distillation">Feature Distillation<a class="headerlink" href="#feature-distillation" title="Permanent link">&para;</a></h3>
+<p>Extends response distillation with an additional MSE loss on intermediate hidden states. Provides stronger layer-level supervision, especially useful when the teacher and student share similar architecture.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature_distillation</span>
+<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./outputs/feature_distillation</span>
+<span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-4</span>
+
+<span class="nt">feature_distillation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">teacher_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2-medium</span>
+<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">          </span><span class="c1"># KL divergence weight</span>
+<span class="w">  </span><span class="nt">beta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w">           </span><span class="c1"># hidden-state MSE weight</span>
+<span class="w">  </span><span class="nt">feature_layers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">  </span><span class="c1"># null = auto-select 4 evenly-spaced student layers</span>
+</code></pre></div>
+
+<p><strong>Loss breakdown:</strong></p>
+<div class="codehilite"><pre><span></span><code>total_loss = alpha × KL(student || teacher)
+           + (1 - alpha - beta) × CE(student, labels)
+           + beta × MSE(student_hidden, teacher_hidden)
+</code></pre></div>
+
+<p><code>feature_layers</code> accepts a list of student layer indices, e.g. <code>[0, 4, 8, 11]</code>. Each is mapped to the proportionally corresponding teacher layer. <code>null</code> auto-selects 4 evenly-spaced layers.</p>
+<p><strong>Tuning guide:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>beta</code></td>
+<td>Higher = more hidden-state alignment; start at 0.1–0.3</td>
+</tr>
+<tr>
+<td><code>feature_layers</code></td>
+<td>Fewer layers = faster training; more = stronger supervision</td>
+</tr>
+</tbody>
+</table>
+<p>Full example: <code>examples/configs/feature_distillation.yaml</code></p>
+<hr />
+<h2 id="pruning-config">Pruning config<a class="headerlink" href="#pruning-config" title="Permanent link">&para;</a></h2>
+<p>Pruning commands (<code>prune</code>, <code>wanda</code>) use their own config objects, not <code>PipelineConfig</code>. They are standalone operations on a saved model — no <code>training</code> or <code>lora</code> sections.</p>
+<h3 id="structured-pruning-finetune-cli-prune">Structured Pruning (<code>finetune-cli prune</code>)<a class="headerlink" href="#structured-pruning-finetune-cli-prune" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># examples/configs/structured_pruning.yaml</span>
+
+<span class="nt">model_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./outputs/gpt2_lora&quot;</span>
+
+<span class="nt">pruning</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./outputs/gpt2_pruned&quot;</span>
+<span class="w">  </span><span class="nt">sparsity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w">             </span><span class="c1"># fraction of heads to zero (0.0–1.0)</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;heads&quot;</span><span class="w">           </span><span class="c1"># &quot;heads&quot; (attention) or &quot;ffn&quot; (feed-forward)</span>
+<span class="w">  </span><span class="nt">importance_metric</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;magnitude&quot;</span>
+<span class="w">  </span><span class="nt">min_heads_per_layer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">    </span><span class="c1"># safety floor — never collapse a layer entirely</span>
+</code></pre></div>
+
+<p><strong>Sparsity guidance:</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>sparsity</code></th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1</td>
+<td>Light — minimal accuracy impact, small size reduction</td>
+</tr>
+<tr>
+<td>0.3</td>
+<td>Moderate — good balance (recommended starting point)</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>Aggressive — noticeable accuracy drop, significant speedup</td>
+</tr>
+<tr>
+<td>0.7+</td>
+<td>Extreme — only for heavily over-parameterised models</td>
+</tr>
+</tbody>
+</table>
+<p>Python API:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">PruningConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructuredPruner</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PruningConfig</span><span class="p">(</span>
+    <span class="n">output_dir</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./outputs/pruned&quot;</span><span class="p">),</span>
+    <span class="n">sparsity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span>
+    <span class="n">min_heads_per_layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">StructuredPruner</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">prune</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Full example: <code>examples/configs/structured_pruning.yaml</code></p>
+<h3 id="wanda-pruning-finetune-cli-wanda">WANDA Pruning (<code>finetune-cli wanda</code>)<a class="headerlink" href="#wanda-pruning-finetune-cli-wanda" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># examples/configs/wanda.yaml</span>
+
+<span class="nt">model_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./outputs/gpt2_lora&quot;</span>
+
+<span class="nt">wanda</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./outputs/gpt2_wanda&quot;</span>
+<span class="w">  </span><span class="nt">sparsity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                    </span><span class="c1"># fraction of weights to zero (0.0–1.0)</span>
+<span class="w">  </span><span class="nt">n_calibration_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span><span class="w">       </span><span class="c1"># number of calibration forward passes</span>
+<span class="w">  </span><span class="nt">calibration_seq_len</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span><span class="w">         </span><span class="c1"># token sequence length for calibration</span>
+<span class="w">  </span><span class="nt">use_row_wise</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">               </span><span class="c1"># true = per-row threshold (recommended)</span>
+<span class="w">  </span><span class="nt">layer_types</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">                </span><span class="c1"># null = auto (Linear + Conv1D)</span>
+</code></pre></div>
+
+<p><strong>Sparsity guidance:</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>sparsity</code></th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.3</td>
+<td>Light — minimal accuracy drop</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>Standard — matches original paper results on LLaMA/OPT</td>
+</tr>
+<tr>
+<td>0.6</td>
+<td>Aggressive — calibration data recommended</td>
+</tr>
+<tr>
+<td>0.7+</td>
+<td>Research-grade — significant accuracy loss expected</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>use_row_wise</code>:</strong> When <code>true</code>, the sparsity threshold is computed per output neuron row — each neuron retains the same fraction of its incoming weights. When <code>false</code>, a single global threshold is applied across the entire weight matrix.</p>
+<p>Python API:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">WandaConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">WandaPruner</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">WandaConfig</span><span class="p">(</span>
+    <span class="n">output_dir</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./outputs/wanda&quot;</span><span class="p">),</span>
+    <span class="n">sparsity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">n_calibration_samples</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="n">use_row_wise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">WandaPruner</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">calibration_input_ids</span><span class="o">=</span><span class="n">calib_ids</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Full example: <code>examples/configs/wanda.yaml</code></p>
 <hr />
 <h2 id="configuration-recipes">Configuration recipes<a class="headerlink" href="#configuration-recipes" title="Permanent link">&para;</a></h2>
-<h3 id="quick-experiment-cpu-friendly">Quick experiment (CPU-friendly)<a class="headerlink" href="#quick-experiment-cpu-friendly" title="Permanent link">&para;</a></h3>
+<h3 id="quick-cpu-experiment">Quick CPU experiment<a class="headerlink" href="#quick-cpu-experiment" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gpt2&quot;</span>
-<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float32&quot;</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2</span>
+<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float32</span>
 <span class="nt">dataset</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">max_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
 <span class="nt">tokenization</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
+<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span>
 <span class="nt">training</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
@@ -1106,10 +1542,10 @@
 <span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 </code></pre></div>
 
-<h3 id="balanced-quality-8gb-gpu">Balanced quality (8GB GPU)<a class="headerlink" href="#balanced-quality-8gb-gpu" title="Permanent link">&para;</a></h3>
+<h3 id="balanced-quality-8gb-gpu">Balanced quality — 8GB GPU<a class="headerlink" href="#balanced-quality-8gb-gpu" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gpt2-medium&quot;</span>
-<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float16&quot;</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2-medium</span>
+<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span>
 <span class="nt">training</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
@@ -1120,13 +1556,13 @@
 <span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
 </code></pre></div>
 
-<h3 id="large-model-on-limited-vram-qlora">Large model on limited VRAM (QLoRA)<a class="headerlink" href="#large-model-on-limited-vram-qlora" title="Permanent link">&para;</a></h3>
+<h3 id="large-model-limited-vram-qlora">Large model — limited VRAM (QLoRA)<a class="headerlink" href="#large-model-limited-vram-qlora" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;meta-llama/Llama-3.2-1B&quot;</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meta-llama/Llama-3.2-1B</span>
 <span class="w">  </span><span class="nt">load_in_4bit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float16&quot;</span>
+<span class="w">  </span><span class="nt">torch_dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float16</span>
 <span class="nt">training</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;qlora&quot;</span>
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qlora</span>
 <span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">  </span><span class="nt">gradient_accumulation_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">fp16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -1137,85 +1573,16 @@
 <span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;q_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;k_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;v_proj&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;o_proj&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 
-<hr />
-<hr />
-<h2 id="dpo-configuration">DPO configuration<a class="headerlink" href="#dpo-configuration" title="Permanent link">&para;</a></h2>
-<p>DPO (Direct Preference Optimization) requires an extra <code>beta</code> parameter and a dataset with <code>prompt</code>, <code>chosen</code>, and <code>rejected</code> columns.</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">dataset</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local_file</span>
-<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data/dpo_sample.jsonl</span><span class="w">  </span><span class="c1"># generated by examples/generate_sample_data.py</span>
-<span class="w">  </span><span class="nt">max_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
-
+<h3 id="distillation-student-teacher">Distillation — student ← teacher<a class="headerlink" href="#distillation-student-teacher" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2</span><span class="w">             </span><span class="c1"># student</span>
 <span class="nt">training</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dpo</span>
-<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./outputs/gpt2_dpo</span>
-<span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">  </span><span class="nt">gradient_accumulation_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0e-5</span>
-
-<span class="nt">lora</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
-<span class="w">  </span><span class="nt">lora_alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
-<span class="w">  </span><span class="nt">lora_dropout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
-<span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">   </span><span class="c1"># auto-detect</span>
-</code></pre></div>
-
-<h3 id="beta-parameter"><code>beta</code> parameter<a class="headerlink" href="#beta-parameter" title="Permanent link">&para;</a></h3>
-<p><code>beta</code> is not in the YAML config — it uses the DPOTrainer Python default of <code>0.1</code>. To customise it, use the Python API:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DPOTrainer</span>
-<span class="n">trainer</span> <span class="o">=</span> <span class="n">DPOTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">training_config</span><span class="p">,</span> <span class="n">lora_config</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-</code></pre></div>
-
-<p>Lower beta (0.05–0.1) keeps the model close to the reference; higher (0.3–0.5) applies stronger preference shaping.</p>
-<h3 id="dataset-columns">Dataset columns<a class="headerlink" href="#dataset-columns" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Column</th>
-<th>Type</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>prompt</code></td>
-<td>string</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>chosen</code></td>
-<td>string</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>rejected</code></td>
-<td>string</td>
-<td>Yes</td>
-</tr>
-</tbody>
-</table>
-<p>Generate offline sample data:</p>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>examples/generate_sample_data.py
-<span class="c1"># Creates data/dpo_sample.jsonl (200 rows)</span>
-</code></pre></div>
-
-<p><strong>Requires:</strong> <code>pip install "finetune-cli[dpo]"</code> or <code>pip install trl&gt;=0.7.0</code></p>
-<h2 id="generating-a-config-file">Generating a config file<a class="headerlink" href="#generating-a-config-file" title="Permanent link">&para;</a></h2>
-<p>Use the built-in examples as a starting point:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Copy and edit</span>
-cp<span class="w"> </span>examples/configs/lora_gpt2.yaml<span class="w"> </span>my_config.yaml
-
-<span class="c1"># Or generate from the CLI (coming soon)</span>
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--model<span class="w"> </span>gpt2<span class="w"> </span>--dataset<span class="w"> </span>./data.jsonl<span class="w"> </span>--output<span class="w"> </span>./output
-<span class="c1"># Training args are logged — copy them into a config file</span>
-</code></pre></div>
-
-<hr />
-<h2 id="json-vs-yaml">JSON vs YAML<a class="headerlink" href="#json-vs-yaml" title="Permanent link">&para;</a></h2>
-<p>Both formats are supported. YAML is recommended for readability. JSON is useful for programmatic generation.</p>
-<div class="codehilite"><pre><span></span><code>finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>config.yaml
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>config.json
+<span class="w">  </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vanilla_distillation</span>
+<span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="nt">distillation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">teacher_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt2-medium</span>
+<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
+<span class="w">  </span><span class="nt">alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
 </code></pre></div>
 
 

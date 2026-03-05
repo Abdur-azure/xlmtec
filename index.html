@@ -307,6 +307,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What&#39;s included">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -314,17 +364,6 @@
     <span class="md-ellipsis">
       
         Navigation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#migrating-from-v1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migrating from v1?
       
     </span>
   </a>
@@ -666,6 +705,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="What&#39;s included">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -673,17 +762,6 @@
     <span class="md-ellipsis">
       
         Navigation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#migrating-from-v1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migrating from v1?
       
     </span>
   </a>
@@ -722,8 +800,8 @@
 
 
 <h1 id="finetune-cli">finetune-cli<a class="headerlink" href="#finetune-cli" title="Permanent link">&para;</a></h1>
-<p><strong>Production-grade LLM fine-tuning from the command line.</strong></p>
-<p><code>finetune-cli</code> is a modular Python framework for fine-tuning large language models using LoRA and QLoRA. It provides a type-safe configuration system, a composable trainer stack, a benchmarking pipeline, and a clean CLI — all fully tested and CI-verified.</p>
+<p><strong>Production-grade LLM fine-tuning, distillation, and pruning from the command line.</strong></p>
+<p><code>finetune-cli</code> is a modular Python framework that wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.</p>
 <hr />
 <h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># Install</span>
@@ -731,15 +809,135 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Abdur
 <span class="nb">cd</span><span class="w"> </span>finetune_cli
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 
-<span class="c1"># Fine-tune GPT-2 on a local dataset</span>
-finetune-cli<span class="w"> </span>train<span class="w"> </span>--model<span class="w"> </span>gpt2<span class="w"> </span>--dataset<span class="w"> </span>./data.jsonl<span class="w"> </span>--epochs<span class="w"> </span><span class="m">3</span>
+<span class="c1"># Generate sample data (no network required)</span>
+python<span class="w"> </span>examples/generate_sample_data.py
 
-<span class="c1"># Or use a config file (recommended)</span>
+<span class="c1"># Fine-tune GPT-2 with LoRA</span>
 finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span class="w"> </span>examples/configs/lora_gpt2.yaml
+
+<span class="c1"># Or use the interactive TUI</span>
+finetune-cli<span class="w"> </span>tui
 </code></pre></div>
 
 <hr />
 <h2 id="whats-included">What's included<a class="headerlink" href="#whats-included" title="Permanent link">&para;</a></h2>
+<h3 id="cli-commands">CLI commands<a class="headerlink" href="#cli-commands" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>finetune-cli train</code></td>
+<td>Fine-tune with LoRA / QLoRA / Full / Instruction / DPO / Distillation</td>
+</tr>
+<tr>
+<td><code>finetune-cli evaluate</code></td>
+<td>Score a checkpoint — ROUGE, BLEU, Perplexity</td>
+</tr>
+<tr>
+<td><code>finetune-cli benchmark</code></td>
+<td>Before/after comparison report</td>
+</tr>
+<tr>
+<td><code>finetune-cli merge</code></td>
+<td>Merge LoRA adapter into base model</td>
+</tr>
+<tr>
+<td><code>finetune-cli upload</code></td>
+<td>Push model or adapter to HuggingFace Hub</td>
+</tr>
+<tr>
+<td><code>finetune-cli recommend</code></td>
+<td>Inspect model + VRAM, output optimal YAML config</td>
+</tr>
+<tr>
+<td><code>finetune-cli prune</code></td>
+<td>Structured pruning — zero lowest-magnitude attention heads</td>
+</tr>
+<tr>
+<td><code>finetune-cli wanda</code></td>
+<td>WANDA unstructured pruning — weight × activation scoring</td>
+</tr>
+<tr>
+<td><code>finetune-cli tui</code></td>
+<td>Interactive Textual TUI — all commands via terminal UI</td>
+</tr>
+</tbody>
+</table>
+<h3 id="training-methods">Training methods<a class="headerlink" href="#training-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Class</th>
+<th>Sprint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LoRA</td>
+<td><code>LoRATrainer</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>QLoRA</td>
+<td><code>QLoRATrainer</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>Full Fine-Tuning</td>
+<td><code>FullFineTuner</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>Instruction Tuning</td>
+<td><code>InstructionTrainer</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>DPO</td>
+<td><code>DPOTrainer</code></td>
+<td>8</td>
+</tr>
+<tr>
+<td>Response Distillation</td>
+<td><code>ResponseDistillationTrainer</code></td>
+<td>23</td>
+</tr>
+<tr>
+<td>Feature Distillation</td>
+<td><code>FeatureDistillationTrainer</code></td>
+<td>24</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pruning">Pruning<a class="headerlink" href="#pruning" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Class</th>
+<th>Algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Structured Pruning</td>
+<td><code>StructuredPruner</code></td>
+<td>Zero lowest-magnitude attention head rows per layer</td>
+</tr>
+<tr>
+<td>WANDA</td>
+<td><code>WandaPruner</code></td>
+<td>Zero weights by |W_ij| × ||X_j||₂ score</td>
+</tr>
+</tbody>
+</table>
+<h3 id="core-components">Core components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -749,24 +947,8 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 </thead>
 <tbody>
 <tr>
-<td><code>finetune_cli train</code></td>
-<td>LoRA / QLoRA training with auto-detected target modules</td>
-</tr>
-<tr>
-<td><code>finetune_cli evaluate</code></td>
-<td>ROUGE, BLEU, Perplexity scoring on a saved checkpoint</td>
-</tr>
-<tr>
-<td><code>finetune_cli benchmark</code></td>
-<td>Before/after comparison report with delta indicators</td>
-</tr>
-<tr>
-<td><code>finetune_cli upload</code></td>
-<td>Push adapter or merged model to HuggingFace Hub</td>
-</tr>
-<tr>
 <td><code>ConfigBuilder</code></td>
-<td>Fluent Python API for building validated pipeline configs</td>
+<td>Fluent Python API for building validated <code>PipelineConfig</code></td>
 </tr>
 <tr>
 <td><code>DataPipeline</code></td>
@@ -774,23 +956,11 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 </tr>
 <tr>
 <td><code>TrainerFactory</code></td>
-<td>Single entry point — selects trainer for lora / qlora / instruction_tuning / full_finetuning</td>
+<td>Single entry point — selects trainer from <code>TrainingMethod</code> enum</td>
 </tr>
 <tr>
 <td><code>BenchmarkRunner</code></td>
 <td>Model-agnostic evaluation with comparison reports</td>
-</tr>
-<tr>
-<td><code>finetune_cli merge</code></td>
-<td>Merge LoRA adapter into base model → standalone model</td>
-</tr>
-<tr>
-<td><code>finetune_cli recommend</code></td>
-<td>Inspect model size + VRAM, output optimal YAML config</td>
-</tr>
-<tr>
-<td><code>DPOTrainer</code></td>
-<td>Direct Preference Optimization on prompt/chosen/rejected datasets (requires trl)</td>
 </tr>
 </tbody>
 </table>
@@ -798,27 +968,44 @@ finetune-cli<span class="w"> </span>train<span class="w"> </span>--config<span c
 <h2 id="navigation">Navigation<a class="headerlink" href="#navigation" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><a href="installation/">Installation</a></strong> — requirements, GPU setup, HuggingFace login</li>
-<li><strong><a href="usage/">Usage Guide</a></strong> — all CLI subcommands with examples</li>
-<li><strong><a href="configuration/">Configuration</a></strong> — YAML config reference and parameter guide</li>
-<li><strong><a href="api/">API Reference</a></strong> — Python API for programmatic use</li>
-<li><strong><a href="examples/">Examples</a></strong> — common workflows and recipes</li>
+<li><strong><a href="usage/">Usage Guide</a></strong> — all 9 CLI commands with examples</li>
+<li><strong><a href="configuration/">Configuration</a></strong> — YAML config reference for all methods</li>
+<li><strong><a href="api/">API Reference</a></strong> — Python API for trainers, pruners, and data pipeline</li>
+<li><strong><a href="tui/">TUI Guide</a></strong> — interactive terminal interface walkthrough</li>
 <li><strong><a href="troubleshooting/">Troubleshooting</a></strong> — OOM, NaN loss, dataset errors</li>
 </ul>
 <hr />
-<h2 id="migrating-from-v1">Migrating from v1?<a class="headerlink" href="#migrating-from-v1" title="Permanent link">&para;</a></h2>
-<p>See <a href="https://github.com/Abdur-azure/finetune_cli/blob/main/CHANGELOG.md">CHANGELOG.md</a> for the full v1 → v2 migration guide.</p>
-<div class="admonition note">
-<p class="admonition-title">v1 is deprecated</p>
-<p>Running <code>python finetune_cli.py</code> will display a migration message. The v1 interactive wizard has been replaced by the <code>finetune-cli</code> subcommands documented here.</p>
-</div>
-<hr />
 <h2 id="project-status">Project status<a class="headerlink" href="#project-status" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Version:</strong> 2.8.0</li>
-<li><strong>Tests:</strong> 124+ unit tests + integration tests (all green)</li>
-<li><strong>CI:</strong> pytest matrix across Python 3.10 / 3.11 / 3.12</li>
-<li><strong>License:</strong> MIT</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Version</strong></td>
+<td>3.13.0</td>
+</tr>
+<tr>
+<td><strong>Tests</strong></td>
+<td>200+ unit + integration (all green, no GPU required for unit suite)</td>
+</tr>
+<tr>
+<td><strong>CI</strong></td>
+<td>pytest matrix — Python 3.10 / 3.11 / 3.12</td>
+</tr>
+<tr>
+<td><strong>Platform</strong></td>
+<td>Windows / macOS / Linux</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table>
 
 
 
