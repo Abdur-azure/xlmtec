@@ -158,6 +158,38 @@ class FeatureDistillationConfig:
 
 
 
+
+@dataclass(frozen=True)
+class WandaConfig:
+    """Configuration for WANDA (Weight AND Activation) unstructured pruning.
+
+    WANDA scores each weight by |W_ij| * ||X_j||_2 where W is the weight
+    matrix and X is the input activation norm collected on a small calibration
+    dataset.  Weights with the lowest scores are zeroed — no gradient pass or
+    retraining is required.
+
+    Attributes:
+        output_dir:        Where the pruned model will be saved.
+        sparsity:          Target fraction of weights to zero per linear layer.
+                           0.0 = no pruning; 0.5 = half the weights zeroed.
+                           Recommended: 0.3–0.5.
+        n_calibration_samples: Number of calibration forward passes used to
+                           collect activation norms. More = more accurate
+                           scoring but slower. Default: 128.
+        calibration_seq_len: Token sequence length for calibration inputs.
+        layer_types:       Which nn.Module class names to prune. Default covers
+                           all linear projections in standard transformer models.
+        use_row_wise:      If True, apply sparsity row-by-row (each output
+                           neuron pruned independently). If False, apply
+                           globally across the full weight matrix.
+    """
+    output_dir: Path
+    sparsity: float = 0.5
+    n_calibration_samples: int = 128
+    calibration_seq_len: int = 128
+    layer_types: Optional[List[str]] = None
+    use_row_wise: bool = True
+
 @dataclass(frozen=True)
 class PruningConfig:
     """Configuration for structured pruning.

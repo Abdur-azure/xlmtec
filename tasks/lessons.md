@@ -352,3 +352,32 @@ And in the caller, pre-compute ALL formatted values before ANY f-string:
   f"zeroed {zeroed_int:,}"       # safe
 Rule: any value that comes from a mock chain must be cast to int/float at
 collection time, not at formatting time.
+
+---
+
+### Lesson: Value-threshold masking fails on uniform scores — use index-based ranking
+
+**Symptom:** `test_apply_wanda_mask_global_zeroes_correct_fraction` fails with
+`assert 32 <= 17` — all weights zeroed instead of 50%.
+
+**Root cause:** `kthvalue(k).values` returns the k-th value (e.g. `1.0` for
+uniform scores), then `scores > threshold` is `False` for every element when
+all scores equal the threshold → entire matrix zeroed.
+
+**Fix:** Replace value-threshold with index-based ranking:
+```python
+# WRONG — breaks on ties/uniform scores
+threshold = scores.flatten().kthvalue(n_prune).values
+mask = scores > threshold
+
+# RIGHT — always zeroes exactly n_prune elements
+_, sorted_indices = scores.flatten().sort()  # ascending
+prune_flat_idx = sorted_indices[:n_prune]
+mask = torch.ones(scores.numel(), dtype=torch.bool)
+mask[prune_flat_idx] = False
+mask = mask.reshape(scores.shape)
+```
+
+**Rule:** Any pruning/masking that uses a value threshold must use `>=` or
+index-based selection to handle ties. Unit tests with uniform tensors (all
+`torch.ones`) are the canonical regression test for this class of bug.

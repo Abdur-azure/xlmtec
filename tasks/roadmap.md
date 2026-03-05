@@ -26,7 +26,7 @@ Validated methods for commercial relevance. Build order: simplest → most compl
 | Method | Status | Sprint |
 |--------|--------|--------|
 | Structured Pruning | ✅ Built | Sprint 29 |
-| WANDA | ⬜ Not started | — |
+| WANDA | ✅ Built | Sprint 30 |
 
 ---
 

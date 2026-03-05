@@ -1,0 +1,53 @@
+# WANDA Pruning Example Config
+#
+# Prunes ~50% of weights using WANDA (Weight AND Activation) scoring.
+# Run with:
+#   finetune-cli wanda ./outputs/gpt2_lora \
+#       --output ./outputs/gpt2_wanda \
+#       --sparsity 0.5 \
+#       --dataset ./data/sample.jsonl \
+#       --n-samples 128
+#
+# Without a calibration dataset (magnitude-only fallback):
+#   finetune-cli wanda ./outputs/gpt2_lora \
+#       --output ./outputs/gpt2_wanda \
+#       --sparsity 0.5
+#
+# Then evaluate the pruned model:
+#   finetune-cli benchmark gpt2 ./outputs/gpt2_wanda \
+#       --dataset ./data/sample.jsonl \
+#       --metrics rougeL,bleu
+
+model_path: "./outputs/gpt2_lora"
+
+wanda:
+  output_dir:             "./outputs/gpt2_wanda"
+  sparsity:               0.5
+  n_calibration_samples:  128
+  calibration_seq_len:    128
+  use_row_wise:           true     # true = per-row threshold (recommended)
+  layer_types:            null     # null = auto (Linear + Conv1D)
+
+# ── Sparsity guidance ──────────────────────────────────────────────────────
+#
+#  sparsity  |  effect
+#  ----------+--------------------------------------------------------------
+#  0.3       |  Light WANDA — minimal accuracy drop, moderate size reduction
+#  0.5       |  Standard WANDA — matches original paper results on LLaMA/OPT
+#  0.6       |  Aggressive — may need calibration data for quality results
+#  0.7+      |  Research-grade — significant accuracy loss expected
+#
+# ── WANDA vs Structured Pruning ───────────────────────────────────────────
+#
+#  WANDA (this)         |  Structured Pruning (Sprint 29)
+#  ---------------------+------------------------------------------------
+#  Unstructured         |  Structured (whole heads / neurons)
+#  Needs calibration    |  No calibration needed
+#  Higher accuracy      |  Simpler, no activation tracking required
+#  Keeps model shape    |  Keeps model shape
+#  Scores: |W|*||X||   |  Scores: mean |W| per head
+#
+# After pruning, benchmark with:
+#   finetune-cli benchmark gpt2 ./outputs/gpt2_wanda \
+#       --dataset ./data/sample.jsonl \
+#       --metrics rougeL,bleu,perplexity

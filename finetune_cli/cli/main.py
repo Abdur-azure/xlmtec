@@ -548,7 +548,122 @@ def prune(
     except Exception as exc:
         console.print(f"\n[bold red]Unexpected error:[/bold red] {exc}")
         raise typer.Exit(code=1)
-    
+
+# ============================================================================
+# WANDA
+# ============================================================================
+
+
+@app.command()
+def wanda(
+    model_path: Path = typer.Argument(..., help="Path to saved model or adapter directory"),
+    output_dir: Path = typer.Option(..., "--output", "-o", help="Directory to save the pruned model"),
+    sparsity: float = typer.Option(0.5, "--sparsity", "-s", help="Fraction of weights to zero per layer (0.0–1.0)"),
+    n_samples: int = typer.Option(128, "--n-samples", help="Number of calibration forward passes"),
+    seq_len: int = typer.Option(128, "--seq-len", help="Sequence length for calibration inputs"),
+    dataset: Optional[Path] = typer.Option(None, "--dataset", "-d", help="Calibration dataset (.jsonl/.txt). If omitted, falls back to magnitude-only scoring."),
+    row_wise: bool = typer.Option(True, "--row-wise/--global", help="Apply sparsity per output row (True) or globally (False)"),
+):
+    """Prune a model using WANDA (Weight AND Activation) scoring.
+
+    WANDA is zero-shot unstructured pruning: each weight is scored by
+    |W| * ||activation||_2. Weights with the lowest scores are zeroed.
+    No gradient pass or retraining is required.
+
+    Recommended sparsity: 0.3–0.5. Use --dataset for best results; without
+    it, falls back to magnitude-only scoring.
+
+    Example:
+
+        finetune-cli wanda ./outputs/gpt2_lora --output ./outputs/gpt2_wanda \\
+            --sparsity 0.5 --dataset ./data/sample.jsonl
+    """
+    from finetune_cli.core.types import ModelConfig, WandaConfig
+    from finetune_cli.core.exceptions import FineTuneError
+    from finetune_cli.trainers.wanda_pruner import WandaPruner
+
+    if not model_path.exists():
+        console.print(f"[red]Error:[/red] Model path does not exist: {model_path}")
+        raise typer.Exit(code=1)
+
+    if not (0.0 <= sparsity < 1.0):
+        console.print("[red]Error:[/red] --sparsity must be in range [0.0, 1.0)")
+        raise typer.Exit(code=1)
+
+    panel_text = (
+        "[bold cyan]WANDA Configuration[/bold cyan]\n\n"
+        "[yellow]Model:[/yellow] " + str(model_path) + "\n"
+        "[yellow]Output:[/yellow] " + str(output_dir) + "\n"
+        f"[yellow]Sparsity:[/yellow] {sparsity:.0%}\n"
+        f"[yellow]Calibration samples:[/yellow] {n_samples}\n"
+        "[yellow]Calibration dataset:[/yellow] " + (str(dataset) if dataset else "none (magnitude-only fallback)")
+    )
+    console.print(Panel.fit(panel_text, title="⚡  WANDA Pruning", border_style="cyan"))
+
+    try:
+        with console.status("[bold green]Loading model..."):
+            from finetune_cli.models.loader import load_model_and_tokenizer
+            model_config = ModelConfig(name=str(model_path))
+            model, tokenizer = load_model_and_tokenizer(model_config)
+        console.print("[green]✓[/green] Model loaded")
+
+        # Build calibration input_ids if a dataset was provided
+        calib_ids = None
+        if dataset is not None:
+            if not dataset.exists():
+                console.print(f"[red]Error:[/red] Dataset not found: {dataset}")
+                raise typer.Exit(code=1)
+            with console.status("[bold green]Preparing calibration data..."):
+                import torch
+                from finetune_cli.data import quick_load, prepare_dataset
+                from finetune_cli.core.types import (
+                    DatasetConfig, DatasetSource, TokenizationConfig,
+                )
+                ds_cfg = DatasetConfig(
+                    source=DatasetSource.LOCAL_FILE,
+                    path=str(dataset),
+                    max_samples=n_samples,
+                )
+                tok_cfg = TokenizationConfig(max_length=seq_len)
+                ds = prepare_dataset(ds_cfg, tok_cfg, tokenizer)
+                if hasattr(ds, "with_format"):
+                    ds = ds.with_format("torch")
+                input_ids = torch.stack([
+                    row["input_ids"] for row in ds
+                    if "input_ids" in row
+                ][:n_samples])
+                calib_ids = input_ids
+            console.print(f"[green]✓[/green] Calibration data: {calib_ids.shape[0]} samples")
+
+        wanda_config = WandaConfig(
+            output_dir=output_dir,
+            sparsity=sparsity,
+            n_calibration_samples=n_samples,
+            calibration_seq_len=seq_len,
+            use_row_wise=row_wise,
+        )
+
+        with console.status("[bold green]Pruning with WANDA..."):
+            pruner = WandaPruner(model, tokenizer, wanda_config)
+            result = pruner.prune(calibration_input_ids=calib_ids)
+
+        result_text = (
+            "[bold green]✓ WANDA pruning complete[/bold green]\n\n"
+            "[yellow]Output dir:[/yellow] " + str(result.output_dir) + "\n"
+            f"[yellow]Weights zeroed:[/yellow] {result.zeroed_param_count:,} / {result.original_param_count:,}\n"
+            f"[yellow]Sparsity achieved:[/yellow] {result.sparsity_achieved:.1%}\n"
+            f"[yellow]Layers pruned:[/yellow] {result.layers_pruned}\n"
+            f"[yellow]Time:[/yellow] {result.pruning_time_seconds:.1f}s"
+        )
+        console.print(Panel.fit(result_text, title="⚡  Done", border_style="green"))
+
+    except FineTuneError as exc:
+        console.print(f"\n[bold red]Error:[/bold red] {exc}")
+        raise typer.Exit(code=1)
+    except Exception as exc:
+        console.print(f"\n[bold red]Unexpected error:[/bold red] {exc}")
+        raise typer.Exit(code=1)
+
 # ============================================================================
 # TUI  (Sprint 25)
 # ============================================================================

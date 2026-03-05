@@ -390,3 +390,30 @@ pytest tests/test_structured_pruner.py -v  → all tests pass, no GPU
 pytest tests/ --co -q --ignore=tests/test_integration.py  → 0 errors
 finetune-cli prune --help  → shows prune command
 ```
+
+---
+
+## Sprint 30: "WANDA Pruning"  ✅ COMPLETE
+
+- [x] finetune_cli/core/types.py — WandaConfig frozen dataclass (step 0, per lessons.md)
+- [x] verify: python -c "from finetune_cli.core.types import WandaConfig; print('OK')"
+- [x] finetune_cli/trainers/wanda_pruner.py — WandaPruner + WandaResult
+- [x] finetune_cli/trainers/__init__.py — WandaPruner, WandaResult exported
+- [x] cli/main.py — `wanda` subcommand
+- [x] tests/test_wanda_pruner.py — unit tests, no GPU, absolute imports
+- [x] examples/configs/wanda.yaml — runnable example config
+- [x] tasks/roadmap.md — WANDA marked ✅ Sprint 30
+- [x] audit_repo.py — new files registered
+- [x] CHANGELOG.md — Sprint 30 entry
+- [x] tasks/CONTEXT.md — Sprint 30 row
+- [x] CLAUDE.md — Sprint 30 row + WandaPruner in table
+- [x] pyproject.toml — bump to 3.13.0
+- [x] tasks/todo.md — Sprint 30 gate recorded
+
+### Acceptance Gate
+```
+python -c "from finetune_cli.core.types import WandaConfig; print('OK')"
+pytest tests/test_wanda_pruner.py -v  → all tests pass, no GPU
+pytest tests/ --co -q --ignore=tests/test_integration.py  → 0 errors
+finetune-cli wanda --help  → shows wanda command
+```

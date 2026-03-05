@@ -4,6 +4,40 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.13.0] — Sprint 30: "WANDA Pruning" — 2026-03-05
+
+### Added
+- `finetune_cli/core/types.py` — `WandaConfig` frozen dataclass
+  (output_dir, sparsity=0.5, n_calibration_samples=128,
+  calibration_seq_len=128, layer_types=None, use_row_wise=True).
+- `finetune_cli/trainers/wanda_pruner.py` — `WandaPruner` + `WandaResult`.
+  WANDA unstructured pruning: registers forward hooks to collect input
+  activation norms over a calibration dataset, scores each weight by
+  |W_ij| * ||X_j||_2, zeros the bottom `sparsity` fraction per layer.
+  Falls back to magnitude-only scoring when no calibration data is
+  provided. Supports row-wise and global sparsity modes. Auto-targets
+  nn.Linear and Conv1D layers. Returns `WandaResult` frozen dataclass.
+- `finetune_cli/trainers/__init__.py` — `WandaPruner`, `WandaResult` exported.
+- `cli/main.py` — `wanda` subcommand. Args: model_path, --output, --sparsity
+  (0.5), --n-samples (128), --seq-len (128), --dataset (optional),
+  --row-wise/--global.
+- `tests/test_wanda_pruner.py` — 18 unit tests: WandaConfig validation (4),
+  helper functions `_wanda_score` and `_apply_wanda_mask` (5), pruner
+  without calibration (7), pruner with real calibration data (2). Uses
+  real CPU torch tensors — no GPU required.
+- `tests/test_wanda_cli.py` — 6 CLI-level tests: missing path, invalid
+  sparsity, happy path exits 0, sparsity forwarded to config, output
+  contains sparsity, missing dataset exits 1.
+- `examples/configs/wanda.yaml` — runnable example with sparsity guidance
+  and WANDA vs Structured Pruning comparison table.
+- `tasks/roadmap.md` — WANDA marked ✅ Sprint 30.
+
+### Changed
+- `pyproject.toml` — version 3.12.0 → 3.13.0
+- `audit_repo.py` — new files registered.
+
+---
+
 ## [3.12.0] — Sprint 29: "Structured Pruning" — 2026-03-04
 
 ### Added
