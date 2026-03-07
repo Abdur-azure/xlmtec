@@ -1,6 +1,6 @@
 # TUI — Interactive Terminal Interface
 
-`finetune-cli` ships with a full interactive terminal UI built on [Textual](https://textual.textualize.io/).
+`lmtool` ships with a full interactive terminal UI built on [Textual](https://textual.textualize.io/).
 It wraps every CLI command in a keyboard-navigable form, streams live output, and displays results — all without leaving your terminal.
 
 ---
@@ -9,7 +9,7 @@ It wraps every CLI command in a keyboard-navigable form, streams live output, an
 
 ```bash
 pip install "textual>=0.52.0"
-finetune-cli tui
+lmtool tui
 ```
 
 ---
@@ -17,9 +17,9 @@ finetune-cli tui
 ## Home screen
 
 ```
-┌─ finetune-cli ── LLM Fine-Tuning Toolkit ──────────────────────────── 12:34 ─┐
+┌─ lmtool ── LLM Fine-Tuning Toolkit ──────────────────────────── 12:34 ─┐
 │                                                                                │
-│        finetune-cli  --  LLM Fine-Tuning Toolkit                              │
+│        lmtool  --  LLM Fine-Tuning Toolkit                              │
 │     Tab / Arrow keys to navigate   Enter or Click to select   Q to quit       │
 │                                                                                │
 │  ┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐     │
@@ -130,10 +130,10 @@ Analyse a model's size and available VRAM, then output an optimal training confi
 When you submit a form, the TUI switches to a live running view:
 
 ```
-┌─ finetune-cli ─────────────────────────────────────────── 12:35 ─┐
+┌─ lmtool ─────────────────────────────────────────── 12:35 ─┐
 │  ⚙  Training  gpt2  [lora]                              00:42    │
 ├───────────────────────────────────────────────────────────────────┤
-│ $ finetune-cli train --model gpt2 --dataset ./data/...            │
+│ $ lmtool train --model gpt2 --dataset ./data/...            │
 │ Loading model gpt2...                                             │
 │ ✓ Model loaded (124M parameters)                                  │
 │ Loading dataset ./data/sample.jsonl...                            │
@@ -155,7 +155,7 @@ Press `q` or click **Cancel** to abort the running command.
 On completion the TUI shows a result summary:
 
 ```
-┌─ finetune-cli ─────────────────────────────────────────────────────┐
+┌─ lmtool ─────────────────────────────────────────────────────┐
 │                                                                     │
 │          ✅  Command completed successfully                         │
 │                                                                     │

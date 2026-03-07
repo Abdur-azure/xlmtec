@@ -31,8 +31,8 @@ def method(
     Get training method recommendation based on constraints.
 
     Example:
-        finetune-cli recommend method --model-size 0.124 --vram 8
-        finetune-cli recommend method --model-size 7 --vram 12 --task complex
+        lmtool recommend method --model-size 0.124 --vram 8
+        lmtool recommend method --model-size 7 --vram 12 --task complex
     """
 
     # Convert to parameters
@@ -93,7 +93,7 @@ def config(
     Get configuration recommendations for a training method.
 
     Example:
-        finetune-cli recommend config lora --dataset-size 5000
+        lmtool recommend config lora --dataset-size 5000
     """
 
     console.print(f"\n[bold cyan]Configuration Recommendations for {method.upper()}[/bold cyan]\n")
@@ -181,7 +181,7 @@ def hardware(
     Get hardware requirements for training.
 
     Example:
-        finetune-cli recommend hardware 7 --method qlora
+        lmtool recommend hardware 7 --method qlora
     """
 
     console.print(f"\n[bold cyan]Hardware Requirements[/bold cyan]")

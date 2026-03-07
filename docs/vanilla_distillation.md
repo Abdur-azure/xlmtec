@@ -101,7 +101,7 @@ Where:
 ### **Example Usage**
 
 ```python
-from finetune_cli import LLMFineTuner
+from lmtool import LLMFineTuner
 
 # Initialize
 finetuner = LLMFineTuner("gpt2", "./distilled_model")
@@ -124,7 +124,7 @@ finetuner.train(dataset, num_epochs=3)
 
 **CLI Usage:**
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Select method: 4 (Vanilla Distillation)
 # Student model: gpt2
@@ -208,7 +208,7 @@ Total Loss = α × CE_loss + (1-α) × Feature_loss
 ### **Example Usage**
 
 ```python
-from finetune_cli import LLMFineTuner
+from lmtool import LLMFineTuner
 
 # Initialize
 finetuner = LLMFineTuner("gpt2", "./distilled_model")
@@ -230,7 +230,7 @@ finetuner.train(dataset, num_epochs=5)
 
 **CLI Usage:**
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Select method: 5 (Feature Distillation)
 # Student model: gpt2
@@ -488,7 +488,7 @@ print(f"Performance retention: {val_scores_student / val_scores_teacher * 100:.1
 ### **Example 1: Basic Vanilla Distillation**
 
 ```python
-from finetune_cli import LLMFineTuner
+from lmtool import LLMFineTuner
 
 # Setup
 finetuner = LLMFineTuner("gpt2", "./vanilla_distilled")
@@ -521,7 +521,7 @@ print("✅ Vanilla distillation complete!")
 ### **Example 2: Advanced Feature Distillation**
 
 ```python
-from finetune_cli import LLMFineTuner
+from lmtool import LLMFineTuner
 
 # Setup
 finetuner = LLMFineTuner("gpt2", "./feature_distilled")
@@ -559,7 +559,7 @@ print("✅ Feature distillation complete!")
 ### **Example 3: Comparison Study**
 
 ```python
-from finetune_cli import LLMFineTuner
+from lmtool import LLMFineTuner
 
 # Compare vanilla vs feature distillation
 methods = [

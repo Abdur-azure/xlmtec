@@ -1,4 +1,4 @@
-"""UploadScreen — form for `finetune-cli upload`."""
+"""UploadScreen — form for `lmtool upload`."""
 
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -9,7 +9,7 @@ from textual.widgets import Button, Footer, Header, Input, Label, Switch
 
 
 class UploadScreen(Screen):
-    """Form screen for `finetune-cli upload`.
+    """Form screen for `lmtool upload`.
 
     Collects: model path, repo_id, HF token (masked), private toggle,
     merge-adapter toggle, base model (shown only when merge-adapter is on),
@@ -194,7 +194,7 @@ class UploadScreen(Screen):
             return
 
         command = [
-            "finetune-cli", "upload",
+            "lmtool", "upload",
             model_path,
             repo_id,
             "--token", token,
@@ -205,7 +205,7 @@ class UploadScreen(Screen):
         if merge:
             command += ["--merge-adapter", "--base-model", base]
 
-        from finetune_cli.tui.screens.running import RunningScreen
+        from lmtool.tui.screens.running import RunningScreen
         self.app.switch_screen(
             RunningScreen(
                 command=command,

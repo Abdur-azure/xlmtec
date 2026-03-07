@@ -6,7 +6,7 @@ from textual.containers import Grid
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Label
 
-from finetune_cli.tui.widgets.command_card import CommandCard
+from lmtool.tui.widgets.command_card import CommandCard
 
 _COMMANDS = [
     {"id": "train",     "label": "Train",     "description": "Fine-tune with LoRA, QLoRA, DPO and more",       "icon": "🚀"},
@@ -67,7 +67,7 @@ class HomeScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
         yield Label(
-            "finetune-cli  --  LLM Fine-Tuning Toolkit",
+            "lmtool  --  LLM Fine-Tuning Toolkit",
             classes="home-title",
         )
         yield Label(
@@ -94,22 +94,22 @@ class HomeScreen(Screen):
     def on_command_card_selected(self, event: CommandCard.Selected) -> None:
         """Route card selection to the appropriate screen."""
         if event.command_id == "train":
-            from finetune_cli.tui.screens.train import TrainScreen
+            from lmtool.tui.screens.train import TrainScreen
             self.app.switch_screen(TrainScreen())
         elif event.command_id == "recommend":
-            from finetune_cli.tui.screens.recommend import RecommendScreen
+            from lmtool.tui.screens.recommend import RecommendScreen
             self.app.switch_screen(RecommendScreen())
         elif event.command_id == "evaluate":
-            from finetune_cli.tui.screens.evaluate import EvaluateScreen
+            from lmtool.tui.screens.evaluate import EvaluateScreen
             self.app.switch_screen(EvaluateScreen())
         elif event.command_id == "benchmark":
-            from finetune_cli.tui.screens.benchmark import BenchmarkScreen
+            from lmtool.tui.screens.benchmark import BenchmarkScreen
             self.app.switch_screen(BenchmarkScreen())
         elif event.command_id == "merge":
-            from finetune_cli.tui.screens.merge import MergeScreen
+            from lmtool.tui.screens.merge import MergeScreen
             self.app.switch_screen(MergeScreen())
         elif event.command_id == "upload":
-            from finetune_cli.tui.screens.upload import UploadScreen
+            from lmtool.tui.screens.upload import UploadScreen
             self.app.switch_screen(UploadScreen())
         else:
             self.app.notify(

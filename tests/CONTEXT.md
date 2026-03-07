@@ -16,10 +16,10 @@ Unit tests (mocked, no GPU) + integration tests (real GPT-2, CPU ok).
 | `test_recommend.py` | recommend CLI command, YAML output validity, qlora recommendation |
 | `test_evaluation.py` | RougeMetric, BleuMetric, MetricRegistry, BenchmarkReport, BenchmarkRunner |
 | `test_cli_train.py` | CLI train command wiring for all 5 methods, config file precedence |
-| `test_merge.py` | finetune-cli merge: happy path, missing dir/config, dtype validation |
-| `test_evaluate.py` | finetune-cli evaluate: output display, unknown metric, num-samples flag |
-| `test_benchmark.py` | finetune-cli benchmark: summary output, run_comparison called |
-| `test_upload.py` | finetune-cli upload: token, private, HF_TOKEN env, merge-adapter flow |
+| `test_merge.py` | lmtool merge: happy path, missing dir/config, dtype validation |
+| `test_evaluate.py` | lmtool evaluate: output display, unknown metric, num-samples flag |
+| `test_benchmark.py` | lmtool benchmark: summary output, run_comparison called |
+| `test_upload.py` | lmtool upload: token, private, HF_TOKEN env, merge-adapter flow |
 | `test_data.py` | detect_columns, quick_load, prepare_dataset, error types (no HF downloads) |
 | `test_integration.py` | End-to-end: real GPT-2, 1 step, asserts adapter saved |
 
@@ -29,7 +29,7 @@ Unit tests (mocked, no GPU) + integration tests (real GPT-2, CPU ok).
   collectable without torch installed. Use `MagicMock` with `param.numel.return_value = N`.
 - **All unit tests mock HF Trainer and PEFT** — no real model loads, no GPU needed
 - **patch() target = where the name is used, not where it's exported**
-  e.g. `finetune_cli.data.pipeline.DataPipeline` not `finetune_cli.data.DataPipeline`
+  e.g. `lmtool.data.pipeline.DataPipeline` not `lmtool.data.DataPipeline`
 - **Integration tests are guarded** with `pytest.importorskip` at module level
 - `conftest.py` at repo root handles `sys.path` — never rely on `PYTHONPATH`
 - New trainers always get their own test file, not tacked onto `test_trainers.py`

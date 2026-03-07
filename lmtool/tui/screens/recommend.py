@@ -1,4 +1,4 @@
-"""RecommendScreen — form for `finetune-cli recommend`."""
+"""RecommendScreen — form for `lmtool recommend`."""
 
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -9,7 +9,7 @@ from textual.widgets import Button, Footer, Header, Input, Label
 
 
 class RecommendScreen(Screen):
-    """Form screen for the `finetune-cli recommend` command.
+    """Form screen for the `lmtool recommend` command.
 
     Collects: model name, optional output path.
     Submits → RunningScreen which streams the recommendation output.
@@ -118,11 +118,11 @@ class RecommendScreen(Screen):
             )
             return
 
-        command = ["finetune-cli", "recommend", model]
+        command = ["lmtool", "recommend", model]
         if output:
             command += ["--output", output]
 
-        from finetune_cli.tui.screens.running import RunningScreen
+        from lmtool.tui.screens.running import RunningScreen
         self.app.switch_screen(
             RunningScreen(
                 command=command,

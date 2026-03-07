@@ -1,8 +1,8 @@
-# finetune-cli
+# lmtool
 
-**Production-grade LLM fine-tuning, distillation, and pruning from the command line.**
+**Production-grade LLM fine tuning, distillation, and pruning from the command line.**
 
-[![CI](https://github.com/Abdur-azure/finetune_cli/actions/workflows/ci.yml/badge.svg)](https://github.com/Abdur-azure/finetune_cli/actions)
+[![CI](https://github.com/Abdur-azure/lmtool/actions/workflows/ci.yml/badge.svg)](https://github.com/Abdur-azure/lmtool/actions)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -10,15 +10,15 @@
 
 ## What it does
 
-`finetune-cli` is a modular Python framework for fine-tuning, distilling, and pruning large language models. It wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.
+`lmtool` is a modular Python framework for fine-tuning, distilling, and pruning large language models. It wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.
 
 ---
 
 ## Install
 
 ```bash
-git clone https://github.com/Abdur-azure/finetune_cli.git
-cd finetune_cli
+git clone https://github.com/Abdur-azure/lmtool.git
+cd lmtool
 pip install -e .
 ```
 
@@ -31,16 +31,16 @@ pip install -e .
 python examples/generate_sample_data.py
 
 # 2. Not sure which method to use? Ask
-finetune-cli recommend gpt2 --output my_config.yaml
+lmtool recommend gpt2 --output my_config.yaml
 
 # 3. Train with the generated config
-finetune-cli train --config my_config.yaml
+lmtool train --config my_config.yaml
 
 # 4. Or use a ready-made config
-finetune-cli train --config examples/configs/lora_gpt2.yaml
+lmtool train --config examples/configs/lora_gpt2.yaml
 
 # 5. Launch the interactive TUI
-finetune-cli tui
+lmtool tui
 ```
 
 ---
@@ -49,15 +49,15 @@ finetune-cli tui
 
 | Command | What it does |
 |---------|-------------|
-| `finetune-cli train` | Fine-tune using a YAML config or inline flags (LoRA / QLoRA / Full / Instruction / DPO / Distillation) |
-| `finetune-cli evaluate` | Score a saved checkpoint (ROUGE, BLEU, Perplexity) |
-| `finetune-cli benchmark` | Before/after comparison: base vs fine-tuned |
-| `finetune-cli merge` | Merge LoRA adapter into base model → standalone model |
-| `finetune-cli upload` | Push adapter or merged model to HuggingFace Hub |
-| `finetune-cli recommend` | Inspect model size + VRAM, output optimal YAML config |
-| `finetune-cli prune` | Structured pruning — zero lowest-magnitude attention heads |
-| `finetune-cli wanda` | WANDA unstructured pruning — zero weights by \|W\|×activation score |
-| `finetune-cli tui` | Interactive Textual TUI — all commands via a terminal UI |
+| `lmtool train` | Fine-tune using a YAML config or inline flags (LoRA / QLoRA / Full / Instruction / DPO / Distillation) |
+| `lmtool evaluate` | Score a saved checkpoint (ROUGE, BLEU, Perplexity) |
+| `lmtool benchmark` | Before/after comparison: base vs fine-tuned |
+| `lmtool merge` | Merge LoRA adapter into base model → standalone model |
+| `lmtool upload` | Push adapter or merged model to HuggingFace Hub |
+| `lmtool recommend` | Inspect model size + VRAM, output optimal YAML config |
+| `lmtool prune` | Structured pruning — zero lowest-magnitude attention heads |
+| `lmtool wanda` | WANDA unstructured pruning — zero weights by \|W\|×activation score |
+| `lmtool tui` | Interactive Textual TUI — all commands via a terminal UI |
 
 ---
 
@@ -79,13 +79,13 @@ finetune-cli tui
 
 ```bash
 # Structured pruning — zero lowest-magnitude attention heads
-finetune-cli prune ./outputs/gpt2_lora \
+lmtool prune ./outputs/gpt2_lora \
     --output ./outputs/gpt2_pruned \
     --sparsity 0.3 \
     --method heads
 
 # WANDA unstructured pruning — weight × activation scoring, zero-shot
-finetune-cli wanda ./outputs/gpt2_lora \
+lmtool wanda ./outputs/gpt2_lora \
     --output ./outputs/gpt2_wanda \
     --sparsity 0.5 \
     --dataset ./data/sample.jsonl
@@ -112,11 +112,11 @@ finetune-cli wanda ./outputs/gpt2_lora \
 ## Python API
 
 ```python
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import TrainingMethod, DatasetSource
-from finetune_cli.models.loader import load_model_and_tokenizer
-from finetune_cli.data import prepare_dataset
-from finetune_cli.trainers import TrainerFactory
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import TrainingMethod, DatasetSource
+from lmtool.models.loader import load_model_and_tokenizer
+from lmtool.data import prepare_dataset
+from lmtool.trainers import TrainerFactory
 
 config = (
     ConfigBuilder()

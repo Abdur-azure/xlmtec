@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://Abdur-azure.github.io/finetune_cli/training_and_evaluation/">
+        <link rel="canonical" href="https://Abdur-azure.github.io/lmtool/training_and_evaluation/">
       
       
         <link rel="prev" href="../installation/">
@@ -164,13 +164,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/Abdur-azure/finetune_cli" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/Abdur-azure/lmtool" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    finetune_cli
+    lmtool
   </div>
 </a>
       </div>
@@ -210,13 +210,13 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/Abdur-azure/finetune_cli" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/Abdur-azure/lmtool" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    finetune_cli
+    lmtool
   </div>
 </a>
     </div>
@@ -237,7 +237,7 @@
   <span class="md-ellipsis">
     
   
-    finetune-cli
+    lmtool
   
 
     
@@ -1695,8 +1695,8 @@
 - When you need multiple task-specific adapters
 - Balance between quality and efficiency</p>
 <p><strong>Configuration:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingMethod</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingMethod</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigBuilder</span><span class="p">()</span> \
     <span class="o">.</span><span class="n">with_model</span><span class="p">(</span><span class="s2">&quot;gpt2&quot;</span><span class="p">)</span> \
@@ -1741,7 +1741,7 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_with_lora</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_with_lora</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">train_with_lora</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
@@ -1830,7 +1830,7 @@
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_with_qlora</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_with_qlora</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">train_with_qlora</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">quantized_model</span><span class="p">,</span>
@@ -1843,7 +1843,7 @@
 </code></pre></div>
 
 <p><strong>Best Practices:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_qlora_best_practices</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_qlora_best_practices</span>
 
 <span class="n">practices</span> <span class="o">=</span> <span class="n">get_qlora_best_practices</span><span class="p">()</span>
 <span class="c1"># Returns comprehensive recommendations for QLoRA training</span>
@@ -1875,7 +1875,7 @@
 </code></pre></div>
 
 <p><strong>Memory Estimation:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">FullFineTuner</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">FullFineTuner</span>
 
 <span class="n">trainer</span> <span class="o">=</span> <span class="n">FullFineTuner</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 <span class="n">memory</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">estimate_memory_usage</span><span class="p">()</span>
@@ -1887,7 +1887,7 @@
 </code></pre></div>
 
 <p><strong>Example:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_full_finetuning</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_full_finetuning</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">train_full_finetuning</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
@@ -2011,11 +2011,11 @@
 <hr />
 <h2 id="training-examples">📝 Training Examples<a class="headerlink" href="#training-examples" title="Permanent link">&para;</a></h2>
 <h3 id="example-1-quick-lora-training"><strong>Example 1: Quick LoRA Training</strong><a class="headerlink" href="#example-1-quick-lora-training" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingMethod</span><span class="p">,</span> <span class="n">DatasetSource</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.models.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_model_and_tokenizer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_dataset</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_model</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingMethod</span><span class="p">,</span> <span class="n">DatasetSource</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.models.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_model_and_tokenizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_model</span>
 
 <span class="c1"># 1. Configuration</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigBuilder</span><span class="p">()</span> \
@@ -2171,8 +2171,8 @@
 <h3 id="rouge-metrics"><strong>ROUGE Metrics</strong><a class="headerlink" href="#rouge-metrics" title="Permanent link">&para;</a></h3>
 <p><strong>ROUGE (Recall-Oriented Understudy for Gisting Evaluation)</strong></p>
 <p>Measures overlap between generated and reference text.</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">evaluate_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">EvaluationMetric</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">evaluate_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">EvaluationMetric</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">EvaluationConfig</span><span class="p">(</span>
     <span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
@@ -2246,7 +2246,7 @@
 - When both precision and recall matter</p>
 <h3 id="exact-match"><strong>Exact Match</strong><a class="headerlink" href="#exact-match" title="Permanent link">&para;</a></h3>
 <p>Percentage of predictions that exactly match reference.</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactMatchMetric</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactMatchMetric</span>
 
 <span class="c1"># With normalization</span>
 <span class="n">metric</span> <span class="o">=</span> <span class="n">ExactMatchMetric</span><span class="p">(</span>
@@ -2269,7 +2269,7 @@
 <h2 id="benchmarking">🔬 Benchmarking<a class="headerlink" href="#benchmarking" title="Permanent link">&para;</a></h2>
 <h3 id="basic-benchmarking"><strong>Basic Benchmarking</strong><a class="headerlink" href="#basic-benchmarking" title="Permanent link">&para;</a></h3>
 <p>Compare base model vs fine-tuned model:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">benchmark_models</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">benchmark_models</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">benchmark_models</span><span class="p">(</span>
     <span class="n">base_model</span><span class="o">=</span><span class="n">base_model</span><span class="p">,</span>
@@ -2296,7 +2296,7 @@ Average Improvement: +55.36%
 </code></pre></div>
 
 <h3 id="generate-reports"><strong>Generate Reports</strong><a class="headerlink" href="#generate-reports" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReportGenerator</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReportGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># Markdown report</span>
@@ -2323,7 +2323,7 @@ Average Improvement: +55.36%
 </code></pre></div>
 
 <h3 id="compare-pre-computed-metrics"><strong>Compare Pre-computed Metrics</strong><a class="headerlink" href="#compare-pre-computed-metrics" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_metrics</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_metrics</span>
 
 <span class="n">base_metrics</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;rouge1&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
@@ -2345,12 +2345,12 @@ Average Improvement: +55.36%
 <hr />
 <h2 id="complete-workflows">🔄 Complete Workflows<a class="headerlink" href="#complete-workflows" title="Permanent link">&para;</a></h2>
 <h3 id="workflow-1-train-and-evaluate"><strong>Workflow 1: Train and Evaluate</strong><a class="headerlink" href="#workflow-1-train-and-evaluate" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingMethod</span><span class="p">,</span> <span class="n">EvaluationMetric</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.models.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_model_and_tokenizer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_dataset</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">evaluate_model</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingMethod</span><span class="p">,</span> <span class="n">EvaluationMetric</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.models.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_model_and_tokenizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">evaluate_model</span>
 
 <span class="c1"># 1. Configuration</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigBuilder</span><span class="p">()</span> \
@@ -2401,7 +2401,7 @@ Average Improvement: +55.36%
 </code></pre></div>
 
 <h3 id="workflow-2-beforeafter-comparison"><strong>Workflow 2: Before/After Comparison</strong><a class="headerlink" href="#workflow-2-beforeafter-comparison" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">benchmark_models</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">benchmark_models</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># Load base model</span>
@@ -2428,7 +2428,7 @@ Average Improvement: +55.36%
 </code></pre></div>
 
 <h3 id="workflow-3-quick-evaluation"><strong>Workflow 3: Quick Evaluation</strong><a class="headerlink" href="#workflow-3-quick-evaluation" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">quick_evaluate</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">quick_evaluate</span>
 
 <span class="c1"># Fast evaluation without configuration</span>
 <span class="n">test_inputs</span> <span class="o">=</span> <span class="p">[</span>
@@ -2473,7 +2473,7 @@ Average Improvement: +55.36%
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
 <span class="c1"># Save training state</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoRATrainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoRATrainer</span>
 
 <span class="n">trainer</span> <span class="o">=</span> <span class="n">LoRATrainer</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
@@ -2548,7 +2548,7 @@ Average Improvement: +55.36%
 
 <h3 id="method-selection"><strong>Method Selection</strong><a class="headerlink" href="#method-selection" title="Permanent link">&para;</a></h3>
 <p><strong>Use the Method Recommender:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">finetune_cli.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodRecommender</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lmtool.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MethodRecommender</span>
 
 <span class="n">recommendation</span> <span class="o">=</span> <span class="n">MethodRecommender</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span>
     <span class="n">model_size_params</span><span class="o">=</span><span class="mf">124e6</span><span class="p">,</span>   <span class="c1"># GPT-2 small</span>

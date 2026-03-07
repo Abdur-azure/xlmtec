@@ -1,4 +1,4 @@
-"""EvaluateScreen — form for `finetune-cli evaluate`."""
+"""BenchmarkScreen — form for `lmtool evaluate benchmark`."""
 
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -8,20 +8,20 @@ from textual.validation import Length
 from textual.widgets import Button, Checkbox, Footer, Header, Input, Label
 
 _METRIC_OPTIONS = [
-    ("rouge1",      "ROUGE-1"),
-    ("rouge2",      "ROUGE-2"),
-    ("rougeL",      "ROUGE-L"),
-    ("bleu",        "BLEU"),
-    ("perplexity",  "Perplexity"),
+    ("rouge1",     "ROUGE-1"),
+    ("rouge2",     "ROUGE-2"),
+    ("rougeL",     "ROUGE-L"),
+    ("bleu",       "BLEU"),
+    ("perplexity", "Perplexity"),
 ]
 
 
-class EvaluateScreen(Screen):
-    """Form screen for the `finetune-cli evaluate` command.
+class BenchmarkScreen(Screen):
+    """Form screen for `lmtool evaluate benchmark`.
 
-    Collects: model/checkpoint path, dataset path, metrics (multi-select
-    checkboxes), max-samples, optional report output path.
-    Submits → RunningScreen with the built CLI command.
+    Collects: base model, fine-tuned model path, dataset, metrics,
+    max-samples, optional report path.
+    Submits → RunningScreen.
     """
 
     BINDINGS = [
@@ -30,16 +30,16 @@ class EvaluateScreen(Screen):
     ]
 
     DEFAULT_CSS = """
-    EvaluateScreen {
+    BenchmarkScreen {
         background: $background;
     }
 
-    EvaluateScreen .form-container {
+    BenchmarkScreen .form-container {
         padding: 1 4;
         height: 1fr;
     }
 
-    EvaluateScreen .form-title {
+    BenchmarkScreen .form-title {
         color: $accent;
         text-style: bold;
         height: 3;
@@ -47,20 +47,20 @@ class EvaluateScreen(Screen):
         padding: 0 0 1 0;
     }
 
-    EvaluateScreen .field-label {
+    BenchmarkScreen .field-label {
         color: $text-muted;
         text-style: bold;
         height: 1;
         margin: 1 0 0 0;
     }
 
-    EvaluateScreen .field-hint {
+    BenchmarkScreen .field-hint {
         color: $text-muted;
         height: 1;
         margin: 0 0 0 1;
     }
 
-    EvaluateScreen .metrics-group {
+    BenchmarkScreen .metrics-group {
         layout: grid;
         grid-size: 3 2;
         grid-gutter: 0 2;
@@ -68,19 +68,19 @@ class EvaluateScreen(Screen):
         margin: 0 0 0 1;
     }
 
-    EvaluateScreen .form-actions {
+    BenchmarkScreen .form-actions {
         height: 5;
         align: left middle;
         layout: horizontal;
         padding: 1 0;
     }
 
-    EvaluateScreen Button {
+    BenchmarkScreen Button {
         margin: 0 2 0 0;
         min-width: 16;
     }
 
-    EvaluateScreen .validation-error {
+    BenchmarkScreen .validation-error {
         color: $error;
         height: 1;
     }
@@ -89,13 +89,21 @@ class EvaluateScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
         with ScrollableContainer(classes="form-container"):
-            yield Label("📊  Evaluate — score a checkpoint", classes="form-title")
+            yield Label("⚡  Benchmark — compare base vs fine-tuned", classes="form-title")
 
-            yield Label("Model / checkpoint path *", classes="field-label")
-            yield Label("Path to saved adapter or full model", classes="field-hint")
+            yield Label("Base model name or path *", classes="field-label")
+            yield Label("e.g. gpt2, meta-llama/Llama-3.2-1B", classes="field-hint")
+            yield Input(
+                placeholder="gpt2",
+                id="input-base",
+                validators=[Length(minimum=1)],
+            )
+
+            yield Label("Fine-tuned model path *", classes="field-label")
+            yield Label("Path to saved adapter or full fine-tuned model", classes="field-hint")
             yield Input(
                 placeholder="./outputs/gpt2_lora",
-                id="input-model",
+                id="input-finetuned",
                 validators=[Length(minimum=1)],
             )
 
@@ -126,14 +134,14 @@ class EvaluateScreen(Screen):
 
             yield Label("Save report to  (optional)", classes="field-label")
             yield Input(
-                placeholder="./eval_report.md",
+                placeholder="./benchmark_report.md",
                 id="input-report",
             )
 
             yield Label("", classes="validation-error", id="validation-msg")
 
             with Horizontal(classes="form-actions"):
-                yield Button("📊  Run Evaluation", variant="primary", id="btn-submit")
+                yield Button("⚡  Run Benchmark", variant="primary", id="btn-submit")
                 yield Button("← Back", variant="default", id="btn-back")
 
         yield Footer()
@@ -150,14 +158,17 @@ class EvaluateScreen(Screen):
         self.app.switch_screen("home")
 
     def action_submit(self) -> None:
-        model = self.query_one("#input-model", Input).value.strip()
+        base = self.query_one("#input-base", Input).value.strip()
+        finetuned = self.query_one("#input-finetuned", Input).value.strip()
         dataset = self.query_one("#input-dataset", Input).value.strip()
         max_samples = self.query_one("#input-max-samples", Input).value.strip()
         report = self.query_one("#input-report", Input).value.strip()
 
         errors = []
-        if not model:
-            errors.append("Model path is required.")
+        if not base:
+            errors.append("Base model is required.")
+        if not finetuned:
+            errors.append("Fine-tuned path is required.")
         if not dataset:
             errors.append("Dataset path is required.")
 
@@ -175,19 +186,24 @@ class EvaluateScreen(Screen):
             )
             return
 
-        command = ["finetune-cli", "evaluate", model, "--dataset", dataset]
+        command = [
+            "lmtool", "evaluate", "benchmark",
+            "--base", base,
+            "--finetuned", finetuned,
+            "--dataset", dataset,
+        ]
         for m in selected_metrics:
-            command += ["--metrics", m]
+            command += ["--metric", m]
         if max_samples:
             command += ["--max-samples", max_samples]
         if report:
-            command += ["--save-report", report]
+            command += ["--report", report]
 
-        from finetune_cli.tui.screens.running import RunningScreen
+        from lmtool.tui.screens.running import RunningScreen
         self.app.switch_screen(
             RunningScreen(
                 command=command,
-                title=f"Evaluate  {model}",
-                subtitle=f"metrics={','.join(selected_metrics)}",
+                title=f"Benchmark  {base}  vs  {finetuned}",
+                subtitle=f"dataset={dataset}",
             )
         )

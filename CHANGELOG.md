@@ -18,10 +18,10 @@ All notable changes to this project are documented here.
   test timeout raised `120s` → `600s` (cold runner GPT-2 download); (4) `textual`
   and `pytest-asyncio` now installed via extras (TUI tests were silently failing);
   (5) lint job installs package first so ruff can resolve all imports.
-- `audit_repo.py` — fixed `finetune_finetune_cli/...` doubled-prefix typo on TUI
+- `audit_repo.py` — fixed `finetune_lmtool/...` doubled-prefix typo on TUI
   widget entries; added `docs/` entries; cleaned up and sorted all sections.
 - `CLAUDE.md` — fixed all `cli/main.py` bare path refs →
-  `finetune_cli/cli/main.py`; added architecture rule 11 (heavy deps optional);
+  `lmtool/cli/main.py`; added architecture rule 11 (heavy deps optional);
   added `[ml,tui,dev]` install note; pruner table added; Sprint 30–32 history rows.
 - `docs/installation.md` — corrected Python requirement `3.8+` → `3.10+`;
   replaced `pip install -r requirements.txt` with `pip install -e ".[full]"`;
@@ -64,17 +64,17 @@ All notable changes to this project are documented here.
 ## [3.13.0] — Sprint 30: "WANDA Pruning" — 2026-03-05
 
 ### Added
-- `finetune_cli/core/types.py` — `WandaConfig` frozen dataclass
+- `lmtool/core/types.py` — `WandaConfig` frozen dataclass
   (output_dir, sparsity=0.5, n_calibration_samples=128,
   calibration_seq_len=128, layer_types=None, use_row_wise=True).
-- `finetune_cli/trainers/wanda_pruner.py` — `WandaPruner` + `WandaResult`.
+- `lmtool/trainers/wanda_pruner.py` — `WandaPruner` + `WandaResult`.
   WANDA unstructured pruning: registers forward hooks to collect input
   activation norms over a calibration dataset, scores each weight by
   |W_ij| * ||X_j||_2, zeros the bottom `sparsity` fraction per layer.
   Falls back to magnitude-only scoring when no calibration data is
   provided. Supports row-wise and global sparsity modes. Auto-targets
   nn.Linear and Conv1D layers. Returns `WandaResult` frozen dataclass.
-- `finetune_cli/trainers/__init__.py` — `WandaPruner`, `WandaResult` exported.
+- `lmtool/trainers/__init__.py` — `WandaPruner`, `WandaResult` exported.
 - `cli/main.py` — `wanda` subcommand. Args: model_path, --output, --sparsity
   (0.5), --n-samples (128), --seq-len (128), --dataset (optional),
   --row-wise/--global.
@@ -98,10 +98,10 @@ All notable changes to this project are documented here.
 ## [3.12.0] — Sprint 29: "Structured Pruning" — 2026-03-04
 
 ### Added
-- `finetune_cli/core/types.py` — `PruningConfig` frozen dataclass
+- `lmtool/core/types.py` — `PruningConfig` frozen dataclass
   (output_dir, sparsity=0.3, method="heads", importance_metric="magnitude",
   min_heads_per_layer=1). Added BEFORE any trainer code per lessons.md pattern.
-- `finetune_cli/trainers/structured_pruner.py` — `StructuredPruner` class.
+- `lmtool/trainers/structured_pruner.py` — `StructuredPruner` class.
   Soft structured attention-head pruning: scores each head by mean absolute
   weight magnitude, zeroes the bottom `sparsity` fraction per layer, respects
   `min_heads_per_layer` safety floor. Supports `method="heads"` (attention
@@ -109,7 +109,7 @@ All notable changes to this project are documented here.
   transformer layer structure across GPT-2, LLaMA, OPT, BERT-style models.
   Returns `PruningResult` frozen dataclass. No training loop — model is
   modified in-place and saved via `save_pretrained`.
-- `finetune_cli/trainers/__init__.py` — `StructuredPruner`, `PruningResult`
+- `lmtool/trainers/__init__.py` — `StructuredPruner`, `PruningResult`
   exported.
 - `cli/main.py` — `prune` subcommand. Args: model_path, --output, --sparsity
   (default 0.3), --method (heads|ffn), --min-heads (default 1).
@@ -133,16 +133,16 @@ All notable changes to this project are documented here.
 ## [3.11.0] — Sprint 28: "TUI Upload + Polish" — 2026-03-04
 
 ### Added
-- `finetune_cli/tui/screens/upload.py` — `UploadScreen`: model path Input,
+- `lmtool/tui/screens/upload.py` — `UploadScreen`: model path Input,
   repo_id Input, token Input (`password=True` — masked), commit message Input,
   private `Switch`, merge-adapter `Switch` (reveals base model Input when toggled),
-  inline validation. Builds `finetune-cli upload` command → `RunningScreen`.
-- `finetune_cli/tui/app.css` — full Textual CSS theme. Styles all widget types
+  inline validation. Builds `lmtool upload` command → `RunningScreen`.
+- `lmtool/tui/app.css` — full Textual CSS theme. Styles all widget types
   (Input, Select, Checkbox, Switch, Button, DataTable, RichLog, CommandCard,
   running/result/form shared classes). Replaces inline CSS in `app.py`.
-- `finetune_cli/tui/screens/home.py` — Upload card now wired to `UploadScreen`.
+- `lmtool/tui/screens/home.py` — Upload card now wired to `UploadScreen`.
   All 6 cards fully functional.
-- `finetune_cli/tui/app.py` — inline `CSS` block replaced with `CSS_PATH`
+- `lmtool/tui/app.py` — inline `CSS` block replaced with `CSS_PATH`
   pointing to `app.css`.
 - `docs/tui.md` — full usage guide: install, home screen ASCII art, global
   keybindings table, per-command field reference, running/result screen ASCII
@@ -160,17 +160,17 @@ All notable changes to this project are documented here.
 ## [3.10.0] — Sprint 27: "TUI Evaluate, Benchmark, Merge" — 2026-03-04
 
 ### Added
-- `finetune_cli/tui/screens/evaluate.py` — `EvaluateScreen`: model path Input,
+- `lmtool/tui/screens/evaluate.py` — `EvaluateScreen`: model path Input,
   dataset Input, 5-metric Checkbox group (ROUGE-1/2/L, BLEU, Perplexity — default
   ROUGE pre-selected), max-samples Input, optional report path. Builds
-  `finetune-cli evaluate` command → `RunningScreen`.
-- `finetune_cli/tui/screens/benchmark.py` — `BenchmarkScreen`: base model Input,
+  `lmtool evaluate` command → `RunningScreen`.
+- `lmtool/tui/screens/benchmark.py` — `BenchmarkScreen`: base model Input,
   fine-tuned path Input, dataset Input, same metric checkboxes, max-samples, report
-  path. Builds `finetune-cli evaluate benchmark` command → `RunningScreen`.
-- `finetune_cli/tui/screens/merge.py` — `MergeScreen`: adapter dir Input, base model
+  path. Builds `lmtool evaluate benchmark` command → `RunningScreen`.
+- `lmtool/tui/screens/merge.py` — `MergeScreen`: adapter dir Input, base model
   Input, output dir Input, dtype `Select` (float32/float16/bfloat16). Builds
-  `finetune-cli merge` command → `RunningScreen`.
-- `finetune_cli/tui/screens/home.py` — Evaluate, Benchmark, Merge cards now push
+  `lmtool merge` command → `RunningScreen`.
+- `lmtool/tui/screens/home.py` — Evaluate, Benchmark, Merge cards now push
   real screens. Only Upload remains as a stub (Sprint 28).
 - `tests/test_tui.py` — 16 new Pilot tests across 3 new screen classes (card nav,
   form fields render, back nav, empty-submit validation). Total: 46 tests.
@@ -186,22 +186,22 @@ All notable changes to this project are documented here.
 ## [3.9.0] — Sprint 26: "TUI Train & Recommend" — 2026-03-04
 
 ### Added
-- `finetune_cli/tui/widgets/log_panel.py` — `LogPanel`: scrolling `RichLog` widget,
+- `lmtool/tui/widgets/log_panel.py` — `LogPanel`: scrolling `RichLog` widget,
   `write_line()` + `clear()` helpers, auto-scroll reactive.
-- `finetune_cli/tui/widgets/metric_table.py` — `MetricTable`: `DataTable` widget
+- `lmtool/tui/widgets/metric_table.py` — `MetricTable`: `DataTable` widget
   with `populate(dict)` helper for displaying result key/value pairs.
-- `finetune_cli/tui/screens/running.py` — `RunningScreen`: runs CLI command in
+- `lmtool/tui/screens/running.py` — `RunningScreen`: runs CLI command in
   background thread via `@work(thread=True)`. Streams stdout/stderr to `LogPanel`.
   Elapsed timer ticks every second. Cancel via button or q/Ctrl+C → home.
   On finish → switches to `ResultScreen`.
-- `finetune_cli/tui/screens/result.py` — `ResultScreen`: success/failure banner,
+- `lmtool/tui/screens/result.py` — `ResultScreen`: success/failure banner,
   `MetricTable` of results, Home + Quit buttons.
-- `finetune_cli/tui/screens/train.py` — `TrainScreen`: full form (model Input,
+- `lmtool/tui/screens/train.py` — `TrainScreen`: full form (model Input,
   method Select with all 7 methods, dataset Input, epochs Input, lr Input, output
-  Input). Inline validation. Submit → `RunningScreen` with `finetune-cli train` cmd.
-- `finetune_cli/tui/screens/recommend.py` — `RecommendScreen`: model Input,
-  optional output path Input. Submit → `RunningScreen` with `finetune-cli recommend`.
-- `finetune_cli/tui/screens/home.py` — Train + Recommend cards now push real screens.
+  Input). Inline validation. Submit → `RunningScreen` with `lmtool train` cmd.
+- `lmtool/tui/screens/recommend.py` — `RecommendScreen`: model Input,
+  optional output path Input. Submit → `RunningScreen` with `lmtool recommend`.
+- `lmtool/tui/screens/home.py` — Train + Recommend cards now push real screens.
   Evaluate/Benchmark/Merge/Upload show "coming in Sprint 27" toast stub.
 - `tests/test_tui.py` — 14 new Pilot tests: train card navigation, form fields
   render, back button returns home, empty submit shows validation, recommend card
@@ -216,19 +216,19 @@ All notable changes to this project are documented here.
 ## [3.8.0] — Sprint 25: "TUI Foundation" — 2025-03-03
 
 ### Added
-- `finetune_cli/tui/__init__.py` — TUI package.
-- `finetune_cli/tui/app.py` — `FinetuneApp(App)`: root Textual app, screen stack
+- `lmtool/tui/__init__.py` — TUI package.
+- `lmtool/tui/app.py` — `LMToolApp(App)`: root Textual app, screen stack
   management, global keybindings (q=quit, h/esc=go_home, ctrl+c=quit),
   `on_mount` pushes HomeScreen, global CSS theme.
-- `finetune_cli/tui/screens/__init__.py` — screens package.
-- `finetune_cli/tui/screens/home.py` — `HomeScreen`: 6 `CommandCard` widgets in a
+- `lmtool/tui/screens/__init__.py` — screens package.
+- `lmtool/tui/screens/home.py` — `HomeScreen`: 6 `CommandCard` widgets in a
   3×2 `Grid`, header with clock, subtitle bar, footer with keybinding hints.
   `on_command_card_selected` stub (full routing Sprint 26+).
-- `finetune_cli/tui/widgets/__init__.py` — widgets package.
-- `finetune_cli/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable
+- `lmtool/tui/widgets/__init__.py` — widgets package.
+- `lmtool/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable
   styled card with label, description, icon, hover/focus CSS states.
   Posts `CommandCard.Selected` message on click or Enter.
-- `finetune_cli/cli/main.py` — `tui` subcommand added (lazy import, graceful
+- `lmtool/cli/main.py` — `tui` subcommand added (lazy import, graceful
   ImportError message if textual not installed).
 - `tests/test_tui.py` — 10 Textual Pilot headless tests: app mounts, HomeScreen
   is initial screen, 6 cards render, card IDs correct, cards focusable,
@@ -247,19 +247,19 @@ All notable changes to this project are documented here.
 ## [3.8.0] — Sprint 25: "TUI Foundation" — 2026-03-04
 
 ### Added
-- `finetune_cli/tui/__init__.py` — TUI package init.
-- `finetune_cli/tui/app.py` — `FinetuneApp(App)` root Textual app. Global bindings:
+- `lmtool/tui/__init__.py` — TUI package init.
+- `lmtool/tui/app.py` — `LMToolApp(App)` root Textual app. Global bindings:
   `q`=quit, `h`/`escape`=home, `ctrl+c`=quit. `action_go_home()` pops all screens
   above home. `run()` entry point called by CLI.
-- `finetune_cli/tui/screens/__init__.py` — screens package init.
-- `finetune_cli/tui/screens/home.py` — `HomeScreen`: 6 `CommandCard` widgets in a
+- `lmtool/tui/screens/__init__.py` — screens package init.
+- `lmtool/tui/screens/home.py` — `HomeScreen`: 6 `CommandCard` widgets in a
   3×2 CSS grid. Arrow-key nav (wraps), Tab/Shift+Tab, Enter to select. Sprint 25
   shows a `notify()` stub — real screen push wired in Sprint 26+.
-- `finetune_cli/tui/widgets/__init__.py` — widgets package init.
-- `finetune_cli/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable card
+- `lmtool/tui/widgets/__init__.py` — widgets package init.
+- `lmtool/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable card
   with icon, bold label, description. Hover + focus border highlight via CSS.
   Posts `CommandCard.Selected` on click or Enter. `can_focus = True`.
-- `cli/main.py` — `tui` subcommand added (lazy import of `FinetuneApp`, graceful
+- `cli/main.py` — `tui` subcommand added (lazy import of `LMToolApp`, graceful
   error if textual not installed).
 - `tests/test_tui.py` — 16 async Pilot tests (headless): app mounts, HomeScreen is
   initial screen, title set, 6 cards rendered, card IDs correct, cards focusable,
@@ -276,19 +276,19 @@ All notable changes to this project are documented here.
 ## [3.7.0] — Sprint 24: "Feature Distillation" — 2025-03-02
 
 ### Added
-- `finetune_cli/core/types.py` — `FeatureDistillationConfig` frozen dataclass
+- `lmtool/core/types.py` — `FeatureDistillationConfig` frozen dataclass
   (teacher_model_name, temperature=2.0, alpha=0.3, beta=0.2,
   feature_layers=None, feature_loss_weight=1.0).
-- `finetune_cli/trainers/feature_distillation_trainer.py` — `FeatureDistillationTrainer`
+- `lmtool/trainers/feature_distillation_trainer.py` — `FeatureDistillationTrainer`
   + `_FeatureDistillationTrainer` (HF Trainer subclass). Three-component loss:
   alpha*CE + beta*KL_output*T² + gamma*MSE_hidden. Auto layer selection when
   feature_layers=None. Dimension mismatch fallback via L2 normalisation.
   `ResourceWarning` for models >1B params.
 - `_select_layers()` helper — evenly-spaced auto selection or explicit validation.
 - `_map_teacher_layer()` helper — proportional student→teacher layer index mapping.
-- `finetune_cli/trainers/factory.py` — `FEATURE_DISTILLATION` wired to
+- `lmtool/trainers/factory.py` — `FEATURE_DISTILLATION` wired to
   `FeatureDistillationTrainer`; `feature_distillation_config` param added.
-- `finetune_cli/trainers/__init__.py` — `FeatureDistillationTrainer` exported.
+- `lmtool/trainers/__init__.py` — `FeatureDistillationTrainer` exported.
 - `tests/test_feature_distillation_trainer.py` — 21 unit tests: `_select_layers`
   (5), `_map_teacher_layer` (3), factory dispatch (2), init/VRAM (3),
   `_setup_peft` (2), `train()` flow (6).
@@ -304,15 +304,15 @@ All notable changes to this project are documented here.
 ## [3.6.0] — Sprint 23: "Response Distillation" — 2025-03-01
 
 ### Added
-- `finetune_cli/trainers/response_distillation_trainer.py` — `ResponseDistillationTrainer`
+- `lmtool/trainers/response_distillation_trainer.py` — `ResponseDistillationTrainer`
   extending `BaseTrainer`. Loads teacher (frozen, eval mode), runs KL divergence +
   CE blended loss via internal `_DistillationTrainer` HF Trainer subclass.
   Issues `ResourceWarning` for student models >1B params (dual-model VRAM concern).
-- `finetune_cli/core/types.py` — `DistillationConfig` frozen dataclass
+- `lmtool/core/types.py` — `DistillationConfig` frozen dataclass
   (teacher_model_name, temperature=2.0, alpha=0.5).
-- `finetune_cli/trainers/factory.py` — `VANILLA_DISTILLATION` wired to
+- `lmtool/trainers/factory.py` — `VANILLA_DISTILLATION` wired to
   `ResponseDistillationTrainer`; `distillation_config` param added to `create()` and `train()`.
-- `finetune_cli/trainers/__init__.py` — `ResponseDistillationTrainer` exported.
+- `lmtool/trainers/__init__.py` — `ResponseDistillationTrainer` exported.
 - `tests/test_response_distillation_trainer.py` — 12 unit tests: factory dispatch,
   MissingConfigError, config stored, VRAM warning/no-warning, _setup_peft, train() flow,
   eval_loss extracted, model saved, teacher frozen, teacher load failure → TrainingError.
@@ -329,7 +329,7 @@ All notable changes to this project are documented here.
 
 ### Fixed
 - `CLAUDE.md` — sprint history frozen at Sprint 12 → updated through Sprint 21; version 2.0.0 → 3.4.0; added two new architecture rules (absolute imports, no real tensors); trainer table added; test commands updated
-- `audit_repo.py` — three trainer paths wrong (`trainers/` → `finetune_cli/trainers/`); added missing top-level files (`README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `audit_repo.py`, `.gitignore`); added `finetune_cli/data/pipeline.py`; CONTEXT.md paths corrected to `finetune_cli/` prefix
+- `audit_repo.py` — three trainer paths wrong (`trainers/` → `lmtool/trainers/`); added missing top-level files (`README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `audit_repo.py`, `.gitignore`); added `lmtool/data/pipeline.py`; CONTEXT.md paths corrected to `lmtool/` prefix
 - `pyproject.toml` — version 3.4.0 → 3.5.0
 
 ---
@@ -426,9 +426,9 @@ All notable changes to this project are documented here.
 ## [2.9.2] — Sprint 13: "Test Coverage Complete" — 2025-02-27
 
 ### Added
-- `tests/test_evaluate.py` — 6 unit tests for `finetune-cli evaluate`
-- `tests/test_benchmark.py` — 6 unit tests for `finetune-cli benchmark`
-- `tests/test_upload.py` — 7 unit tests for `finetune-cli upload`
+- `tests/test_evaluate.py` — 6 unit tests for `lmtool evaluate`
+- `tests/test_benchmark.py` — 6 unit tests for `lmtool benchmark`
+- `tests/test_upload.py` — 7 unit tests for `lmtool upload`
 - `tests/test_cli_train.py` — `test_full_finetuning_via_flags` added
 - `audit_repo.py` — three new test files added to REQUIRED_FILES
 
@@ -495,7 +495,7 @@ All notable changes to this project are documented here.
 ## [2.3.0] — Sprint 5: "Merge & Release" — 2025-02-27
 
 ### Added
-- `finetune-cli merge` subcommand
+- `lmtool merge` subcommand
 - `tests/test_merge.py` — 8 tests
 
 ---

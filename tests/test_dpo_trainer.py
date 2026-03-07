@@ -10,9 +10,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 from datasets import Dataset
 
-from finetune_cli.core.exceptions import DatasetError, TrainingError
-from finetune_cli.core.types import LoRAConfig, TrainingConfig, TrainingMethod
-from finetune_cli.trainers.dpo_trainer import DPOTrainer, validate_dpo_dataset
+from lmtool.core.exceptions import DatasetError, TrainingError
+from lmtool.core.types import LoRAConfig, TrainingConfig, TrainingMethod
+from lmtool.trainers.dpo_trainer import DPOTrainer, validate_dpo_dataset
 
 # ============================================================================
 # FIXTURES
@@ -184,8 +184,8 @@ class TestDPOTrainer:
         mock_trl_module.DPOConfig.return_value = mock_dpo_config
 
         with patch.dict("sys.modules", {"trl": mock_trl_module}):
-            with patch("finetune_cli.trainers.dpo_trainer.get_peft_model", return_value=mock_model):
-                with patch("finetune_cli.trainers.dpo_trainer.detect_target_modules", return_value=["q_proj"]):
+            with patch("lmtool.trainers.dpo_trainer.get_peft_model", return_value=mock_model):
+                with patch("lmtool.trainers.dpo_trainer.detect_target_modules", return_value=["q_proj"]):
                     result = trainer.train(dpo_dataset)
 
         assert result.train_loss == pytest.approx(0.42)
@@ -196,14 +196,14 @@ class TestDPOTrainer:
         self, mock_model, mock_tokenizer, training_config, lora_config
     ):
         trainer = self._make_trainer(mock_model, mock_tokenizer, training_config, lora_config)
-        with patch("finetune_cli.trainers.dpo_trainer.get_peft_model", return_value=mock_model) as mock_gpm:
-            with patch("finetune_cli.trainers.dpo_trainer.detect_target_modules", return_value=["q_proj"]):
+        with patch("lmtool.trainers.dpo_trainer.get_peft_model", return_value=mock_model) as mock_gpm:
+            with patch("lmtool.trainers.dpo_trainer.detect_target_modules", return_value=["q_proj"]):
                 trainer._setup_peft(mock_model)
         mock_gpm.assert_called_once()
 
     def test_factory_creates_dpo_trainer(self, mock_model, mock_tokenizer, training_config, lora_config):
         """TrainerFactory.create() returns a DPOTrainer for method=dpo."""
-        from finetune_cli.trainers.factory import TrainerFactory
+        from lmtool.trainers.factory import TrainerFactory
         trainer = TrainerFactory.create(
             model=mock_model,
             tokenizer=mock_tokenizer,
@@ -214,8 +214,8 @@ class TestDPOTrainer:
 
     def test_factory_dpo_requires_lora_config(self, mock_model, mock_tokenizer, training_config):
         """TrainerFactory.create() raises MissingConfigError if lora_config is None."""
-        from finetune_cli.core.exceptions import MissingConfigError
-        from finetune_cli.trainers.factory import TrainerFactory
+        from lmtool.core.exceptions import MissingConfigError
+        from lmtool.trainers.factory import TrainerFactory
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(
                 model=mock_model,

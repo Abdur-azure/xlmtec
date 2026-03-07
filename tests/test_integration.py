@@ -51,8 +51,8 @@ def output_dir(tmp_path_factory) -> Path:
 @pytest.fixture(scope="module")
 def gpt2_model_and_tokenizer():
     """Load real GPT-2 once per module — shared across all integration tests."""
-    from finetune_cli.core.types import ModelConfig
-    from finetune_cli.models.loader import load_model_and_tokenizer
+    from lmtool.core.types import ModelConfig
+    from lmtool.models.loader import load_model_and_tokenizer
     model, tokenizer = load_model_and_tokenizer(ModelConfig(name="gpt2"))
     return model, tokenizer
 
@@ -74,7 +74,7 @@ def tiny_token_dataset(gpt2_model_and_tokenizer):
 
 def _base_training_config(output_dir: Path):
     """Return a minimal TrainingConfig for 1-step runs."""
-    from finetune_cli.core.types import TrainingConfig, TrainingMethod
+    from lmtool.core.types import TrainingConfig, TrainingMethod
     return TrainingConfig(
         method=TrainingMethod.LORA,
         output_dir=output_dir,
@@ -88,7 +88,7 @@ def _base_training_config(output_dir: Path):
 
 
 def _lora_config():
-    from finetune_cli.core.types import LoRAConfig
+    from lmtool.core.types import LoRAConfig
     return LoRAConfig(r=4, lora_alpha=8, target_modules=["c_attn"])
 
 
@@ -102,8 +102,8 @@ class TestEndToEnd:
 
     def test_config_builds_from_yaml(self, tiny_jsonl, output_dir):
         """ConfigBuilder produces a valid PipelineConfig from inline values."""
-        from finetune_cli.core.config import ConfigBuilder
-        from finetune_cli.core.types import DatasetSource, TrainingMethod
+        from lmtool.core.config import ConfigBuilder
+        from lmtool.core.types import DatasetSource, TrainingMethod
 
         config = (
             ConfigBuilder()
@@ -127,8 +127,8 @@ class TestEndToEnd:
         """Load GPT-2 + LoRA, train 1 step, assert adapter saved."""
         import copy
 
-        from finetune_cli.core.types import TrainingMethod
-        from finetune_cli.trainers import TrainerFactory
+        from lmtool.core.types import TrainingMethod
+        from lmtool.trainers import TrainerFactory
 
         save_dir = output_dir / "lora_gpt2"
         save_dir.mkdir(exist_ok=True)
@@ -150,8 +150,8 @@ class TestEndToEnd:
 
     def test_rouge_metric_runs_on_strings(self):
         """ROUGE metric computes without needing a live model."""
-        from finetune_cli.core.types import EvaluationMetric
-        from finetune_cli.evaluation.metrics import RougeMetric
+        from lmtool.core.types import EvaluationMetric
+        from lmtool.evaluation.metrics import RougeMetric
 
         metric = RougeMetric(EvaluationMetric.ROUGE_L)
         score = metric.compute(
@@ -162,7 +162,7 @@ class TestEndToEnd:
 
     def test_benchmark_report_summary_format(self):
         """BenchmarkReport.summary() produces a non-empty string."""
-        from finetune_cli.evaluation.benchmarker import BenchmarkReport
+        from lmtool.evaluation.benchmarker import BenchmarkReport
 
         report = BenchmarkReport(
             base_scores={"rougeL": 0.25, "bleu": 0.10},
@@ -179,8 +179,8 @@ class TestEndToEnd:
 
         from datasets import Dataset
 
-        from finetune_cli.core.types import TrainingConfig, TrainingMethod
-        from finetune_cli.trainers import InstructionTrainer, TrainerFactory
+        from lmtool.core.types import TrainingConfig, TrainingMethod
+        from lmtool.trainers import InstructionTrainer, TrainerFactory
 
         save_dir = output_dir / "instruction_gpt2"
         save_dir.mkdir(exist_ok=True)
@@ -217,8 +217,8 @@ class TestEndToEnd:
         """recommend command writes a YAML that loads cleanly as PipelineConfig."""
         from typer.testing import CliRunner
 
-        from finetune_cli.cli.main import app
-        from finetune_cli.core.config import PipelineConfig
+        from lmtool.cli.main import app
+        from lmtool.core.config import PipelineConfig
 
         runner = CliRunner()
         cfg_path = tmp_path_factory.mktemp("rec") / "out.yaml"
@@ -241,12 +241,12 @@ class TestResponseDistillationIntegration:
                                                    tiny_token_dataset, output_dir):
         import copy
 
-        from finetune_cli.core.types import (
+        from lmtool.core.types import (
             DistillationConfig,
             TrainingConfig,
             TrainingMethod,
         )
-        from finetune_cli.trainers import ResponseDistillationTrainer
+        from lmtool.trainers import ResponseDistillationTrainer
 
         save_dir = output_dir / "response_distill"
         save_dir.mkdir(exist_ok=True)
@@ -279,13 +279,13 @@ class TestResponseDistillationIntegration:
         """TrainingResult from distillation has correct types."""
         import copy
 
-        from finetune_cli.core.types import (
+        from lmtool.core.types import (
             DistillationConfig,
             TrainingConfig,
             TrainingMethod,
         )
-        from finetune_cli.trainers import ResponseDistillationTrainer
-        from finetune_cli.trainers.base import TrainingResult
+        from lmtool.trainers import ResponseDistillationTrainer
+        from lmtool.trainers.base import TrainingResult
 
         save_dir = output_dir / "response_distill_fields"
         save_dir.mkdir(exist_ok=True)
@@ -319,12 +319,12 @@ class TestFeatureDistillationIntegration:
                                                   tiny_token_dataset, output_dir):
         import copy
 
-        from finetune_cli.core.types import (
+        from lmtool.core.types import (
             FeatureDistillationConfig,
             TrainingConfig,
             TrainingMethod,
         )
-        from finetune_cli.trainers import FeatureDistillationTrainer
+        from lmtool.trainers import FeatureDistillationTrainer
 
         save_dir = output_dir / "feature_distill"
         save_dir.mkdir(exist_ok=True)
@@ -357,12 +357,12 @@ class TestFeatureDistillationIntegration:
         """Explicit feature_layers list runs without error."""
         import copy
 
-        from finetune_cli.core.types import (
+        from lmtool.core.types import (
             FeatureDistillationConfig,
             TrainingConfig,
             TrainingMethod,
         )
-        from finetune_cli.trainers import FeatureDistillationTrainer
+        from lmtool.trainers import FeatureDistillationTrainer
 
         save_dir = output_dir / "feature_distill_explicit"
         save_dir.mkdir(exist_ok=True)
@@ -395,8 +395,8 @@ class TestStructuredPrunerIntegration:
     def test_structured_prune_saves_model(self, gpt2_model_and_tokenizer, output_dir):
         import copy
 
-        from finetune_cli.core.types import PruningConfig
-        from finetune_cli.trainers import StructuredPruner
+        from lmtool.core.types import PruningConfig
+        from lmtool.trainers import StructuredPruner
 
         save_dir = output_dir / "structured_pruned"
         save_dir.mkdir(exist_ok=True)
@@ -422,8 +422,8 @@ class TestStructuredPrunerIntegration:
         """PruningResult has all expected fields with correct types."""
         import copy
 
-        from finetune_cli.core.types import PruningConfig
-        from finetune_cli.trainers import PruningResult, StructuredPruner
+        from lmtool.core.types import PruningConfig
+        from lmtool.trainers import PruningResult, StructuredPruner
 
         save_dir = output_dir / "structured_pruned_fields"
         save_dir.mkdir(exist_ok=True)
@@ -445,8 +445,8 @@ class TestStructuredPrunerIntegration:
         """method='ffn' runs without error on GPT-2."""
         import copy
 
-        from finetune_cli.core.types import PruningConfig
-        from finetune_cli.trainers import StructuredPruner
+        from lmtool.core.types import PruningConfig
+        from lmtool.trainers import StructuredPruner
 
         save_dir = output_dir / "structured_pruned_ffn"
         save_dir.mkdir(exist_ok=True)
@@ -470,8 +470,8 @@ class TestWandaPrunerIntegration:
     def test_wanda_prune_saves_model(self, gpt2_model_and_tokenizer, output_dir):
         import copy
 
-        from finetune_cli.core.types import WandaConfig
-        from finetune_cli.trainers import WandaPruner
+        from lmtool.core.types import WandaConfig
+        from lmtool.trainers import WandaPruner
 
         save_dir = output_dir / "wanda_pruned"
         save_dir.mkdir(exist_ok=True)
@@ -498,8 +498,8 @@ class TestWandaPrunerIntegration:
         """WandaResult has correct types and non-trivial values."""
         import copy
 
-        from finetune_cli.core.types import WandaConfig
-        from finetune_cli.trainers import WandaPruner, WandaResult
+        from lmtool.core.types import WandaConfig
+        from lmtool.trainers import WandaPruner, WandaResult
 
         save_dir = output_dir / "wanda_pruned_fields"
         save_dir.mkdir(exist_ok=True)
@@ -528,8 +528,8 @@ class TestWandaPrunerIntegration:
 
         import torch
 
-        from finetune_cli.core.types import WandaConfig
-        from finetune_cli.trainers import WandaPruner
+        from lmtool.core.types import WandaConfig
+        from lmtool.trainers import WandaPruner
 
         save_dir = output_dir / "wanda_pruned_calib"
         save_dir.mkdir(exist_ok=True)
@@ -555,8 +555,8 @@ class TestWandaPrunerIntegration:
         """use_row_wise=False (global mode) runs without error."""
         import copy
 
-        from finetune_cli.core.types import WandaConfig
-        from finetune_cli.trainers import WandaPruner
+        from lmtool.core.types import WandaConfig
+        from lmtool.trainers import WandaPruner
 
         save_dir = output_dir / "wanda_pruned_global"
         save_dir.mkdir(exist_ok=True)
@@ -583,13 +583,13 @@ class TestCLISmoke:
     """
 
     def test_train_lora_cli_exits_zero(self, tiny_jsonl, output_dir):
-        """finetune-cli train --method lora exits 0 on valid inputs."""
+        """lmtool train --method lora exits 0 on valid inputs."""
         from unittest.mock import MagicMock, patch
 
         from typer.testing import CliRunner
 
-        from finetune_cli.cli.main import app
-        from finetune_cli.trainers.base import TrainingResult
+        from lmtool.cli.main import app
+        from lmtool.trainers.base import TrainingResult
 
         runner = CliRunner()
         save_dir = output_dir / "cli_lora"
@@ -599,9 +599,9 @@ class TestCLISmoke:
             output_dir=save_dir, train_loss=0.5, eval_loss=None,
             epochs_completed=1, steps_completed=5, training_time_seconds=1.0,
         )
-        with patch("finetune_cli.models.loader.load_model_and_tokenizer",
+        with patch("lmtool.models.loader.load_model_and_tokenizer",
                    return_value=(MagicMock(), MagicMock())):
-            with patch("finetune_cli.trainers.factory.TrainerFactory.train",
+            with patch("lmtool.trainers.factory.TrainerFactory.train",
                        return_value=mock_result):
                 result = runner.invoke(app, [
                     "train",
@@ -614,13 +614,13 @@ class TestCLISmoke:
         assert result.exit_code == 0, result.output
 
     def test_prune_cli_exits_zero(self, output_dir):
-        """finetune-cli prune exits 0 with mocked model and pruner."""
+        """lmtool prune exits 0 with mocked model and pruner."""
         from unittest.mock import MagicMock, patch
 
         from typer.testing import CliRunner
 
-        from finetune_cli.cli.main import app
-        from finetune_cli.trainers.structured_pruner import PruningResult
+        from lmtool.cli.main import app
+        from lmtool.trainers.structured_pruner import PruningResult
 
         runner = CliRunner()
         model_dir = output_dir / "prune_src"
@@ -636,9 +636,9 @@ class TestCLISmoke:
         mock_pruner = MagicMock()
         mock_pruner.prune.return_value = mock_result
 
-        with patch("finetune_cli.models.loader.load_model_and_tokenizer",
+        with patch("lmtool.models.loader.load_model_and_tokenizer",
                    return_value=(MagicMock(), MagicMock())):
-            with patch("finetune_cli.trainers.structured_pruner.StructuredPruner",
+            with patch("lmtool.trainers.structured_pruner.StructuredPruner",
                        return_value=mock_pruner):
                 result = runner.invoke(app, [
                     "prune", str(model_dir),
@@ -648,13 +648,13 @@ class TestCLISmoke:
         assert result.exit_code == 0, result.output
 
     def test_wanda_cli_exits_zero(self, output_dir):
-        """finetune-cli wanda exits 0 with mocked model and pruner."""
+        """lmtool wanda exits 0 with mocked model and pruner."""
         from unittest.mock import MagicMock, patch
 
         from typer.testing import CliRunner
 
-        from finetune_cli.cli.main import app
-        from finetune_cli.trainers.wanda_pruner import WandaResult
+        from lmtool.cli.main import app
+        from lmtool.trainers.wanda_pruner import WandaResult
 
         runner = CliRunner()
         model_dir = output_dir / "wanda_src"
@@ -669,9 +669,9 @@ class TestCLISmoke:
         mock_pruner = MagicMock()
         mock_pruner.prune.return_value = mock_result
 
-        with patch("finetune_cli.models.loader.load_model_and_tokenizer",
+        with patch("lmtool.models.loader.load_model_and_tokenizer",
                    return_value=(MagicMock(), MagicMock())):
-            with patch("finetune_cli.trainers.wanda_pruner.WandaPruner",
+            with patch("lmtool.trainers.wanda_pruner.WandaPruner",
                        return_value=mock_pruner):
                 result = runner.invoke(app, [
                     "wanda", str(model_dir),
@@ -681,13 +681,13 @@ class TestCLISmoke:
         assert result.exit_code == 0, result.output
 
     def test_train_distillation_cli_exits_zero(self, tiny_jsonl, output_dir):
-        """finetune-cli train --method vanilla_distillation exits 0."""
+        """lmtool train --method vanilla_distillation exits 0."""
         from unittest.mock import MagicMock, patch
 
         from typer.testing import CliRunner
 
-        from finetune_cli.cli.main import app
-        from finetune_cli.trainers.base import TrainingResult
+        from lmtool.cli.main import app
+        from lmtool.trainers.base import TrainingResult
 
         runner = CliRunner()
         save_dir = output_dir / "cli_distill"
@@ -697,9 +697,9 @@ class TestCLISmoke:
             output_dir=save_dir, train_loss=0.4, eval_loss=None,
             epochs_completed=1, steps_completed=5, training_time_seconds=1.0,
         )
-        with patch("finetune_cli.models.loader.load_model_and_tokenizer",
+        with patch("lmtool.models.loader.load_model_and_tokenizer",
                    return_value=(MagicMock(), MagicMock())):
-            with patch("finetune_cli.trainers.factory.TrainerFactory.train",
+            with patch("lmtool.trainers.factory.TrainerFactory.train",
                        return_value=mock_result):
                 result = runner.invoke(app, [
                     "train",

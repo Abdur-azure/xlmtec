@@ -17,14 +17,14 @@ from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Label
 from textual.worker import Worker, WorkerState
 
-from finetune_cli.tui.widgets.log_panel import LogPanel
+from lmtool.tui.widgets.log_panel import LogPanel
 
 
 class RunningScreen(Screen):
     """Executes a CLI command and streams its output to a live log panel.
 
     Args:
-        command:     List of command tokens to execute (e.g. ["finetune-cli", "train", ...]).
+        command:     List of command tokens to execute (e.g. ["lmtool", "train", ...]).
         title:       Display title shown in the header area.
         subtitle:    Short subtitle line below the title.
     """
@@ -184,7 +184,7 @@ class RunningScreen(Screen):
 
     def _on_command_finished(self) -> None:
         self._set_status("Done — pushing result screen…")
-        from finetune_cli.tui.screens.result import ResultScreen
+        from lmtool.tui.screens.result import ResultScreen
         self.app.switch_screen(
             ResultScreen(
                 success=self._success,

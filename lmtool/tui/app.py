@@ -1,7 +1,7 @@
 """
-FinetuneApp — root Textual application for finetune-cli TUI.
+LMToolApp — root Textual application for lmtool TUI.
 
-Entry point: `finetune-cli tui`
+Entry point: `lmtool tui`
 
 Global keybindings (all screens):
     q           quit the application
@@ -14,13 +14,13 @@ from pathlib import Path
 from textual.app import App
 from textual.binding import Binding
 
-from finetune_cli.tui.screens.home import HomeScreen
+from lmtool.tui.screens.home import HomeScreen
 
 
-class FinetuneApp(App):
+class LMToolApp(App):
     """Root Textual App — manages screen stack and global bindings."""
 
-    TITLE = "finetune-cli"
+    TITLE = "lmtool"
     SUB_TITLE = "LLM Fine-Tuning Toolkit"
 
     # External CSS theme — Sprint 28
@@ -51,5 +51,5 @@ class FinetuneApp(App):
 
 
 def run() -> None:
-    """Launch the TUI app. Called by `finetune-cli tui`."""
-    FinetuneApp().run()
+    """Launch the TUI app. Called by `lmtool tui`."""
+    LMToolApp().run()

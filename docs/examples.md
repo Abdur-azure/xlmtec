@@ -17,7 +17,7 @@ You have a JSONL file with conversational data and want to create a chatbot.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: gpt2
@@ -77,7 +77,7 @@ Using HuggingFace medical dataset.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: facebook/opt-350m
@@ -121,7 +121,7 @@ article,summary
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: google/flan-t5-base
@@ -157,7 +157,7 @@ Using HuggingFace code dataset with specific file selection.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: Salesforce/codegen-350M-mono
@@ -190,7 +190,7 @@ Fine-tune on SQuAD-style Q&A data.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: distilbert-base-uncased
@@ -237,7 +237,7 @@ Fine-tune multilingual model for specific languages.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: xlm-roberta-base
@@ -271,7 +271,7 @@ Adapt model for sentiment classification.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: roberta-base
@@ -305,7 +305,7 @@ Using large instruction dataset with selective loading.
 ### Configuration
 
 ```bash
-python finetune_cli.py
+python lmtool.py
 
 # Interactive prompts:
 Model name: EleutherAI/pythia-410m

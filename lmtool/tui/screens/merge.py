@@ -1,4 +1,4 @@
-"""MergeScreen — form for `finetune-cli merge`."""
+"""MergeScreen — form for `lmtool merge`."""
 
 from textual.app import ComposeResult
 from textual.binding import Binding
@@ -15,7 +15,7 @@ _DTYPE_OPTIONS = [
 
 
 class MergeScreen(Screen):
-    """Form screen for `finetune-cli merge`.
+    """Form screen for `lmtool merge`.
 
     Collects: adapter directory, base model name, output directory, dtype.
     Submits → RunningScreen with the built CLI command.
@@ -155,14 +155,14 @@ class MergeScreen(Screen):
             return
 
         command = [
-            "finetune-cli", "merge",
+            "lmtool", "merge",
             adapter,
             output,
             "--base-model", base,
             "--dtype", str(dtype),
         ]
 
-        from finetune_cli.tui.screens.running import RunningScreen
+        from lmtool.tui.screens.running import RunningScreen
         self.app.switch_screen(
             RunningScreen(
                 command=command,

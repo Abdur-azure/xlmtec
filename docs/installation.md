@@ -16,8 +16,8 @@
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/Abdur-azure/finetune_cli.git
-cd finetune_cli
+git clone https://github.com/Abdur-azure/lmtool.git
+cd lmtool
 ```
 
 ### 2. Create a virtual environment
@@ -52,8 +52,8 @@ pip install -e ".[full]"
 ### 4. Verify
 
 ```bash
-finetune-cli --help
-python -c "from finetune_cli.core.config import ConfigBuilder; print('OK')"
+lmtool --help
+python -c "from lmtool.core.config import ConfigBuilder; print('OK')"
 ```
 
 ---
@@ -62,13 +62,13 @@ python -c "from finetune_cli.core.config import ConfigBuilder; print('OK')"
 
 ```bash
 # Core only
-pip install finetune-cli
+pip install lmtool
 
 # With ML stack
-pip install "finetune-cli[ml]"
+pip install "lmtool[ml]"
 
 # Everything
-pip install "finetune-cli[full]"
+pip install "lmtool[full]"
 ```
 
 ---

@@ -13,33 +13,33 @@ import pytest
 # Install with: pip install "textual>=0.52.0" pytest-asyncio
 pytest.importorskip("textual", reason="textual not installed")
 
-from finetune_cli.tui.app import FinetuneApp  # noqa: E402
-from finetune_cli.tui.screens.home import HomeScreen  # noqa: E402
-from finetune_cli.tui.widgets.command_card import CommandCard  # noqa: E402
+from lmtool.tui.app import LMToolApp  # noqa: E402
+from lmtool.tui.screens.home import HomeScreen  # noqa: E402
+from lmtool.tui.widgets.command_card import CommandCard  # noqa: E402
 
 
 class TestAppMount:
-    """FinetuneApp starts and reaches HomeScreen cleanly."""
+    """LMToolApp starts and reaches HomeScreen cleanly."""
 
     @pytest.mark.asyncio
     async def test_app_mounts_without_error(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             assert app.screen is not None
 
     @pytest.mark.asyncio
     async def test_home_screen_is_initial_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             assert isinstance(app.screen, HomeScreen)
 
     @pytest.mark.asyncio
     async def test_app_title_set(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
-            assert app.TITLE == "finetune-cli"
+            assert app.TITLE == "lmtool"
 
 
 class TestHomeScreen:
@@ -47,7 +47,7 @@ class TestHomeScreen:
 
     @pytest.mark.asyncio
     async def test_six_command_cards_rendered(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -59,7 +59,7 @@ class TestHomeScreen:
             "card-train", "card-evaluate", "card-benchmark",
             "card-upload", "card-merge", "card-recommend",
         }
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -68,7 +68,7 @@ class TestHomeScreen:
 
     @pytest.mark.asyncio
     async def test_cards_are_focusable(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -77,7 +77,7 @@ class TestHomeScreen:
 
     @pytest.mark.asyncio
     async def test_home_title_label_present(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -85,7 +85,7 @@ class TestHomeScreen:
 
     @pytest.mark.asyncio
     async def test_home_subtitle_label_present(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -97,7 +97,7 @@ class TestKeyboardNavigation:
 
     @pytest.mark.asyncio
     async def test_q_key_exits_app(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -105,7 +105,7 @@ class TestKeyboardNavigation:
 
     @pytest.mark.asyncio
     async def test_tab_moves_focus(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -114,7 +114,7 @@ class TestKeyboardNavigation:
 
     @pytest.mark.asyncio
     async def test_escape_stays_on_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -124,7 +124,7 @@ class TestKeyboardNavigation:
 
     @pytest.mark.asyncio
     async def test_right_arrow_moves_focus(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -135,7 +135,7 @@ class TestKeyboardNavigation:
 
     @pytest.mark.asyncio
     async def test_down_arrow_moves_to_next_row(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -153,7 +153,7 @@ class TestCommandCard:
 
     @pytest.mark.asyncio
     async def test_click_card_does_not_crash(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -165,7 +165,7 @@ class TestCommandCard:
 
     @pytest.mark.asyncio
     async def test_enter_on_focused_card_does_not_crash(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -178,7 +178,7 @@ class TestCommandCard:
 
     @pytest.mark.asyncio
     async def test_card_command_id_matches_id_attribute(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -192,10 +192,10 @@ class TestCommandCard:
 
 from textual.widgets import Checkbox  # noqa: E402
 
-from finetune_cli.tui.screens.recommend import RecommendScreen  # noqa: E402
-from finetune_cli.tui.screens.result import ResultScreen  # noqa: E402
-from finetune_cli.tui.screens.running import RunningScreen  # noqa: E402
-from finetune_cli.tui.screens.train import TrainScreen  # noqa: E402
+from lmtool.tui.screens.recommend import RecommendScreen  # noqa: E402
+from lmtool.tui.screens.result import ResultScreen  # noqa: E402
+from lmtool.tui.screens.running import RunningScreen  # noqa: E402
+from lmtool.tui.screens.train import TrainScreen  # noqa: E402
 
 
 class TestTrainScreen:
@@ -203,7 +203,7 @@ class TestTrainScreen:
 
     @pytest.mark.asyncio
     async def test_train_card_navigates_to_train_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -213,7 +213,7 @@ class TestTrainScreen:
 
     @pytest.mark.asyncio
     async def test_train_screen_has_model_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -223,7 +223,7 @@ class TestTrainScreen:
 
     @pytest.mark.asyncio
     async def test_train_screen_has_method_select(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -233,7 +233,7 @@ class TestTrainScreen:
 
     @pytest.mark.asyncio
     async def test_train_screen_has_dataset_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -243,7 +243,7 @@ class TestTrainScreen:
 
     @pytest.mark.asyncio
     async def test_train_back_button_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -259,7 +259,7 @@ class TestTrainScreen:
 
     @pytest.mark.asyncio
     async def test_train_submit_empty_shows_validation(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -279,7 +279,7 @@ class TestRecommendScreen:
 
     @pytest.mark.asyncio
     async def test_recommend_card_navigates_to_recommend_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -289,7 +289,7 @@ class TestRecommendScreen:
 
     @pytest.mark.asyncio
     async def test_recommend_screen_has_model_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -299,7 +299,7 @@ class TestRecommendScreen:
 
     @pytest.mark.asyncio
     async def test_recommend_screen_has_output_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -309,7 +309,7 @@ class TestRecommendScreen:
 
     @pytest.mark.asyncio
     async def test_recommend_back_button_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -324,7 +324,7 @@ class TestRecommendScreen:
 
     @pytest.mark.asyncio
     async def test_recommend_submit_empty_shows_validation(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -342,7 +342,7 @@ class TestResultScreen:
 
     @pytest.mark.asyncio
     async def test_result_screen_success_renders(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -355,7 +355,7 @@ class TestResultScreen:
 
     @pytest.mark.asyncio
     async def test_result_screen_failure_renders(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -368,7 +368,7 @@ class TestResultScreen:
 
     @pytest.mark.asyncio
     async def test_result_home_button_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -383,9 +383,9 @@ class TestResultScreen:
 # Sprint 27 — Evaluate, Benchmark, Merge screens
 # ============================================================================
 
-from finetune_cli.tui.screens.benchmark import BenchmarkScreen  # noqa: E402
-from finetune_cli.tui.screens.evaluate import EvaluateScreen  # noqa: E402
-from finetune_cli.tui.screens.merge import MergeScreen  # noqa: E402
+from lmtool.tui.screens.benchmark import BenchmarkScreen  # noqa: E402
+from lmtool.tui.screens.evaluate import EvaluateScreen  # noqa: E402
+from lmtool.tui.screens.merge import MergeScreen  # noqa: E402
 
 
 class TestEvaluateScreen:
@@ -393,7 +393,7 @@ class TestEvaluateScreen:
 
     @pytest.mark.asyncio
     async def test_evaluate_card_navigates_to_evaluate_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -403,7 +403,7 @@ class TestEvaluateScreen:
 
     @pytest.mark.asyncio
     async def test_evaluate_screen_has_model_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -413,7 +413,7 @@ class TestEvaluateScreen:
 
     @pytest.mark.asyncio
     async def test_evaluate_screen_has_dataset_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -423,7 +423,7 @@ class TestEvaluateScreen:
 
     @pytest.mark.asyncio
     async def test_evaluate_screen_has_metric_checkboxes(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -434,7 +434,7 @@ class TestEvaluateScreen:
 
     @pytest.mark.asyncio
     async def test_evaluate_back_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -449,7 +449,7 @@ class TestEvaluateScreen:
 
     @pytest.mark.asyncio
     async def test_evaluate_submit_empty_shows_validation(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -467,7 +467,7 @@ class TestBenchmarkScreen:
 
     @pytest.mark.asyncio
     async def test_benchmark_card_navigates_to_benchmark_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -477,7 +477,7 @@ class TestBenchmarkScreen:
 
     @pytest.mark.asyncio
     async def test_benchmark_screen_has_base_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -487,7 +487,7 @@ class TestBenchmarkScreen:
 
     @pytest.mark.asyncio
     async def test_benchmark_screen_has_finetuned_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -497,7 +497,7 @@ class TestBenchmarkScreen:
 
     @pytest.mark.asyncio
     async def test_benchmark_back_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -512,7 +512,7 @@ class TestBenchmarkScreen:
 
     @pytest.mark.asyncio
     async def test_benchmark_submit_empty_shows_validation(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -530,7 +530,7 @@ class TestMergeScreen:
 
     @pytest.mark.asyncio
     async def test_merge_card_navigates_to_merge_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -540,7 +540,7 @@ class TestMergeScreen:
 
     @pytest.mark.asyncio
     async def test_merge_screen_has_adapter_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -550,7 +550,7 @@ class TestMergeScreen:
 
     @pytest.mark.asyncio
     async def test_merge_screen_has_dtype_select(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -560,7 +560,7 @@ class TestMergeScreen:
 
     @pytest.mark.asyncio
     async def test_merge_back_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -575,7 +575,7 @@ class TestMergeScreen:
 
     @pytest.mark.asyncio
     async def test_merge_submit_empty_shows_validation(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -594,7 +594,7 @@ class TestMergeScreen:
 
 from textual.widgets import Input, Switch  # noqa: E402
 
-from finetune_cli.tui.screens.upload import UploadScreen  # noqa: E402
+from lmtool.tui.screens.upload import UploadScreen  # noqa: E402
 
 
 class TestUploadScreen:
@@ -602,7 +602,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_card_navigates_to_upload_screen(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -612,7 +612,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_screen_has_model_path_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -622,7 +622,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_screen_has_repo_id_input(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -632,7 +632,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_token_field_is_masked(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -643,7 +643,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_screen_has_private_switch(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -653,7 +653,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_screen_has_merge_switch(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -663,7 +663,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_back_returns_home(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -678,7 +678,7 @@ class TestUploadScreen:
 
     @pytest.mark.asyncio
     async def test_upload_submit_empty_shows_validation(self):
-        app = FinetuneApp()
+        app = LMToolApp()
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
@@ -705,7 +705,7 @@ class TestAllSixCardsReachable:
             "#card-recommend": RecommendScreen,
         }
         for card_id, screen_cls in expected.items():
-            app = FinetuneApp()
+            app = LMToolApp()
             async with app.run_test(size=(120, 40)) as pilot:
                 await pilot.pause()
                 await pilot.pause()

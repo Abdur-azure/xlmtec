@@ -51,8 +51,8 @@ The framework provides three main training methods and comprehensive evaluation 
 
 **Configuration:**
 ```python
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import TrainingMethod
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import TrainingMethod
 
 config = ConfigBuilder() \
     .with_model("gpt2") \
@@ -75,7 +75,7 @@ config = ConfigBuilder() \
 
 **Example:**
 ```python
-from finetune_cli.trainers import train_with_lora
+from lmtool.trainers import train_with_lora
 
 result = train_with_lora(
     model=model,
@@ -148,7 +148,7 @@ config = ConfigBuilder() \
 
 **Example:**
 ```python
-from finetune_cli.trainers import train_with_qlora
+from lmtool.trainers import train_with_qlora
 
 result = train_with_qlora(
     model=quantized_model,
@@ -162,7 +162,7 @@ result = train_with_qlora(
 
 **Best Practices:**
 ```python
-from finetune_cli.trainers import get_qlora_best_practices
+from lmtool.trainers import get_qlora_best_practices
 
 practices = get_qlora_best_practices()
 # Returns comprehensive recommendations for QLoRA training
@@ -200,7 +200,7 @@ config = ConfigBuilder() \
 
 **Memory Estimation:**
 ```python
-from finetune_cli.trainers import FullFineTuner
+from lmtool.trainers import FullFineTuner
 
 trainer = FullFineTuner(model, tokenizer, config)
 memory = trainer.estimate_memory_usage()
@@ -213,7 +213,7 @@ print(f"Total: {memory['total_estimated_gb']:.2f} GB")
 
 **Example:**
 ```python
-from finetune_cli.trainers import train_full_finetuning
+from lmtool.trainers import train_full_finetuning
 
 result = train_full_finetuning(
     model=model,
@@ -301,11 +301,11 @@ training_config = TrainingConfig(
 ### **Example 1: Quick LoRA Training**
 
 ```python
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import TrainingMethod, DatasetSource
-from finetune_cli.models.loader import load_model_and_tokenizer
-from finetune_cli.data import prepare_dataset
-from finetune_cli.trainers import train_model
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import TrainingMethod, DatasetSource
+from lmtool.models.loader import load_model_and_tokenizer
+from lmtool.data import prepare_dataset
+from lmtool.trainers import train_model
 
 # 1. Configuration
 config = ConfigBuilder() \
@@ -430,8 +430,8 @@ result = train_model(
 Measures overlap between generated and reference text.
 
 ```python
-from finetune_cli.evaluation import evaluate_model
-from finetune_cli.core.types import EvaluationMetric
+from lmtool.evaluation import evaluate_model
+from lmtool.core.types import EvaluationMetric
 
 config = EvaluationConfig(
     metrics=[
@@ -523,7 +523,7 @@ print(f"F1: {result.metrics['f1']:.4f}")
 Percentage of predictions that exactly match reference.
 
 ```python
-from finetune_cli.evaluation.metrics import ExactMatchMetric
+from lmtool.evaluation.metrics import ExactMatchMetric
 
 # With normalization
 metric = ExactMatchMetric(
@@ -552,7 +552,7 @@ metric_strict = ExactMatchMetric(
 Compare base model vs fine-tuned model:
 
 ```python
-from finetune_cli.evaluation import benchmark_models
+from lmtool.evaluation import benchmark_models
 
 result = benchmark_models(
     base_model=base_model,
@@ -582,7 +582,7 @@ Average Improvement: +55.36%
 ### **Generate Reports**
 
 ```python
-from finetune_cli.evaluation import ReportGenerator
+from lmtool.evaluation import ReportGenerator
 from pathlib import Path
 
 # Markdown report
@@ -611,7 +611,7 @@ ReportGenerator.save_report(
 ### **Compare Pre-computed Metrics**
 
 ```python
-from finetune_cli.evaluation import compare_metrics
+from lmtool.evaluation import compare_metrics
 
 base_metrics = {
     'rouge1': 0.25,
@@ -637,12 +637,12 @@ print(result.improvements)
 ### **Workflow 1: Train and Evaluate**
 
 ```python
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import TrainingMethod, EvaluationMetric
-from finetune_cli.models.loader import load_model_and_tokenizer
-from finetune_cli.data import prepare_dataset
-from finetune_cli.trainers import train_model
-from finetune_cli.evaluation import evaluate_model
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import TrainingMethod, EvaluationMetric
+from lmtool.models.loader import load_model_and_tokenizer
+from lmtool.data import prepare_dataset
+from lmtool.trainers import train_model
+from lmtool.evaluation import evaluate_model
 
 # 1. Configuration
 config = ConfigBuilder() \
@@ -695,7 +695,7 @@ print(f"ROUGE-1: {eval_result.metrics['rouge1']:.4f}")
 ### **Workflow 2: Before/After Comparison**
 
 ```python
-from finetune_cli.evaluation import benchmark_models
+from lmtool.evaluation import benchmark_models
 from pathlib import Path
 
 # Load base model
@@ -724,7 +724,7 @@ print(f"Average Improvement: {benchmark_result.get_average_improvement():.2f}%")
 ### **Workflow 3: Quick Evaluation**
 
 ```python
-from finetune_cli.evaluation import quick_evaluate
+from lmtool.evaluation import quick_evaluate
 
 # Fast evaluation without configuration
 test_inputs = [
@@ -774,7 +774,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Save training state
-from finetune_cli.trainers import LoRATrainer
+from lmtool.trainers import LoRATrainer
 
 trainer = LoRATrainer(...)
 result = trainer.train(dataset)
@@ -857,7 +857,7 @@ ft_result = evaluate_model(finetuned_model, ..., eval_config)
 
 **Use the Method Recommender:**
 ```python
-from finetune_cli.trainers import MethodRecommender
+from lmtool.trainers import MethodRecommender
 
 recommendation = MethodRecommender.recommend(
     model_size_params=124e6,   # GPT-2 small

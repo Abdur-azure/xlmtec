@@ -6,7 +6,7 @@ Context file for AI-assisted development. Read this at the start of every sessio
 
 ## Project
 
-**finetune-cli** — production-grade LLM fine-tuning framework with a modular CLI.
+**lmtool** — production-grade LLM fine-tuning framework with a modular CLI.
 Version: 3.15.0 | License: MIT | Python: 3.10+
 
 ---
@@ -14,13 +14,13 @@ Version: 3.15.0 | License: MIT | Python: 3.10+
 ## Repo layout
 
 ```
-finetune_cli/              # Main package
+lmtool/              # Main package
   core/                    # Types, config, exceptions (no deps on other subpackages)
   data/                    # Dataset loading, tokenization, pipeline
   models/                  # Model + tokenizer loading, target module detection
   trainers/                # All trainers + pruners + factory
   evaluation/              # ROUGE, BLEU, Perplexity metrics + BenchmarkRunner
-  cli/                     # Typer CLI — all subcommands live in finetune_cli/cli/main.py
+  cli/                     # Typer CLI — all subcommands live in lmtool/cli/main.py
   tui/                     # Textual interactive terminal UI
   utils/                   # Logging only
 
@@ -40,12 +40,12 @@ tasks/                     # todo.md + lessons.md — read every session
 1. **Dependency direction is one-way**: `cli/tui → trainers/evaluation/data → models → core`. Never import upward or sideways between subpackages.
 2. **`core/` has zero internal deps** — imports only stdlib and pydantic.
 3. **All config objects are frozen dataclasses** (`@dataclass(frozen=True)`). Never mutate after construction.
-4. **All errors extend `FineTuneError`** from `finetune_cli/core/exceptions.py`. Never raise raw builtins from module code.
-5. **Always use `get_logger(__name__)`** from `finetune_cli/utils/logging.py`. Never `logging.getLogger` directly.
+4. **All errors extend `FineTuneError`** from `lmtool/core/exceptions.py`. Never raise raw builtins from module code.
+5. **Always use `get_logger(__name__)`** from `lmtool/utils/logging.py`. Never `logging.getLogger` directly.
 6. **`TrainingResult` must carry `output_dir: Path`** — downstream CLI and evaluation depend on it.
-7. **`finetune_cli/trainers/__init__.py` must export every new trainer** — CLI and tests import from there.
-8. **`finetune_cli/data/__init__.py` must mirror CLI imports exactly** — trace the full import chain when adding exports.
-9. **All test files use absolute imports** — `from finetune_cli.x import y`, never `from ..x import y`.
+7. **`lmtool/trainers/__init__.py` must export every new trainer** — CLI and tests import from there.
+8. **`lmtool/data/__init__.py` must mirror CLI imports exactly** — trace the full import chain when adding exports.
+9. **All test files use absolute imports** — `from lmtool.x import y`, never `from ..x import y`.
 10. **No real torch tensors in unit tests** — use `MagicMock` with `param.numel.return_value = N`.
 11. **Heavy deps (`torch`, `transformers`) are optional** — guard all imports with try/except or lazy-import inside functions. Core CLI must work without the `[ml]` extra installed.
 
@@ -65,20 +65,20 @@ pip install -e ".[full]"       # everything including docs
 
 | Type | Location | Purpose |
 |------|----------|---------|
-| `TrainingMethod` | `finetune_cli/core/types.py` | Enum of all training methods |
-| `PipelineConfig` | `finetune_cli/core/config.py` | Top-level Pydantic config |
-| `ConfigBuilder` | `finetune_cli/core/config.py` | Fluent builder for PipelineConfig |
-| `TrainingConfig` | `finetune_cli/core/types.py` | Frozen dataclass for training hyper-params |
-| `LoRAConfig` | `finetune_cli/core/types.py` | Frozen dataclass for LoRA params |
-| `DistillationConfig` | `finetune_cli/core/types.py` | Frozen dataclass for response distillation |
-| `FeatureDistillationConfig` | `finetune_cli/core/types.py` | Frozen dataclass for feature distillation |
-| `PruningConfig` | `finetune_cli/core/types.py` | Frozen dataclass for structured pruning |
-| `WandaConfig` | `finetune_cli/core/types.py` | Frozen dataclass for WANDA pruning |
-| `TrainingResult` | `finetune_cli/trainers/base.py` | Frozen dataclass returned by all trainers |
-| `PruningResult` | `finetune_cli/trainers/structured_pruner.py` | Returned by StructuredPruner |
-| `WandaResult` | `finetune_cli/trainers/wanda_pruner.py` | Returned by WandaPruner |
-| `EvaluationResult` | `finetune_cli/evaluation/benchmarker.py` | Per-model scores |
-| `BenchmarkReport` | `finetune_cli/evaluation/benchmarker.py` | Before/after comparison |
+| `TrainingMethod` | `lmtool/core/types.py` | Enum of all training methods |
+| `PipelineConfig` | `lmtool/core/config.py` | Top-level Pydantic config |
+| `ConfigBuilder` | `lmtool/core/config.py` | Fluent builder for PipelineConfig |
+| `TrainingConfig` | `lmtool/core/types.py` | Frozen dataclass for training hyper-params |
+| `LoRAConfig` | `lmtool/core/types.py` | Frozen dataclass for LoRA params |
+| `DistillationConfig` | `lmtool/core/types.py` | Frozen dataclass for response distillation |
+| `FeatureDistillationConfig` | `lmtool/core/types.py` | Frozen dataclass for feature distillation |
+| `PruningConfig` | `lmtool/core/types.py` | Frozen dataclass for structured pruning |
+| `WandaConfig` | `lmtool/core/types.py` | Frozen dataclass for WANDA pruning |
+| `TrainingResult` | `lmtool/trainers/base.py` | Frozen dataclass returned by all trainers |
+| `PruningResult` | `lmtool/trainers/structured_pruner.py` | Returned by StructuredPruner |
+| `WandaResult` | `lmtool/trainers/wanda_pruner.py` | Returned by WandaPruner |
+| `EvaluationResult` | `lmtool/evaluation/benchmarker.py` | Per-model scores |
+| `BenchmarkReport` | `lmtool/evaluation/benchmarker.py` | Before/after comparison |
 
 ---
 
@@ -86,31 +86,31 @@ pip install -e ".[full]"       # everything including docs
 
 | Method | Class | File | Config needed |
 |--------|-------|------|---------------|
-| `lora` | `LoRATrainer` | `finetune_cli/trainers/lora_trainer.py` | `lora_config` |
-| `qlora` | `QLoRATrainer` | `finetune_cli/trainers/qlora_trainer.py` | `lora_config` + `model_config` |
-| `full_finetuning` | `FullFineTuner` | `finetune_cli/trainers/full_trainer.py` | none |
-| `instruction_tuning` | `InstructionTrainer` | `finetune_cli/trainers/instruction_trainer.py` | `lora_config` |
-| `dpo` | `DPOTrainer` | `finetune_cli/trainers/dpo_trainer.py` | `lora_config` + `trl` dep |
-| `vanilla_distillation` | `ResponseDistillationTrainer` | `finetune_cli/trainers/response_distillation_trainer.py` | `distillation_config` |
-| `feature_distillation` | `FeatureDistillationTrainer` | `finetune_cli/trainers/feature_distillation_trainer.py` | `feature_distillation_config` |
+| `lora` | `LoRATrainer` | `lmtool/trainers/lora_trainer.py` | `lora_config` |
+| `qlora` | `QLoRATrainer` | `lmtool/trainers/qlora_trainer.py` | `lora_config` + `model_config` |
+| `full_finetuning` | `FullFineTuner` | `lmtool/trainers/full_trainer.py` | none |
+| `instruction_tuning` | `InstructionTrainer` | `lmtool/trainers/instruction_trainer.py` | `lora_config` |
+| `dpo` | `DPOTrainer` | `lmtool/trainers/dpo_trainer.py` | `lora_config` + `trl` dep |
+| `vanilla_distillation` | `ResponseDistillationTrainer` | `lmtool/trainers/response_distillation_trainer.py` | `distillation_config` |
+| `feature_distillation` | `FeatureDistillationTrainer` | `lmtool/trainers/feature_distillation_trainer.py` | `feature_distillation_config` |
 
 ## Implemented pruners
 
 | Command | Class | File |
 |---------|-------|------|
-| `finetune-cli prune` | `StructuredPruner` | `finetune_cli/trainers/structured_pruner.py` |
-| `finetune-cli wanda` | `WandaPruner` | `finetune_cli/trainers/wanda_pruner.py` |
+| `lmtool prune` | `StructuredPruner` | `lmtool/trainers/structured_pruner.py` |
+| `lmtool wanda` | `WandaPruner` | `lmtool/trainers/wanda_pruner.py` |
 
 ---
 
 ## Adding a new trainer — checklist
 
-1. Create `finetune_cli/trainers/<n>_trainer.py`, extend `BaseTrainer`
+1. Create `lmtool/trainers/<n>_trainer.py`, extend `BaseTrainer`
 2. Implement `_setup_peft(model) -> model`
-3. Add the new `TrainingMethod` enum value to `finetune_cli/core/types.py` if missing
-4. Wire the new method in `finetune_cli/trainers/factory.py` → `TrainerFactory.create()`
-5. Export from `finetune_cli/trainers/__init__.py`
-6. Add to `_LORA_METHODS` in `finetune_cli/cli/main.py` if it needs a LoRA config
+3. Add the new `TrainingMethod` enum value to `lmtool/core/types.py` if missing
+4. Wire the new method in `lmtool/trainers/factory.py` → `TrainerFactory.create()`
+5. Export from `lmtool/trainers/__init__.py`
+6. Add to `_LORA_METHODS` in `lmtool/cli/main.py` if it needs a LoRA config
 7. Write `tests/test_<n>_trainer.py` — mock HF Trainer, no GPU required, absolute imports
 8. Add a CLI test to `tests/test_cli_train.py` asserting `exit_code == 0`
 9. Add example config to `examples/configs/<n>.yaml` pointing at local data

@@ -6,7 +6,7 @@ All YAML config fields for every training method, distillation mode, and pruning
 
 ## Common sections
 
-Every config file that uses `finetune-cli train` shares these top-level sections.
+Every config file that uses `lmtool train` shares these top-level sections.
 
 ### `model`
 
@@ -243,7 +243,7 @@ Full example: `examples/configs/feature_distillation.yaml`
 
 Pruning commands (`prune`, `wanda`) use their own config objects, not `PipelineConfig`. They are standalone operations on a saved model — no `training` or `lora` sections.
 
-### Structured Pruning (`finetune-cli prune`)
+### Structured Pruning (`lmtool prune`)
 
 ```yaml
 # examples/configs/structured_pruning.yaml
@@ -269,8 +269,8 @@ pruning:
 
 Python API:
 ```python
-from finetune_cli.core.types import PruningConfig
-from finetune_cli.trainers import StructuredPruner
+from lmtool.core.types import PruningConfig
+from lmtool.trainers import StructuredPruner
 
 config = PruningConfig(
     output_dir=Path("./outputs/pruned"),
@@ -283,7 +283,7 @@ result = StructuredPruner(model, tokenizer, config).prune()
 
 Full example: `examples/configs/structured_pruning.yaml`
 
-### WANDA Pruning (`finetune-cli wanda`)
+### WANDA Pruning (`lmtool wanda`)
 
 ```yaml
 # examples/configs/wanda.yaml
@@ -312,8 +312,8 @@ wanda:
 
 Python API:
 ```python
-from finetune_cli.core.types import WandaConfig
-from finetune_cli.trainers import WandaPruner
+from lmtool.core.types import WandaConfig
+from lmtool.trainers import WandaPruner
 
 config = WandaConfig(
     output_dir=Path("./outputs/wanda"),

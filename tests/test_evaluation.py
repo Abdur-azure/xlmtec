@@ -6,9 +6,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from finetune_cli.core.types import EvaluationConfig, EvaluationMetric
-from finetune_cli.evaluation.benchmarker import BenchmarkReport, BenchmarkRunner, EvaluationResult
-from finetune_cli.evaluation.metrics import BleuMetric, MetricRegistry, RougeMetric
+from lmtool.core.types import EvaluationConfig, EvaluationMetric
+from lmtool.evaluation.benchmarker import BenchmarkReport, BenchmarkRunner, EvaluationResult
+from lmtool.evaluation.metrics import BleuMetric, MetricRegistry, RougeMetric
 
 # ============================================================================
 # ROUGE

@@ -1,7 +1,7 @@
 site_name: Finetune CLI
-site_url: https://Abdur-azure.github.io/finetune_cli
-repo_url: https://github.com/Abdur-azure/finetune_cli
-repo_name: finetune_cli
+site_url: https://Abdur-azure.github.io/lmtool
+repo_url: https://github.com/Abdur-azure/lmtool
+repo_name: lmtool
 
 theme:
   name: material

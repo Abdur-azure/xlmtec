@@ -4,15 +4,15 @@ Python API for programmatic use. All public classes are importable from their re
 
 ---
 
-## Configuration — `finetune_cli.core.config`
+## Configuration — `lmtool.core.config`
 
 ### `ConfigBuilder`
 
 Fluent builder for constructing a validated `PipelineConfig`.
 
 ```python
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import TrainingMethod, DatasetSource
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import TrainingMethod, DatasetSource
 
 config = (
     ConfigBuilder()
@@ -47,14 +47,14 @@ config.to_yaml(Path("config.yaml"))
 
 ---
 
-## Data Pipeline — `finetune_cli.data`
+## Data Pipeline — `lmtool.data`
 
 ### `quick_load`
 
 One-liner for loading and tokenizing a dataset.
 
 ```python
-from finetune_cli.data import quick_load
+from lmtool.data import quick_load
 from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
@@ -67,7 +67,7 @@ dataset = quick_load("./data.jsonl", tokenizer, max_samples=500, max_length=512)
 Full pipeline with optional train/validation split.
 
 ```python
-from finetune_cli.data import prepare_dataset
+from lmtool.data import prepare_dataset
 
 result = prepare_dataset(
     dataset_config=config.dataset.to_config(),
@@ -81,10 +81,10 @@ result = prepare_dataset(
 
 ---
 
-## Model Loading — `finetune_cli.models.loader`
+## Model Loading — `lmtool.models.loader`
 
 ```python
-from finetune_cli.models.loader import load_model_and_tokenizer
+from lmtool.models.loader import load_model_and_tokenizer
 
 model, tokenizer = load_model_and_tokenizer(config.model.to_config())
 ```
@@ -93,14 +93,14 @@ Handles device mapping, 4-bit/8-bit quantization, and `pad_token` setup automati
 
 ---
 
-## Trainers — `finetune_cli.trainers`
+## Trainers — `lmtool.trainers`
 
 ### `TrainerFactory.train` (recommended)
 
 Single entry point — selects the right trainer based on `TrainingMethod`.
 
 ```python
-from finetune_cli.trainers import TrainerFactory
+from lmtool.trainers import TrainerFactory
 
 result = TrainerFactory.train(
     model=model,
@@ -116,7 +116,7 @@ result = TrainerFactory.train(
 ### `LoRATrainer` / `QLoRATrainer` / `FullFineTuner` / `InstructionTrainer`
 
 ```python
-from finetune_cli.trainers import LoRATrainer
+from lmtool.trainers import LoRATrainer
 
 trainer = LoRATrainer(model, tokenizer, training_config, lora_config)
 result = trainer.train(dataset)
@@ -127,7 +127,7 @@ result = trainer.train(dataset)
 Requires `pip install trl>=0.7.0`. Dataset must have `prompt`, `chosen`, `rejected` columns.
 
 ```python
-from finetune_cli.trainers import DPOTrainer, validate_dpo_dataset
+from lmtool.trainers import DPOTrainer, validate_dpo_dataset
 
 validate_dpo_dataset(dataset)   # raises ValueError if columns are missing
 trainer = DPOTrainer(model, tokenizer, training_config, lora_config, beta=0.1)
@@ -141,8 +141,8 @@ result = trainer.train(dataset)
 Student learns to match the output distribution of a larger teacher model (KL divergence + cross-entropy loss).
 
 ```python
-from finetune_cli.core.types import DistillationConfig
-from finetune_cli.trainers import ResponseDistillationTrainer
+from lmtool.core.types import DistillationConfig
+from lmtool.trainers import ResponseDistillationTrainer
 
 distillation_config = DistillationConfig(
     teacher_model_name="gpt2-medium",
@@ -160,8 +160,8 @@ result = trainer.train(dataset)
 Extends response distillation with MSE loss on intermediate hidden states for stronger layer-level supervision.
 
 ```python
-from finetune_cli.core.types import FeatureDistillationConfig
-from finetune_cli.trainers import FeatureDistillationTrainer
+from lmtool.core.types import FeatureDistillationConfig
+from lmtool.trainers import FeatureDistillationTrainer
 
 fd_config = FeatureDistillationConfig(
     teacher_model_name="gpt2-medium",
@@ -194,7 +194,7 @@ result.trainer_logs           # Dict[str, Any] — raw HF Trainer log history
 
 ---
 
-## Pruning — `finetune_cli.trainers`
+## Pruning — `lmtool.trainers`
 
 Pruners are **not** `BaseTrainer` subclasses — they transform a model in-place rather than training it.
 
@@ -204,8 +204,8 @@ Soft structured pruning. Scores each attention head by mean absolute weight magn
 
 ```python
 from pathlib import Path
-from finetune_cli.core.types import PruningConfig
-from finetune_cli.trainers import StructuredPruner
+from lmtool.core.types import PruningConfig
+from lmtool.trainers import StructuredPruner
 
 pruning_config = PruningConfig(
     output_dir=Path("./outputs/pruned"),
@@ -231,8 +231,8 @@ result.pruning_time_seconds    # float
 WANDA (Weight AND Activation) unstructured pruning. Scores each weight by `|W_ij| × ‖X_j‖₂` where `X` is the input activation norm, then zeros the bottom `sparsity` fraction. Requires a calibration dataset for best results; falls back to magnitude-only scoring without one.
 
 ```python
-from finetune_cli.core.types import WandaConfig
-from finetune_cli.trainers import WandaPruner
+from lmtool.core.types import WandaConfig
+from lmtool.trainers import WandaPruner
 import torch
 
 wanda_config = WandaConfig(
@@ -262,13 +262,13 @@ result.pruning_time_seconds # float
 
 ---
 
-## Evaluation — `finetune_cli.evaluation`
+## Evaluation — `lmtool.evaluation`
 
 ### `BenchmarkRunner`
 
 ```python
-from finetune_cli.evaluation.benchmarker import BenchmarkRunner
-from finetune_cli.core.types import EvaluationConfig, EvaluationMetric
+from lmtool.evaluation.benchmarker import BenchmarkRunner
+from lmtool.core.types import EvaluationConfig, EvaluationMetric
 
 eval_config = EvaluationConfig(
     metrics=[EvaluationMetric.ROUGE_L, EvaluationMetric.BLEU],
@@ -286,8 +286,8 @@ report.delta                  # Dict[str, float] — improvement per metric
 ### Individual metrics
 
 ```python
-from finetune_cli.evaluation.metrics import RougeMetric, BleuMetric
-from finetune_cli.core.types import EvaluationMetric
+from lmtool.evaluation.metrics import RougeMetric, BleuMetric
+from lmtool.core.types import EvaluationMetric
 
 metric = RougeMetric(EvaluationMetric.ROUGE_L)
 score = metric.compute(

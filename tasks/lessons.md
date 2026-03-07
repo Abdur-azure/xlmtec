@@ -1,6 +1,6 @@
 ## Pattern: Patch lazy-imported HF classes via the method, not the module
 Trainer and DataCollatorForLanguageModeling are lazy-imported inside
-_build_hf_trainer() in base.py. patch("finetune_cli.trainers.base.Trainer")
+_build_hf_trainer() in base.py. patch("lmtool.trainers.base.Trainer")
 fails with AttributeError — the attribute doesn't exist at module level.
 Instead patch the method directly on the instance:
     with patch.object(trainer, "_build_hf_trainer", return_value=hf_instance):
@@ -96,9 +96,9 @@ Version number, test count, and component table in docs/index.md all drifted.
 After each sprint, grep for hardcoded version strings and test counts and update them.
 
 ## Pattern: CI test path must match actual repo layout — verify against audit_repo.py
-ci.yml had `pytest finetune_cli/tests/` but tests live at `tests/` from repo root.
+ci.yml had `pytest lmtool/tests/` but tests live at `tests/` from repo root.
 Rule: after writing ci.yml, cross-check every path against audit_repo.py REQUIRED_FILES.
-If audit_repo lists "tests/test_config.py" (no finetune_cli/ prefix), the CI path is `tests/`.
+If audit_repo lists "tests/test_config.py" (no lmtool/ prefix), the CI path is `tests/`.
 
 ## Pattern: ruff config must use [tool.ruff.lint] not [tool.ruff]
 Since ruff 0.1+, `select` and `ignore` belong under `[tool.ruff.lint]` in pyproject.toml.
@@ -114,8 +114,8 @@ Or just keep commands on one line in the docs.
 ## Pattern: Tests in tests/ must use absolute imports, not relative
 test_cli_train.py and test_merge.py used `from ..cli.main import app`.
 Relative imports only work when the file is part of the package being traversed.
-Tests in tests/ (repo root) are NOT inside finetune_cli/, so `..` is invalid.
-Always use absolute imports in test files: `from finetune_cli.cli.main import app`.
+Tests in tests/ (repo root) are NOT inside lmtool/, so `..` is invalid.
+Always use absolute imports in test files: `from lmtool.cli.main import app`.
 
 ## Pattern: conftest.py must not import torch at module level
 The shared conftest.py had `import torch` + `torch.randn(10,10)` in mock_model.
@@ -133,8 +133,8 @@ Fix: model.parameters.side_effect = lambda: iter([param])
 This returns a fresh iterator on every call.
 
 ## Pattern: patch() target must be where the name is USED, not where it's exported
-patch("finetune_cli.data.DataPipeline") patches __init__ — the pipeline functions
-never see it. Correct: "finetune_cli.data.pipeline.DataPipeline".
+patch("lmtool.data.DataPipeline") patches __init__ — the pipeline functions
+never see it. Correct: "lmtool.data.pipeline.DataPipeline".
 Rule: grep for the import in the file under test — that module path is your target.
 
 ## Pattern: Embed paths in YAML using .as_posix(), never raw str()
@@ -212,7 +212,7 @@ Sprint 23 shipped ResponseDistillationTrainer before DistillationConfig was adde
 to core/types.py. Every test file that imported DistillationConfig failed collection
 with ImportError, breaking 6 test files simultaneously.
 Rule: Step 1 of any new trainer sprint is always core/types.py — add the config
-dataclass and verify `python -c "from finetune_cli.core.types import NewConfig"`
+dataclass and verify `python -c "from lmtool.core.types import NewConfig"`
 passes BEFORE writing the trainer file.
 This is now step 0 in the trainer checklist, before even creating the trainer file.
 
@@ -329,12 +329,12 @@ could come from a mock in tests.
 ## Pattern: patch at source module, not at cli.main for inside-function imports
 cli/main.py imports heavy deps inside the function body:
   def prune(...):
-      from finetune_cli.models.loader import load_model_and_tokenizer
-This means the name is NOT on finetune_cli.cli.main at module level.
-Patching "finetune_cli.cli.main.load_model_and_tokenizer" raises AttributeError.
+      from lmtool.models.loader import load_model_and_tokenizer
+This means the name is NOT on lmtool.cli.main at module level.
+Patching "lmtool.cli.main.load_model_and_tokenizer" raises AttributeError.
 Fix: patch at the SOURCE module where the function is defined:
-  patch("finetune_cli.models.loader.load_model_and_tokenizer")
-  patch("finetune_cli.trainers.structured_pruner.StructuredPruner")
+  patch("lmtool.models.loader.load_model_and_tokenizer")
+  patch("lmtool.trainers.structured_pruner.StructuredPruner")
 This is already documented in lessons.md as the lazy-import patch pattern —
 reinforced here because it recurred in test_prune.py.
 
@@ -384,7 +384,7 @@ index-based selection to handle ties. Unit tests with uniform tensors (all
 
 ## Pattern: Split ML deps into optional extras — never put torch in mandatory dependencies
 torch, transformers, peft, accelerate, bitsandbytes and textual are heavy optional deps.
-Putting them in [project.dependencies] means `pip install finetune-cli` pulls ~2.5GB.
+Putting them in [project.dependencies] means `pip install lmtool` pulls ~2.5GB.
 Rule: keep mandatory deps lightweight (pydantic, typer, rich, yaml, tqdm, eval metrics).
 Move GPU stack to [ml], TUI to [tui], DPO to [dpo], tests/lint to [dev], all to [full].
 CI installs: `pip install -e ".[ml,tui,dev]"` for full test suite.

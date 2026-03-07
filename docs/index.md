@@ -1,8 +1,8 @@
-# finetune-cli
+# lmtool
 
 **Production-grade LLM fine-tuning, distillation, and pruning from the command line.**
 
-`finetune-cli` is a modular Python framework that wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.
+`lmtool` is a modular Python framework that wraps HuggingFace Transformers + PEFT in a clean CLI, a validated config system, a composable trainer stack, an interactive TUI, and a full test suite — all CPU-runnable for unit tests.
 
 ---
 
@@ -10,18 +10,18 @@
 
 ```bash
 # Install
-git clone https://github.com/Abdur-azure/finetune_cli.git
-cd finetune_cli
+git clone https://github.com/Abdur-azure/lmtool.git
+cd lmtool
 pip install -e .
 
 # Generate sample data (no network required)
 python examples/generate_sample_data.py
 
 # Fine-tune GPT-2 with LoRA
-finetune-cli train --config examples/configs/lora_gpt2.yaml
+lmtool train --config examples/configs/lora_gpt2.yaml
 
 # Or use the interactive TUI
-finetune-cli tui
+lmtool tui
 ```
 
 ---
@@ -32,15 +32,15 @@ finetune-cli tui
 
 | Command | Description |
 |---------|-------------|
-| `finetune-cli train` | Fine-tune with LoRA / QLoRA / Full / Instruction / DPO / Distillation |
-| `finetune-cli evaluate` | Score a checkpoint — ROUGE, BLEU, Perplexity |
-| `finetune-cli benchmark` | Before/after comparison report |
-| `finetune-cli merge` | Merge LoRA adapter into base model |
-| `finetune-cli upload` | Push model or adapter to HuggingFace Hub |
-| `finetune-cli recommend` | Inspect model + VRAM, output optimal YAML config |
-| `finetune-cli prune` | Structured pruning — zero lowest-magnitude attention heads |
-| `finetune-cli wanda` | WANDA unstructured pruning — weight × activation scoring |
-| `finetune-cli tui` | Interactive Textual TUI — all commands via terminal UI |
+| `lmtool train` | Fine-tune with LoRA / QLoRA / Full / Instruction / DPO / Distillation |
+| `lmtool evaluate` | Score a checkpoint — ROUGE, BLEU, Perplexity |
+| `lmtool benchmark` | Before/after comparison report |
+| `lmtool merge` | Merge LoRA adapter into base model |
+| `lmtool upload` | Push model or adapter to HuggingFace Hub |
+| `lmtool recommend` | Inspect model + VRAM, output optimal YAML config |
+| `lmtool prune` | Structured pruning — zero lowest-magnitude attention heads |
+| `lmtool wanda` | WANDA unstructured pruning — weight × activation scoring |
+| `lmtool tui` | Interactive Textual TUI — all commands via terminal UI |
 
 ### Training methods
 

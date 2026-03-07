@@ -8,9 +8,9 @@
 
 ## Sprint 28: "TUI Upload + Polish"  ⬜ NOT STARTED
 
-- [x] finetune_cli/tui/screens/upload.py — model path, repo_id, token (masked), private toggle, merge-adapter option
+- [x] lmtool/tui/screens/upload.py — model path, repo_id, token (masked), private toggle, merge-adapter option
 - [x] Wire home Upload card → push upload screen
-- [x] finetune_cli/tui/app.css — Textual CSS: consistent color theme across all screens
+- [x] lmtool/tui/app.css — Textual CSS: consistent color theme across all screens
 - [x] UX polish: footer keybinding bar on every screen (q=quit, esc=back, tab=next field)
 - [x] UX polish: red border + inline error text on invalid form fields
 - [x] UX polish: loading spinner overlay while Worker runs
@@ -27,7 +27,7 @@
 
 ### Acceptance Gate
 ```
-finetune-cli tui
+lmtool tui
   → all 6 cards work end-to-end, consistent theme, token masked
 pytest tests/test_tui.py -v
 pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
@@ -38,9 +38,9 @@ python audit_repo.py   → all tui/ files registered
 
 ## Sprint 27: "TUI Evaluate, Benchmark, Merge"  ⬜ NOT STARTED
 
-- [ ] finetune_cli/tui/screens/evaluate.py — checkpoint Input, metrics Checkbox group, num-samples Input
-- [ ] finetune_cli/tui/screens/benchmark.py — base model Input, finetuned path Input, dataset Input, metrics Checkbox
-- [ ] finetune_cli/tui/screens/merge.py — adapter path Input, base model Input, output dir Input, dtype Select
+- [ ] lmtool/tui/screens/evaluate.py — checkpoint Input, metrics Checkbox group, num-samples Input
+- [ ] lmtool/tui/screens/benchmark.py — base model Input, finetuned path Input, dataset Input, metrics Checkbox
+- [ ] lmtool/tui/screens/merge.py — adapter path Input, base model Input, output dir Input, dtype Select
 - [ ] Wire home Evaluate card → push evaluate screen
 - [ ] Wire home Benchmark card → push benchmark screen
 - [ ] Wire home Merge card → push merge screen
@@ -53,7 +53,7 @@ python audit_repo.py   → all tui/ files registered
 
 ### Acceptance Gate
 ```
-finetune-cli tui
+lmtool tui
   → Evaluate, Benchmark, Merge cards all navigate to forms and back to home
 pytest tests/test_tui.py -v
 pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
@@ -63,12 +63,12 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 
 ## Sprint 26: "TUI Train & Recommend"  ⬜ NOT STARTED
 
-- [ ] finetune_cli/tui/screens/running.py — Worker thread, live LogPanel, Ctrl+C cancel, elapsed timer label
-- [ ] finetune_cli/tui/screens/result.py — TrainingResult display, MetricTable, back-to-home Button
-- [ ] finetune_cli/tui/widgets/log_panel.py — scrolling RichLog widget, auto-scroll toggle
-- [ ] finetune_cli/tui/widgets/metric_table.py — DataTable widget rendering result fields
-- [ ] finetune_cli/tui/screens/train.py — model Input, method Select (all TrainingMethods), dataset Input, epochs Input, output Input; Submit → push running
-- [ ] finetune_cli/tui/screens/recommend.py — model Input, output path Input; Submit → push running
+- [ ] lmtool/tui/screens/running.py — Worker thread, live LogPanel, Ctrl+C cancel, elapsed timer label
+- [ ] lmtool/tui/screens/result.py — TrainingResult display, MetricTable, back-to-home Button
+- [ ] lmtool/tui/widgets/log_panel.py — scrolling RichLog widget, auto-scroll toggle
+- [ ] lmtool/tui/widgets/metric_table.py — DataTable widget rendering result fields
+- [ ] lmtool/tui/screens/train.py — model Input, method Select (all TrainingMethods), dataset Input, epochs Input, output Input; Submit → push running
+- [ ] lmtool/tui/screens/recommend.py — model Input, output path Input; Submit → push running
 - [ ] Wire home Train card → push train screen
 - [ ] Wire home Recommend card → push recommend screen
 - [ ] tests/test_tui.py — train form: fill all fields, submit → running screen; recommend form renders
@@ -80,7 +80,7 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 
 ### Acceptance Gate
 ```
-finetune-cli tui
+lmtool tui
   → Train and Recommend: form → running screen → result screen → back to home
 pytest tests/test_tui.py -v
 pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
@@ -91,13 +91,13 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 ## Sprint 25: "TUI Foundation"  ✅ COMPLETE
 
 - [x] pyproject.toml — add textual>=0.52.0 to [project.dependencies]
-- [x] finetune_cli/tui/__init__.py — empty package init
-- [x] finetune_cli/tui/app.py — FinetuneApp(App), SCREENS dict, keybindings (q=quit, h/esc=home), on_mount → HomeScreen
-- [x] finetune_cli/tui/screens/__init__.py — empty package init
-- [x] finetune_cli/tui/screens/home.py — HomeScreen: 6 CommandCards in 2x3 grid, arrow key nav, enter to select (cards are non-functional stubs)
-- [x] finetune_cli/tui/widgets/__init__.py — empty package init
-- [x] finetune_cli/tui/widgets/command_card.py — CommandCard(Widget): label, description, hover highlight, click → post Message
-- [x] cli/main.py — add `tui` subcommand (import FinetuneApp inside function, call App().run())
+- [x] lmtool/tui/__init__.py — empty package init
+- [x] lmtool/tui/app.py — LMToolApp(App), SCREENS dict, keybindings (q=quit, h/esc=home), on_mount → HomeScreen
+- [x] lmtool/tui/screens/__init__.py — empty package init
+- [x] lmtool/tui/screens/home.py — HomeScreen: 6 CommandCards in 2x3 grid, arrow key nav, enter to select (cards are non-functional stubs)
+- [x] lmtool/tui/widgets/__init__.py — empty package init
+- [x] lmtool/tui/widgets/command_card.py — CommandCard(Widget): label, description, hover highlight, click → post Message
+- [x] cli/main.py — add `tui` subcommand (import LMToolApp inside function, call App().run())
 - [x] tests/test_tui.py — Pilot: app mounts without error, HomeScreen has 6 CommandCards, q key exits
 - [x] audit_repo.py — register all new tui/ files
 - [x] CHANGELOG.md — Sprint 25 entry
@@ -110,7 +110,7 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 ### Acceptance Gate
 ```
 pip install textual>=0.52.0
-finetune-cli tui
+lmtool tui
   → home screen with 6 styled cards, arrow keys navigate, q exits
 pytest tests/test_tui.py -v   → Pilot tests pass headless
 pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
@@ -120,11 +120,11 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 
 ## Sprint 24: "Feature Distillation"
 
-- [x] finetune_cli/core/types.py — FeatureDistillationConfig frozen dataclass (step 0, per lessons.md)
-- [x] verify: python -c "from finetune_cli.core.types import FeatureDistillationConfig; print('OK')"
-- [x] finetune_cli/trainers/feature_distillation_trainer.py — FeatureDistillationTrainer, _FeatureDistillationTrainer, _select_layers, _map_teacher_layer
-- [x] finetune_cli/trainers/factory.py — FEATURE_DISTILLATION wired, feature_distillation_config param added
-- [x] finetune_cli/trainers/__init__.py — FeatureDistillationTrainer exported
+- [x] lmtool/core/types.py — FeatureDistillationConfig frozen dataclass (step 0, per lessons.md)
+- [x] verify: python -c "from lmtool.core.types import FeatureDistillationConfig; print('OK')"
+- [x] lmtool/trainers/feature_distillation_trainer.py — FeatureDistillationTrainer, _FeatureDistillationTrainer, _select_layers, _map_teacher_layer
+- [x] lmtool/trainers/factory.py — FEATURE_DISTILLATION wired, feature_distillation_config param added
+- [x] lmtool/trainers/__init__.py — FeatureDistillationTrainer exported
 - [x] tests/test_feature_distillation_trainer.py — 21 unit tests, no GPU, absolute imports
 - [x] examples/configs/feature_distillation.yaml — runnable local config
 - [x] tasks/roadmap.md — Feature Distillation marked ✅ Sprint 24
@@ -138,7 +138,7 @@ pytest tests/ --co -q --ignore=tests/test_integration.py   → 0 errors
 ---
 
 ## Acceptance Gate
-python -c "from finetune_cli.core.types import FeatureDistillationConfig; print('OK')"
+python -c "from lmtool.core.types import FeatureDistillationConfig; print('OK')"
 pytest tests/test_feature_distillation_trainer.py -v
 → 21 passed, no GPU.
 pytest tests/ --co -q --ignore=tests/test_integration.py
@@ -148,10 +148,10 @@ pytest tests/ --co -q --ignore=tests/test_integration.py
 
 ## Sprint 23: "Response Distillation" (Close-out)
 
-- [x] finetune_cli/core/types.py — DistillationConfig frozen dataclass added after LoRAConfig
-- [x] finetune_cli/trainers/response_distillation_trainer.py — ResponseDistillationTrainer + _DistillationTrainer
-- [x] finetune_cli/trainers/factory.py — VANILLA_DISTILLATION wired, distillation_config param added
-- [x] finetune_cli/trainers/__init__.py — ResponseDistillationTrainer exported
+- [x] lmtool/core/types.py — DistillationConfig frozen dataclass added after LoRAConfig
+- [x] lmtool/trainers/response_distillation_trainer.py — ResponseDistillationTrainer + _DistillationTrainer
+- [x] lmtool/trainers/factory.py — VANILLA_DISTILLATION wired, distillation_config param added
+- [x] lmtool/trainers/__init__.py — ResponseDistillationTrainer exported
 - [x] tests/test_response_distillation_trainer.py — 12 unit tests, no GPU, absolute imports
 - [x] examples/configs/response_distillation.yaml — runnable local config
 - [x] tasks/roadmap.md — Response Distillation marked ✅ Sprint 23
@@ -165,7 +165,7 @@ pytest tests/ --co -q --ignore=tests/test_integration.py
 ---
 
 ## Acceptance Gate
-python -c "from finetune_cli.core.types import DistillationConfig; print('OK')"
+python -c "from lmtool.core.types import DistillationConfig; print('OK')"
 pytest tests/test_response_distillation_trainer.py -v
 → 12 passed, no GPU.
 pytest tests/ --co -q --ignore=tests/test_integration.py
@@ -183,10 +183,10 @@ pytest tests/ --co -q --ignore=tests/test_integration.py
 
 ## Sprint 23: "Response Distillation"
 
-- [x] finetune_cli/trainers/response_distillation_trainer.py — ResponseDistillationTrainer, _DistillationTrainer (KL+CE loss), VRAM warning
-- [x] finetune_cli/core/types.py — DistillationConfig frozen dataclass added
-- [x] finetune_cli/trainers/factory.py — VANILLA_DISTILLATION wired, distillation_config param added
-- [x] finetune_cli/trainers/__init__.py — ResponseDistillationTrainer exported
+- [x] lmtool/trainers/response_distillation_trainer.py — ResponseDistillationTrainer, _DistillationTrainer (KL+CE loss), VRAM warning
+- [x] lmtool/core/types.py — DistillationConfig frozen dataclass added
+- [x] lmtool/trainers/factory.py — VANILLA_DISTILLATION wired, distillation_config param added
+- [x] lmtool/trainers/__init__.py — ResponseDistillationTrainer exported
 - [x] tests/test_response_distillation_trainer.py — 12 unit tests, no GPU, absolute imports
 - [x] examples/configs/response_distillation.yaml — runnable local config
 - [x] tasks/roadmap.md — Response Distillation marked ✅
@@ -368,10 +368,10 @@ pytest tests/test_qlora_trainer.py -v
 
 ## Sprint 29: "Structured Pruning"  ⬜ NOT STARTED
 
-- [x] finetune_cli/core/types.py — PruningConfig frozen dataclass (step 0)
-- [x] verify: python -c "from finetune_cli.core.types import PruningConfig; print('OK')"
-- [x] finetune_cli/trainers/structured_pruner.py — StructuredPruner + PruningResult
-- [x] finetune_cli/trainers/__init__.py — StructuredPruner, PruningResult exported
+- [x] lmtool/core/types.py — PruningConfig frozen dataclass (step 0)
+- [x] verify: python -c "from lmtool.core.types import PruningConfig; print('OK')"
+- [x] lmtool/trainers/structured_pruner.py — StructuredPruner + PruningResult
+- [x] lmtool/trainers/__init__.py — StructuredPruner, PruningResult exported
 - [x] cli/main.py — add `prune` subcommand
 - [x] tests/test_structured_pruner.py — unit tests, no GPU, absolute imports
 - [x] examples/configs/structured_pruning.yaml — runnable local config
@@ -385,20 +385,20 @@ pytest tests/test_qlora_trainer.py -v
 
 ### Acceptance Gate
 ```
-python -c "from finetune_cli.core.types import PruningConfig; print('OK')"
+python -c "from lmtool.core.types import PruningConfig; print('OK')"
 pytest tests/test_structured_pruner.py -v  → all tests pass, no GPU
 pytest tests/ --co -q --ignore=tests/test_integration.py  → 0 errors
-finetune-cli prune --help  → shows prune command
+lmtool prune --help  → shows prune command
 ```
 
 ---
 
 ## Sprint 30: "WANDA Pruning"  ✅ COMPLETE
 
-- [x] finetune_cli/core/types.py — WandaConfig frozen dataclass (step 0, per lessons.md)
-- [x] verify: python -c "from finetune_cli.core.types import WandaConfig; print('OK')"
-- [x] finetune_cli/trainers/wanda_pruner.py — WandaPruner + WandaResult
-- [x] finetune_cli/trainers/__init__.py — WandaPruner, WandaResult exported
+- [x] lmtool/core/types.py — WandaConfig frozen dataclass (step 0, per lessons.md)
+- [x] verify: python -c "from lmtool.core.types import WandaConfig; print('OK')"
+- [x] lmtool/trainers/wanda_pruner.py — WandaPruner + WandaResult
+- [x] lmtool/trainers/__init__.py — WandaPruner, WandaResult exported
 - [x] cli/main.py — `wanda` subcommand
 - [x] tests/test_wanda_pruner.py — unit tests, no GPU, absolute imports
 - [x] examples/configs/wanda.yaml — runnable example config
@@ -412,8 +412,8 @@ finetune-cli prune --help  → shows prune command
 
 ### Acceptance Gate
 ```
-python -c "from finetune_cli.core.types import WandaConfig; print('OK')"
+python -c "from lmtool.core.types import WandaConfig; print('OK')"
 pytest tests/test_wanda_pruner.py -v  → all tests pass, no GPU
 pytest tests/ --co -q --ignore=tests/test_integration.py  → 0 errors
-finetune-cli wanda --help  → shows wanda command
+lmtool wanda --help  → shows wanda command
 ```

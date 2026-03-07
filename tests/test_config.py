@@ -4,13 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from finetune_cli.core.config import ConfigBuilder, PipelineConfig
-from finetune_cli.core.exceptions import (
+from lmtool.core.config import ConfigBuilder, PipelineConfig
+from lmtool.core.exceptions import (
     IncompatibleConfigError,
     InvalidConfigError,
     MissingConfigError,
 )
-from finetune_cli.core.types import DatasetSource, EvaluationMetric, TrainingMethod
+from lmtool.core.types import DatasetSource, EvaluationMetric, TrainingMethod
 
 
 class TestConfigBuilder:

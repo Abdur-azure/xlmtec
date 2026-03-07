@@ -18,17 +18,17 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import DatasetSource, DeviceType, TrainingMethod
-from finetune_cli.data import prepare_dataset
-from finetune_cli.models.loader import load_model_and_tokenizer
-from finetune_cli.trainers import (
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import DatasetSource, DeviceType, TrainingMethod
+from lmtool.data import prepare_dataset
+from lmtool.models.loader import load_model_and_tokenizer
+from lmtool.trainers import (
     MethodRecommender,
     get_available_methods,
     get_finetuning_comparison,
     train_model,
 )
-from finetune_cli.utils.logging import LogLevel, setup_logger
+from lmtool.utils.logging import LogLevel, setup_logger
 
 # ============================================================================
 # EXAMPLE 1: LoRA Training
@@ -386,7 +386,7 @@ def example_6_config_file():
     logger.info(f"Saved configuration to: {config_path}")
 
     # Load config from file
-    from finetune_cli.core.config import PipelineConfig
+    from lmtool.core.config import PipelineConfig
     loaded_config = PipelineConfig.from_json(config_path)
     logger.info("Loaded configuration from file")
 

@@ -5,7 +5,7 @@ This document describes the complete folder and file structure for the LLM Fine-
 ## Directory Tree
 
 ```
-finetune_cli/
+lmtool/
 ├── .github/
 │   └── workflows/
 │       └── deploy_docs.yml           # GitHub Actions workflow for docs deployment
@@ -22,7 +22,7 @@ finetune_cli/
 │   └── stylesheets/
 │       └── extra.css                 # Custom CSS styles
 │
-├── finetune_cli.py                   # Main application script
+├── lmtool.py                   # Main application script
 ├── requirements.txt                   # Python dependencies
 ├── mkdocs.yml                        # MkDocs configuration
 ├── .gitignore                        # Git ignore rules
@@ -35,7 +35,7 @@ finetune_cli/
 
 ### Root Directory
 
-#### `finetune_cli.py`
+#### `lmtool.py`
 Main Python script containing the `LLMFineTuner` class and CLI interface.
 
 **Key Components:**
@@ -208,19 +208,19 @@ Created during training:
 
 ```bash
 # Create main project directory
-mkdir -p finetune_cli
+mkdir -p lmtool
 
 # Create docs directory and subdirectories
-mkdir -p finetune_cli/docs/stylesheets
+mkdir -p lmtool/docs/stylesheets
 
 # Create GitHub workflows directory
-mkdir -p finetune_cli/.github/workflows
+mkdir -p lmtool/.github/workflows
 ```
 
 ### 2. Create Documentation Files
 
 ```bash
-cd finetune_cli
+cd lmtool
 
 # Create all documentation markdown files
 touch docs/index.md
@@ -342,9 +342,9 @@ mkdocs gh-deploy
 
 ## Resources
 
-- **GitHub Repository**: https://github.com/Abdur-azure/finetune_cli
-- **Documentation Site**: https://Abdur-azure.github.io/finetune_cli
-- **Issue Tracker**: https://github.com/Abdur-azure/finetune_cli/issues
+- **GitHub Repository**: https://github.com/Abdur-azure/lmtool
+- **Documentation Site**: https://Abdur-azure.github.io/lmtool
+- **Issue Tracker**: https://github.com/Abdur-azure/lmtool/issues
 
 ## Support
 

@@ -10,10 +10,10 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 from datasets import Dataset, DatasetDict
 
-from finetune_cli.core.exceptions import MissingConfigError
-from finetune_cli.core.types import LoRAConfig, ModelConfig, TrainingConfig, TrainingMethod
-from finetune_cli.trainers.factory import TrainerFactory
-from finetune_cli.trainers.qlora_trainer import QLoRATrainer
+from lmtool.core.exceptions import MissingConfigError
+from lmtool.core.types import LoRAConfig, ModelConfig, TrainingConfig, TrainingMethod
+from lmtool.trainers.factory import TrainerFactory
+from lmtool.trainers.qlora_trainer import QLoRATrainer
 
 # ============================================================================
 # FIXTURES (mock_model, mock_tokenizer, tmp_output_dir come from conftest.py)
@@ -145,9 +145,9 @@ class TestQLoRATrainerInit:
 class TestQLoRASetupPeft:
     """_setup_peft calls prepare_model_for_kbit_training then LoRA setup."""
 
-    @patch("finetune_cli.trainers.qlora_trainer.prepare_model_for_kbit_training")
-    @patch("finetune_cli.trainers.lora_trainer.get_peft_model")
-    @patch("finetune_cli.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
+    @patch("lmtool.trainers.qlora_trainer.prepare_model_for_kbit_training")
+    @patch("lmtool.trainers.lora_trainer.get_peft_model")
+    @patch("lmtool.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
     def test_kbit_prep_called_before_lora(
         self, mock_detect, mock_get_peft, mock_kbit_prep,
         mock_model, mock_tokenizer, training_config, lora_config, model_config
@@ -167,9 +167,9 @@ class TestQLoRASetupPeft:
         # kbit must be called before get_peft
         assert mock_kbit_prep.call_args[0][0] is mock_model
 
-    @patch("finetune_cli.trainers.qlora_trainer.prepare_model_for_kbit_training")
-    @patch("finetune_cli.trainers.lora_trainer.get_peft_model")
-    @patch("finetune_cli.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
+    @patch("lmtool.trainers.qlora_trainer.prepare_model_for_kbit_training")
+    @patch("lmtool.trainers.lora_trainer.get_peft_model")
+    @patch("lmtool.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
     def test_gradient_checkpointing_passed_to_kbit(
         self, mock_detect, mock_get_peft, mock_kbit_prep,
         mock_model, mock_tokenizer, lora_config, model_config, tmp_output_dir
@@ -199,9 +199,9 @@ class TestQLoRASetupPeft:
 class TestQLoRATrainerTrain:
     """End-to-end train() call with all HF components mocked."""
 
-    @patch("finetune_cli.trainers.qlora_trainer.prepare_model_for_kbit_training")
-    @patch("finetune_cli.trainers.lora_trainer.get_peft_model")
-    @patch("finetune_cli.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
+    @patch("lmtool.trainers.qlora_trainer.prepare_model_for_kbit_training")
+    @patch("lmtool.trainers.lora_trainer.get_peft_model")
+    @patch("lmtool.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
     def test_train_returns_result(
         self, mock_detect, mock_get_peft, mock_kbit_prep,
         mock_model, mock_tokenizer, training_config, lora_config, model_config,

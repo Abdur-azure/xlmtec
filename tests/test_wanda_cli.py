@@ -1,5 +1,5 @@
 """
-Unit tests for the `finetune-cli wanda` CLI subcommand.
+Unit tests for the `lmtool wanda` CLI subcommand.
 
 All model loading and pruning are mocked — no GPU, no real model required.
 """
@@ -10,13 +10,13 @@ from unittest.mock import MagicMock, patch
 import pytest
 from typer.testing import CliRunner
 
-from finetune_cli.cli.main import app
-from finetune_cli.trainers.wanda_pruner import WandaResult
+from lmtool.cli.main import app
+from lmtool.trainers.wanda_pruner import WandaResult
 
 runner = CliRunner()
 
-_LOADER_PATH = "finetune_cli.models.loader.load_model_and_tokenizer"
-_WANDA_PATH  = "finetune_cli.trainers.wanda_pruner.WandaPruner"
+_LOADER_PATH = "lmtool.models.loader.load_model_and_tokenizer"
+_WANDA_PATH  = "lmtool.trainers.wanda_pruner.WandaPruner"
 
 
 def _mock_result(output_dir: Path) -> WandaResult:

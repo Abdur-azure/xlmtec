@@ -8,10 +8,10 @@ Commands:
 
 Usage::
 
-  python -m finetune_cli.cli train --config config.yaml
-  python -m finetune_cli.cli train --model gpt2 --dataset ./data.jsonl
-  python -m finetune_cli.cli evaluate --model-path ./output --dataset ./data.jsonl
-  python -m finetune_cli.cli benchmark --base gpt2 --finetuned ./output --dataset ./data.jsonl
+  python -m lmtool.cli train --config config.yaml
+  python -m lmtool.cli train --model gpt2 --dataset ./data.jsonl
+  python -m lmtool.cli evaluate --model-path ./output --dataset ./data.jsonl
+  python -m lmtool.cli benchmark --base gpt2 --finetuned ./output --dataset ./data.jsonl
 """
 
 from pathlib import Path
@@ -31,7 +31,7 @@ from ..core.types import (
 from ..utils.logging import LogLevel, setup_logger
 
 app = typer.Typer(
-    name="finetune-cli",
+    name="lmtool",
     help="Production-grade LLM fine-tuning CLI (LoRA / QLoRA)",
     add_completion=False,
 )
@@ -385,7 +385,7 @@ def merge(
     with transformers or uploaded to HuggingFace Hub.
 
     Example:
-        finetune-cli merge ./outputs/gpt2_lora ./outputs/gpt2_merged --base-model gpt2
+        lmtool merge ./outputs/gpt2_lora ./outputs/gpt2_merged --base-model gpt2
     """
     try:
         import torch
@@ -486,11 +486,11 @@ def prune(
 
     Example:
 
-        finetune-cli prune ./outputs/gpt2_lora --output ./outputs/gpt2_pruned --sparsity 0.3
+        lmtool prune ./outputs/gpt2_lora --output ./outputs/gpt2_pruned --sparsity 0.3
     """
-    from finetune_cli.core.exceptions import FineTuneError
-    from finetune_cli.core.types import ModelConfig, PruningConfig
-    from finetune_cli.trainers.structured_pruner import StructuredPruner
+    from lmtool.core.exceptions import FineTuneError
+    from lmtool.core.types import ModelConfig, PruningConfig
+    from lmtool.trainers.structured_pruner import StructuredPruner
 
     if not model_path.exists():
         console.print(f"[red]Error:[/red] Model path does not exist: {model_path}")
@@ -516,7 +516,7 @@ def prune(
 
     try:
         with console.status("[bold green]Loading model..."):
-            from finetune_cli.models.loader import load_model_and_tokenizer
+            from lmtool.models.loader import load_model_and_tokenizer
             model_config = ModelConfig(name=str(model_path))
             model, tokenizer = load_model_and_tokenizer(model_config)
         console.print("[green]✓[/green] Model loaded")
@@ -575,12 +575,12 @@ def wanda(
 
     Example:
 
-        finetune-cli wanda ./outputs/gpt2_lora --output ./outputs/gpt2_wanda \\
+        lmtool wanda ./outputs/gpt2_lora --output ./outputs/gpt2_wanda \\
             --sparsity 0.5 --dataset ./data/sample.jsonl
     """
-    from finetune_cli.core.exceptions import FineTuneError
-    from finetune_cli.core.types import ModelConfig, WandaConfig
-    from finetune_cli.trainers.wanda_pruner import WandaPruner
+    from lmtool.core.exceptions import FineTuneError
+    from lmtool.core.types import ModelConfig, WandaConfig
+    from lmtool.trainers.wanda_pruner import WandaPruner
 
     if not model_path.exists():
         console.print(f"[red]Error:[/red] Model path does not exist: {model_path}")
@@ -602,7 +602,7 @@ def wanda(
 
     try:
         with console.status("[bold green]Loading model..."):
-            from finetune_cli.models.loader import load_model_and_tokenizer
+            from lmtool.models.loader import load_model_and_tokenizer
             model_config = ModelConfig(name=str(model_path))
             model, tokenizer = load_model_and_tokenizer(model_config)
         console.print("[green]✓[/green] Model loaded")
@@ -616,12 +616,12 @@ def wanda(
             with console.status("[bold green]Preparing calibration data..."):
                 import torch
 
-                from finetune_cli.core.types import (
+                from lmtool.core.types import (
                     DatasetConfig,
                     DatasetSource,
                     TokenizationConfig,
                 )
-                from finetune_cli.data import prepare_dataset, quick_load
+                from lmtool.data import prepare_dataset, quick_load
                 ds_cfg = DatasetConfig(
                     source=DatasetSource.LOCAL_FILE,
                     path=str(dataset),
@@ -674,7 +674,7 @@ def wanda(
 
 @app.command()
 def tui() -> None:
-    """Launch the interactive Textual TUI for finetune-cli."""
+    """Launch the interactive Textual TUI for lmtool."""
     try:
         import textual  # noqa: F401 — check textual is present first
     except ImportError:
@@ -686,8 +686,8 @@ def tui() -> None:
         raise typer.Exit(code=1)
 
     # Textual is present — import the app (real errors surface here)
-    from finetune_cli.tui.app import FinetuneApp
-    FinetuneApp().run()
+    from lmtool.tui.app import LMToolApp
+    LMToolApp().run()
 
 # ============================================================================
 # ENTRY POINT

@@ -11,7 +11,7 @@ import pytest
 import yaml
 from typer.testing import CliRunner
 
-from finetune_cli.cli.main import app
+from lmtool.cli.main import app
 
 runner = CliRunner()
 
@@ -86,7 +86,7 @@ class TestRecommendCommand:
         out_file = tmp_path / "config.yaml"
         runner.invoke(app, ["recommend", "gpt2", "--output", str(out_file)])
 
-        from finetune_cli.core.config import PipelineConfig
+        from lmtool.core.config import PipelineConfig
         with patch("pathlib.Path.exists", return_value=True):
             cfg = PipelineConfig.from_yaml(out_file)
         assert cfg.training is not None

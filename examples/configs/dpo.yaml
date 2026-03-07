@@ -4,7 +4,7 @@
 # This config uses the Anthropic HH-RLHF dataset (small split).
 #
 # Usage:
-#   finetune-cli train --config examples/configs/dpo.yaml
+#   lmtool train --config examples/configs/dpo.yaml
 #
 # Requirements:
 #   pip install trl>=0.7.0

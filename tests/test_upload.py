@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from typer.testing import CliRunner
 
-from finetune_cli.cli.main import app
+from lmtool.cli.main import app
 
 runner = CliRunner()
 

@@ -3,15 +3,15 @@
 # Prunes ~30% of attention heads from a fine-tuned GPT-2 model.
 # Run with:
 #   python examples/generate_sample_data.py   # (only needed for training data)
-#   finetune-cli train --config examples/configs/lora_gpt2.yaml
-#   finetune-cli prune ./outputs/gpt2_lora \
+#   lmtool train --config examples/configs/lora_gpt2.yaml
+#   lmtool prune ./outputs/gpt2_lora \
 #       --output ./outputs/gpt2_pruned \
 #       --sparsity 0.3 \
 #       --method heads
 #
 # Or load directly via Python:
-#   from finetune_cli.core.types import PruningConfig
-#   from finetune_cli.trainers import StructuredPruner
+#   from lmtool.core.types import PruningConfig
+#   from lmtool.trainers import StructuredPruner
 #   from pathlib import Path
 #
 #   config = PruningConfig(
@@ -40,6 +40,6 @@ pruning:
 #  0.7+      |  Extreme — only for heavily over-parameterised models
 #
 # After pruning, evaluate with:
-#   finetune-cli benchmark gpt2 ./outputs/gpt2_pruned \
+#   lmtool benchmark gpt2 ./outputs/gpt2_pruned \
 #       --dataset ./data/sample.jsonl \
 #       --metrics rougeL,bleu

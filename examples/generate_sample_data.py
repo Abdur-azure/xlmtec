@@ -12,10 +12,10 @@ Outputs:
     data/dpo_sample.jsonl      — 200 rows, DPO format         (prompt, chosen, rejected)
 
 Run this once before executing any example config:
-    finetune-cli train --config examples/configs/lora_gpt2.yaml
-    finetune-cli train --config examples/configs/instruction_tuning.yaml
-    finetune-cli train --config examples/configs/full_finetuning.yaml
-    finetune-cli train --config examples/configs/dpo.yaml
+    lmtool train --config examples/configs/lora_gpt2.yaml
+    lmtool train --config examples/configs/instruction_tuning.yaml
+    lmtool train --config examples/configs/full_finetuning.yaml
+    lmtool train --config examples/configs/dpo.yaml
 """
 
 import json
@@ -202,9 +202,9 @@ def main() -> None:
 
     print(
         "\nDone. Run an example:\n"
-        "  finetune-cli train --config examples/configs/lora_gpt2.yaml\n"
-        "  finetune-cli train --config examples/configs/instruction_tuning.yaml\n"
-        "  finetune-cli train --config examples/configs/dpo.yaml\n"
+        "  lmtool train --config examples/configs/lora_gpt2.yaml\n"
+        "  lmtool train --config examples/configs/instruction_tuning.yaml\n"
+        "  lmtool train --config examples/configs/dpo.yaml\n"
     )
 
 

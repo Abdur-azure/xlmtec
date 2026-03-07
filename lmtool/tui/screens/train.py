@@ -20,7 +20,7 @@ _METHOD_OPTIONS = [
 
 
 class TrainScreen(Screen):
-    """Form screen for the `finetune-cli train` command.
+    """Form screen for the `lmtool train` command.
 
     Collects: model name, training method, dataset path, epochs,
     learning rate, output directory. Submits → RunningScreen.
@@ -187,7 +187,7 @@ class TrainScreen(Screen):
             return
 
         command = [
-            "finetune-cli", "train",
+            "lmtool", "train",
             "--model", model,
             "--dataset", dataset,
             "--method", str(method),
@@ -196,7 +196,7 @@ class TrainScreen(Screen):
             "--output", output,
         ]
 
-        from finetune_cli.tui.screens.running import RunningScreen
+        from lmtool.tui.screens.running import RunningScreen
         self.app.switch_screen(
             RunningScreen(
                 command=command,

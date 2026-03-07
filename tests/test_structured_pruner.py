@@ -10,9 +10,9 @@ from unittest.mock import MagicMock, PropertyMock, patch
 
 import pytest
 
-from finetune_cli.core.exceptions import FineTuneError
-from finetune_cli.core.types import PruningConfig
-from finetune_cli.trainers.structured_pruner import (
+from lmtool.core.exceptions import FineTuneError
+from lmtool.core.types import PruningConfig
+from lmtool.trainers.structured_pruner import (
     PruningResult,
     StructuredPruner,
     _count_params,

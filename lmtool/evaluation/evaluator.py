@@ -318,10 +318,10 @@ def evaluate_model(
         Evaluation results
 
     Example:
-        >>> from finetune_cli.core.config import ConfigBuilder
-        >>> from finetune_cli.core.types import EvaluationMetric
-        >>> from finetune_cli.models.loader import load_model_and_tokenizer
-        >>> from finetune_cli.evaluation import evaluate_model
+        >>> from lmtool.core.config import ConfigBuilder
+        >>> from lmtool.core.types import EvaluationMetric
+        >>> from lmtool.models.loader import load_model_and_tokenizer
+        >>> from lmtool.evaluation import evaluate_model
         >>>
         >>> config = ConfigBuilder() \\
         ...     .with_model("gpt2") \\
@@ -361,7 +361,7 @@ def quick_evaluate(
         Dictionary of scores
 
     Example:
-        >>> from finetune_cli.evaluation import quick_evaluate
+        >>> from lmtool.evaluation import quick_evaluate
         >>>
         >>> scores = quick_evaluate(
         ...     model, tokenizer,

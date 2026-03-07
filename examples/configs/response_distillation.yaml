@@ -2,7 +2,7 @@
 # Student: GPT-2 (124M) learns from Teacher: GPT-2-medium (355M)
 #
 # Run:
-#   finetune-cli train --config examples/configs/response_distillation.yaml
+#   lmtool train --config examples/configs/response_distillation.yaml
 #
 # Data: uses examples/data/sample.jsonl (generate with examples/generate_sample_data.py)
 

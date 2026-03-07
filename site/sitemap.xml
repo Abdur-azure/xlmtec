@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/ARCHITECTURE/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/ARCHITECTURE/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/api/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/api/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/configuration/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/configuration/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/examples/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/examples/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/installation/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/installation/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/training_and_evaluation/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/training_and_evaluation/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/troubleshooting/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/troubleshooting/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/usage/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/usage/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
     <url>
-         <loc>https://Abdur-azure.github.io/finetune_cli/vanilla_distillation/</loc>
+         <loc>https://Abdur-azure.github.io/lmtool/vanilla_distillation/</loc>
          <lastmod>2026-02-27</lastmod>
     </url>
 </urlset>

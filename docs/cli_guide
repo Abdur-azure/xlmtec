@@ -23,26 +23,26 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/Abdur-azure/finetune_cli.git
-cd finetune_cli
+git clone https://github.com/Abdur-azure/lmtool.git
+cd lmtool
 
 # Install in development mode
 pip install -e .
 
 # Verify installation
-finetune-cli --help
+lmtool --help
 ```
 
 ### **Option 2: Install via pip** (when published)
 
 ```bash
-pip install finetune-cli
+pip install lmtool
 ```
 
 ### **Verify Installation**
 
 ```bash
-finetune-cli version
+lmtool version
 ```
 
 **Output:**
@@ -64,20 +64,20 @@ finetune-cli version
 
 ```bash
 # List training methods
-finetune-cli list-methods
+lmtool list-methods
 
 # List evaluation metrics
-finetune-cli list-metrics
+lmtool list-metrics
 ```
 
 ### **2. Train a Model**
 
 ```bash
 # Quick training with defaults
-finetune-cli train quick gpt2 ./data.jsonl ./outputs
+lmtool train quick gpt2 ./data.jsonl ./outputs
 
 # Or with full options
-finetune-cli train run \
+lmtool train run \
     --model gpt2 \
     --dataset ./data.jsonl \
     --method lora \
@@ -89,10 +89,10 @@ finetune-cli train run \
 
 ```bash
 # Quick evaluation
-finetune-cli evaluate quick ./outputs ./test.jsonl
+lmtool evaluate quick ./outputs ./test.jsonl
 
 # Or with specific metrics
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model ./outputs \
     --dataset ./test.jsonl \
     --metric rouge1 \
@@ -103,13 +103,13 @@ finetune-cli evaluate run \
 
 ## 🎯 Training Commands
 
-### **`finetune-cli train run`**
+### **`lmtool train run`**
 
 Train a model with full configuration options.
 
 **Basic Usage:**
 ```bash
-finetune-cli train run \
+lmtool train run \
     --model <model_name> \
     --dataset <dataset_path> \
     --output <output_dir>
@@ -143,7 +143,7 @@ finetune-cli train run \
 
 **LoRA Training:**
 ```bash
-finetune-cli train run \
+lmtool train run \
     --model gpt2 \
     --dataset ./data/train.jsonl \
     --method lora \
@@ -156,7 +156,7 @@ finetune-cli train run \
 
 **QLoRA Training (Large Model):**
 ```bash
-finetune-cli train run \
+lmtool train run \
     --model meta-llama/Llama-2-7b-hf \
     --dataset ./data/train.jsonl \
     --method qlora \
@@ -171,7 +171,7 @@ finetune-cli train run \
 
 **Full Fine-tuning:**
 ```bash
-finetune-cli train run \
+lmtool train run \
     --model gpt2 \
     --dataset ./data/train.jsonl \
     --method full_finetuning \
@@ -183,7 +183,7 @@ finetune-cli train run \
 
 **HuggingFace Dataset:**
 ```bash
-finetune-cli train run \
+lmtool train run \
     --model gpt2 \
     --dataset wikitext \
     --source huggingface \
@@ -194,23 +194,23 @@ finetune-cli train run \
 
 ---
 
-### **`finetune-cli train quick`**
+### **`lmtool train quick`**
 
 Quick training with sensible defaults.
 
 **Usage:**
 ```bash
-finetune-cli train quick <model> <dataset> <output>
+lmtool train quick <model> <dataset> <output>
 ```
 
 **Example:**
 ```bash
-finetune-cli train quick gpt2 ./data.jsonl ./outputs
+lmtool train quick gpt2 ./data.jsonl ./outputs
 ```
 
 Equivalent to:
 ```bash
-finetune-cli train run \
+lmtool train run \
     --model gpt2 \
     --dataset ./data.jsonl \
     --method lora \
@@ -221,31 +221,31 @@ finetune-cli train run \
 
 ---
 
-### **`finetune-cli train resume`**
+### **`lmtool train resume`**
 
 Resume training from checkpoint.
 
 **Usage:**
 ```bash
-finetune-cli train resume <checkpoint_dir> --epochs <additional_epochs>
+lmtool train resume <checkpoint_dir> --epochs <additional_epochs>
 ```
 
 **Example:**
 ```bash
-finetune-cli train resume ./outputs/checkpoint-100 --epochs 2
+lmtool train resume ./outputs/checkpoint-100 --epochs 2
 ```
 
 ---
 
 ## 📊 Evaluation Commands
 
-### **`finetune-cli evaluate run`**
+### **`lmtool evaluate run`**
 
 Evaluate a trained model.
 
 **Basic Usage:**
 ```bash
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model <model_path> \
     --dataset <test_dataset>
 ```
@@ -269,14 +269,14 @@ finetune-cli evaluate run \
 
 **Basic Evaluation:**
 ```bash
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model ./outputs/lora_model \
     --dataset ./data/test.jsonl
 ```
 
 **With Specific Metrics:**
 ```bash
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model ./outputs/lora_model \
     --dataset ./data/test.jsonl \
     --metric rouge1 \
@@ -287,7 +287,7 @@ finetune-cli evaluate run \
 
 **Save Report:**
 ```bash
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model ./outputs/lora_model \
     --dataset ./data/test.jsonl \
     --report ./reports/evaluation.md \
@@ -296,7 +296,7 @@ finetune-cli evaluate run \
 
 **Custom Generation:**
 ```bash
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model ./outputs/lora_model \
     --dataset ./data/test.jsonl \
     --max-length 200 \
@@ -306,13 +306,13 @@ finetune-cli evaluate run \
 
 ---
 
-### **`finetune-cli evaluate benchmark`**
+### **`lmtool evaluate benchmark`**
 
 Compare base model vs fine-tuned model.
 
 **Usage:**
 ```bash
-finetune-cli evaluate benchmark \
+lmtool evaluate benchmark \
     --base <base_model> \
     --finetuned <finetuned_model> \
     --dataset <test_dataset>
@@ -332,7 +332,7 @@ finetune-cli evaluate benchmark \
 
 **Example:**
 ```bash
-finetune-cli evaluate benchmark \
+lmtool evaluate benchmark \
     --base gpt2 \
     --finetuned ./outputs/lora_model \
     --dataset ./data/test.jsonl \
@@ -358,31 +358,31 @@ finetune-cli evaluate benchmark \
 
 ---
 
-### **`finetune-cli evaluate quick`**
+### **`lmtool evaluate quick`**
 
 Quick evaluation with default metrics.
 
 **Usage:**
 ```bash
-finetune-cli evaluate quick <model> <dataset>
+lmtool evaluate quick <model> <dataset>
 ```
 
 **Example:**
 ```bash
-finetune-cli evaluate quick ./outputs/lora_model ./data/test.jsonl
+lmtool evaluate quick ./outputs/lora_model ./data/test.jsonl
 ```
 
 ---
 
 ## ⚙️ Configuration Commands
 
-### **`finetune-cli config generate`**
+### **`lmtool config generate`**
 
 Generate configuration template.
 
 **Usage:**
 ```bash
-finetune-cli config generate \
+lmtool config generate \
     --output <config_file> \
     --method <training_method>
 ```
@@ -399,14 +399,14 @@ finetune-cli config generate \
 
 **Generate LoRA Config:**
 ```bash
-finetune-cli config generate \
+lmtool config generate \
     --output ./configs/lora_config.json \
     --method lora
 ```
 
 **Generate YAML Config:**
 ```bash
-finetune-cli config generate \
+lmtool config generate \
     --output ./configs/training.yaml \
     --method qlora \
     --format yaml
@@ -441,18 +441,18 @@ finetune-cli config generate \
 
 ---
 
-### **`finetune-cli config validate`**
+### **`lmtool config validate`**
 
 Validate configuration file.
 
 **Usage:**
 ```bash
-finetune-cli config validate <config_file>
+lmtool config validate <config_file>
 ```
 
 **Example:**
 ```bash
-finetune-cli config validate ./configs/training.json
+lmtool config validate ./configs/training.json
 ```
 
 **Output:**
@@ -471,36 +471,36 @@ Configuration Summary:
 
 ---
 
-### **`finetune-cli config show`**
+### **`lmtool config show`**
 
 Display configuration file.
 
 **Usage:**
 ```bash
-finetune-cli config show <config_file> [--section <section_name>]
+lmtool config show <config_file> [--section <section_name>]
 ```
 
 **Examples:**
 
 **Show Full Config:**
 ```bash
-finetune-cli config show ./configs/training.json
+lmtool config show ./configs/training.json
 ```
 
 **Show Specific Section:**
 ```bash
-finetune-cli config show ./configs/training.json --section training
+lmtool config show ./configs/training.json --section training
 ```
 
 ---
 
-### **`finetune-cli config templates`**
+### **`lmtool config templates`**
 
 Show available templates.
 
 **Usage:**
 ```bash
-finetune-cli config templates
+lmtool config templates
 ```
 
 **Output:**
@@ -519,13 +519,13 @@ finetune-cli config templates
 
 ## 💡 Recommendation Commands
 
-### **`finetune-cli recommend method`**
+### **`lmtool recommend method`**
 
 Get training method recommendation.
 
 **Usage:**
 ```bash
-finetune-cli recommend method \
+lmtool recommend method \
     --model-size <size_in_billions> \
     --vram <available_vram_gb>
 ```
@@ -543,7 +543,7 @@ finetune-cli recommend method \
 
 **Small Model:**
 ```bash
-finetune-cli recommend method --model-size 0.124 --vram 8
+lmtool recommend method --model-size 0.124 --vram 8
 ```
 
 **Output:**
@@ -560,7 +560,7 @@ Memory Estimates:
 
 **Large Model:**
 ```bash
-finetune-cli recommend method --model-size 7 --vram 12 --task complex
+lmtool recommend method --model-size 7 --vram 12 --task complex
 ```
 
 **Output:**
@@ -580,19 +580,19 @@ Alternative Methods:
 
 ---
 
-### **`finetune-cli recommend config`**
+### **`lmtool recommend config`**
 
 Get configuration recommendations.
 
 **Usage:**
 ```bash
-finetune-cli recommend config <method> \
+lmtool recommend config <method> \
     --dataset-size <num_samples>
 ```
 
 **Example:**
 ```bash
-finetune-cli recommend config lora --dataset-size 5000
+lmtool recommend config lora --dataset-size 5000
 ```
 
 **Output:**
@@ -617,18 +617,18 @@ Tips:
 
 ---
 
-### **`finetune-cli recommend hardware`**
+### **`lmtool recommend hardware`**
 
 Get hardware requirements.
 
 **Usage:**
 ```bash
-finetune-cli recommend hardware <model_size> --method <method>
+lmtool recommend hardware <model_size> --method <method>
 ```
 
 **Example:**
 ```bash
-finetune-cli recommend hardware 7 --method qlora
+lmtool recommend hardware 7 --method qlora
 ```
 
 **Output:**
@@ -659,16 +659,16 @@ Recommended GPUs:
 
 ```bash
 # 1. Get method recommendation
-finetune-cli recommend method --model-size 0.124 --vram 8
+lmtool recommend method --model-size 0.124 --vram 8
 
 # 2. Generate configuration
-finetune-cli config generate --output config.json --method lora
+lmtool config generate --output config.json --method lora
 
 # 3. Validate configuration
-finetune-cli config validate config.json
+lmtool config validate config.json
 
 # 4. Train model
-finetune-cli train run \
+lmtool train run \
     --model gpt2 \
     --dataset ./data/train.jsonl \
     --method lora \
@@ -676,13 +676,13 @@ finetune-cli train run \
     --output ./outputs/model
 
 # 5. Evaluate model
-finetune-cli evaluate run \
+lmtool evaluate run \
     --model ./outputs/model \
     --dataset ./data/test.jsonl \
     --report ./reports/eval.md
 
 # 6. Benchmark against base
-finetune-cli evaluate benchmark \
+lmtool evaluate benchmark \
     --base gpt2 \
     --finetuned ./outputs/model \
     --dataset ./data/test.jsonl \
@@ -693,13 +693,13 @@ finetune-cli evaluate benchmark \
 
 ```bash
 # Check hardware requirements
-finetune-cli recommend hardware 7 --method qlora
+lmtool recommend hardware 7 --method qlora
 
 # Get configuration recommendations
-finetune-cli recommend config qlora --dataset-size 10000
+lmtool recommend config qlora --dataset-size 10000
 
 # Train with QLoRA
-finetune-cli train run \
+lmtool train run \
     --model meta-llama/Llama-2-7b-hf \
     --dataset ./data/large_dataset.jsonl \
     --source local \
@@ -719,7 +719,7 @@ finetune-cli train run \
 ```bash
 # Evaluate multiple checkpoints
 for checkpoint in ./outputs/checkpoints/*; do
-    finetune-cli evaluate run \
+    lmtool evaluate run \
         --model $checkpoint \
         --dataset ./data/test.jsonl \
         --report ./reports/eval_$(basename $checkpoint).md
@@ -736,11 +736,11 @@ Instead of long command lines, use config files:
 
 ```bash
 # Generate and edit config
-finetune-cli config generate --output training.json
+lmtool config generate --output training.json
 nano training.json
 
 # Train using config (coming soon)
-finetune-cli train from-config training.json
+lmtool train from-config training.json
 ```
 
 ### **Environment Variables**
@@ -752,7 +752,7 @@ export FINETUNE_MODEL=gpt2
 export FINETUNE_OUTPUT=./outputs
 export FINETUNE_LOG_LEVEL=DEBUG
 
-finetune-cli train run --dataset ./data.jsonl
+lmtool train run --dataset ./data.jsonl
 ```
 
 ### **Logging**
@@ -761,13 +761,13 @@ Control verbosity:
 
 ```bash
 # Quiet mode
-finetune-cli train run ... --log-level ERROR
+lmtool train run ... --log-level ERROR
 
 # Verbose mode
-finetune-cli train run ... --log-level DEBUG
+lmtool train run ... --log-level DEBUG
 
 # Save logs to file
-finetune-cli train run ... 2>&1 | tee training.log
+lmtool train run ... 2>&1 | tee training.log
 ```
 
 ### **Shell Completion**
@@ -776,10 +776,10 @@ Enable tab completion (future feature):
 
 ```bash
 # Bash
-eval "$(finetune-cli --show-completion bash)"
+eval "$(lmtool --show-completion bash)"
 
 # Zsh
-eval "$(finetune-cli --show-completion zsh)"
+eval "$(lmtool --show-completion zsh)"
 ```
 
 ---
@@ -790,7 +790,7 @@ eval "$(finetune-cli --show-completion zsh)"
 
 ```bash
 # Verify installation
-pip show finetune-cli
+pip show lmtool
 
 # Reinstall
 pip install -e . --force-reinstall
@@ -800,26 +800,26 @@ pip install -e . --force-reinstall
 
 ```bash
 # Reduce batch size
-finetune-cli train run ... --batch-size 2
+lmtool train run ... --batch-size 2
 
 # Enable gradient checkpointing
-finetune-cli train run ... --grad-checkpoint
+lmtool train run ... --grad-checkpoint
 
 # Use QLoRA
-finetune-cli train run ... --method qlora --4bit
+lmtool train run ... --method qlora --4bit
 ```
 
 ### **Slow Training**
 
 ```bash
 # Increase batch size (if memory allows)
-finetune-cli train run ... --batch-size 8
+lmtool train run ... --batch-size 8
 
 # Reduce max length
-finetune-cli train run ... --max-length 256
+lmtool train run ... --max-length 256
 
 # Limit samples for testing
-finetune-cli train run ... --max-samples 1000
+lmtool train run ... --max-samples 1000
 ```
 
 ---

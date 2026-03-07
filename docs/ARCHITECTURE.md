@@ -324,7 +324,7 @@ class CustomLoader(DatasetLoader):
         return dataset
 
 # Register
-from finetune_cli.data import register_loader
+from lmtool.data import register_loader
 register_loader(CustomLoader())
 ```
 
@@ -370,11 +370,11 @@ finetuner.train(tokenized)
 ### **New (Modular):**
 ```python
 # Separate concerns
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import DatasetSource, TrainingMethod
-from finetune_cli.models.loader import load_model_and_tokenizer
-from finetune_cli.data import prepare_dataset
-from finetune_cli.trainers import LoRATrainer
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import DatasetSource, TrainingMethod
+from lmtool.models.loader import load_model_and_tokenizer
+from lmtool.data import prepare_dataset
+from lmtool.trainers import LoRATrainer
 
 # 1. Configuration (validated)
 config = ConfigBuilder() \

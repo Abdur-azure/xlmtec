@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "finetune-cli"
+name = "lmtool"
 version = "3.15.0"
-description = "Production-grade LLM fine-tuning framework with CLI"
+description = "Production-grade LLM fine tuning framework with CLI"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -105,19 +105,19 @@ full = [
 
 # ---------------------------------------------------------------------------
 [project.urls]
-Homepage = "https://github.com/Abdur-azure/finetune_cli"
-Documentation = "https://Abdur-azure.github.io/finetune_cli"
-Issues = "https://github.com/Abdur-azure/finetune_cli/issues"
+Homepage = "https://github.com/Abdur-azure/lmtool"
+Documentation = "https://Abdur-azure.github.io/lmtool"
+Issues = "https://github.com/Abdur-azure/lmtool/issues"
 
 [project.scripts]
-finetune-cli = "finetune_cli.cli.main:main"
+lmtool = "lmtool.cli.main:main"
 
 # ---------------------------------------------------------------------------
 # Setuptools
 # ---------------------------------------------------------------------------
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["finetune_cli*"]
+include = ["lmtool*"]
 exclude = ["tests*", "examples*", "docs*"]
 
 # ---------------------------------------------------------------------------

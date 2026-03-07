@@ -8,7 +8,7 @@ from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Label
 
-from finetune_cli.tui.widgets.metric_table import MetricTable
+from lmtool.tui.widgets.metric_table import MetricTable
 
 
 class ResultScreen(Screen):

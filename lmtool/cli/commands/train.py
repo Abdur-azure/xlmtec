@@ -72,7 +72,7 @@ def run(
     Train a model with specified configuration.
 
     Example:
-        finetune-cli train --model gpt2 --dataset ./data.jsonl --method lora --epochs 3
+        lmtool train --model gpt2 --dataset ./data.jsonl --method lora --epochs 3
     """
 
     # Setup logging
@@ -216,7 +216,7 @@ def quick(
     Quick training with sensible defaults.
 
     Example:
-        finetune-cli train quick gpt2 ./data.jsonl ./outputs
+        lmtool train quick gpt2 ./data.jsonl ./outputs
     """
 
     console.print("[bold cyan]Quick Training Mode[/bold cyan]")
@@ -249,7 +249,7 @@ def resume(
     Resume training from checkpoint.
 
     Example:
-        finetune-cli train resume ./outputs/checkpoint-100 --epochs 2
+        lmtool train resume ./outputs/checkpoint-100 --epochs 2
     """
 
     console.print(Panel.fit(

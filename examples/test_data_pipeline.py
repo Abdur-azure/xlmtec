@@ -19,17 +19,17 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from transformers import AutoTokenizer
 
-from finetune_cli.core.config import ConfigBuilder
-from finetune_cli.core.types import DatasetConfig, DatasetSource, ModelConfig, TokenizationConfig
-from finetune_cli.data import (
+from lmtool.core.config import ConfigBuilder
+from lmtool.core.types import DatasetConfig, DatasetSource, ModelConfig, TokenizationConfig
+from lmtool.data import (
     DataPipeline,
     DatasetAnalyzer,
     detect_columns,
     prepare_dataset,
     quick_load,
 )
-from finetune_cli.models.loader import load_model_and_tokenizer
-from finetune_cli.utils.logging import LogLevel, setup_logger
+from lmtool.models.loader import load_model_and_tokenizer
+from lmtool.utils.logging import LogLevel, setup_logger
 
 
 def example_1_local_jsonl():
@@ -240,7 +240,7 @@ def example_5_error_handling():
 
     logger = setup_logger("example5", level=LogLevel.INFO)
 
-    from finetune_cli.core.exceptions import (
+    from lmtool.core.exceptions import (
         DatasetNotFoundError,
         EmptyDatasetError,
         NoTextColumnsError,

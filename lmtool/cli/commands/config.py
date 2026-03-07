@@ -35,7 +35,7 @@ def generate(
     Generate a configuration template.
 
     Example:
-        finetune-cli config generate --output my_config.json --method lora
+        lmtool config generate --output my_config.json --method lora
     """
 
     console.print(Panel.fit(
@@ -127,7 +127,7 @@ def validate(
     Validate a configuration file.
 
     Example:
-        finetune-cli config validate ./config.json
+        lmtool config validate ./config.json
     """
 
     console.print(f"[bold cyan]Validating configuration:[/bold cyan] {config_file}\n")
@@ -187,8 +187,8 @@ def show(
     Display configuration file contents.
 
     Example:
-        finetune-cli config show ./config.json
-        finetune-cli config show ./config.json --section training
+        lmtool config show ./config.json
+        lmtool config show ./config.json --section training
     """
 
     try:
@@ -241,7 +241,7 @@ def templates():
     Show available configuration templates.
 
     Example:
-        finetune-cli config templates
+        lmtool config templates
     """
 
     from rich.table import Table
@@ -274,4 +274,4 @@ def templates():
 
     console.print(table)
     console.print("\n[bold cyan]Generate a template:[/bold cyan]")
-    console.print("  finetune-cli config generate --method <method> --output config.json")
+    console.print("  lmtool config generate --method <method> --output config.json")

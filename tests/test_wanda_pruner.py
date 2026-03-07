@@ -12,9 +12,9 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 import torch
 
-from finetune_cli.core.exceptions import FineTuneError
-from finetune_cli.core.types import WandaConfig
-from finetune_cli.trainers.wanda_pruner import (
+from lmtool.core.exceptions import FineTuneError
+from lmtool.core.types import WandaConfig
+from lmtool.trainers.wanda_pruner import (
     WandaPruner,
     WandaResult,
     _apply_wanda_mask,

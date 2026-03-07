@@ -12,10 +12,10 @@ from unittest.mock import MagicMock, patch
 import pytest
 from datasets import Dataset
 
-from finetune_cli.core.types import TrainingConfig, TrainingMethod
-from finetune_cli.trainers import TrainerFactory
-from finetune_cli.trainers.base import TrainingResult
-from finetune_cli.trainers.full_trainer import _VRAM_WARNING_THRESHOLD, FullFineTuner
+from lmtool.core.types import TrainingConfig, TrainingMethod
+from lmtool.trainers import TrainerFactory
+from lmtool.trainers.base import TrainingResult
+from lmtool.trainers.full_trainer import _VRAM_WARNING_THRESHOLD, FullFineTuner
 
 # ============================================================================
 # HELPERS
@@ -92,8 +92,8 @@ class TestFullFineTuner:
             resource_warnings = [x for x in w if issubclass(x.category, ResourceWarning)]
             assert len(resource_warnings) == 0
 
-    @patch("finetune_cli.trainers.base.BaseTrainer._build_hf_trainer")
-    @patch("finetune_cli.trainers.base.BaseTrainer._build_training_args")
+    @patch("lmtool.trainers.base.BaseTrainer._build_hf_trainer")
+    @patch("lmtool.trainers.base.BaseTrainer._build_training_args")
     def test_train_returns_result(
         self, mock_args, mock_hf_trainer, mock_model, mock_tokenizer,
         full_training_config, small_dataset

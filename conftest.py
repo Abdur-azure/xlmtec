@@ -1,8 +1,8 @@
 """
 Root conftest.py — ensures the repo root is on sys.path.
 
-This file must sit at the repo root (same level as the finetune_cli/ package).
-It runs automatically before any test collection, making `finetune_cli`
+This file must sit at the repo root (same level as the lmtool/ package).
+It runs automatically before any test collection, making `lmtool`
 importable without needing PYTHONPATH or `pip install -e .`.
 
 Works on Windows, macOS, and Linux.

@@ -27,9 +27,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from finetune_cli.core.exceptions import FineTuneError
-from finetune_cli.core.types import PruningConfig
-from finetune_cli.utils.logging import get_logger
+from lmtool.core.exceptions import FineTuneError
+from lmtool.core.types import PruningConfig
+from lmtool.utils.logging import get_logger
 
 # ---------------------------------------------------------------------------
 # Result type

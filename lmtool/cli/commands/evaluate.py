@@ -59,7 +59,7 @@ def run(
     Evaluate a trained model.
 
     Example:
-        finetune-cli evaluate --model ./outputs --dataset ./test.jsonl --metric rouge1 --metric bleu
+        lmtool evaluate --model ./outputs --dataset ./test.jsonl --metric rouge1 --metric bleu
     """
 
     logger = setup_logger("evaluate", level=LogLevel[log_level.upper()])
@@ -203,7 +203,7 @@ def benchmark(
     Benchmark base vs fine-tuned model.
 
     Example:
-        finetune-cli evaluate benchmark --base gpt2 --finetuned ./outputs --dataset ./test.jsonl
+        lmtool evaluate benchmark --base gpt2 --finetuned ./outputs --dataset ./test.jsonl
     """
 
     logger = setup_logger("benchmark", level=LogLevel[log_level.upper()])
@@ -316,7 +316,7 @@ def quick(
     Quick evaluation with default metrics.
 
     Example:
-        finetune-cli evaluate quick ./outputs ./test.jsonl
+        lmtool evaluate quick ./outputs ./test.jsonl
     """
 
     console.print("[bold cyan]Quick Evaluation Mode[/bold cyan]")

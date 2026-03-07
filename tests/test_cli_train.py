@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from typer.testing import CliRunner
 
-from finetune_cli.cli.main import app
+from lmtool.cli.main import app
 
 runner = CliRunner()
 
@@ -36,10 +36,10 @@ def _mock_training_stack():
     mock_result.steps_completed = 10
 
     patches = [
-        patch("finetune_cli.models.loader.load_model_and_tokenizer",
+        patch("lmtool.models.loader.load_model_and_tokenizer",
               return_value=(MagicMock(), MagicMock())),
-        patch("finetune_cli.data.prepare_dataset", return_value=MagicMock()),
-        patch("finetune_cli.trainers.TrainerFactory.train", return_value=mock_result),
+        patch("lmtool.data.prepare_dataset", return_value=MagicMock()),
+        patch("lmtool.trainers.TrainerFactory.train", return_value=mock_result),
     ]
     return patches
 

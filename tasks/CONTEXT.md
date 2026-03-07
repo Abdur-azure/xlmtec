@@ -18,7 +18,7 @@ Session state. Read both files at the start of every working session.
 | 2 | Expand | FullFineTuner, InstructionTrainer, recommend command |
 | 3 | First Run | Runnable examples, sample data generator, integration tests |
 | 4 | Hardened | CLI lora guard, test_cli_train.py, CHANGELOG, audit_repo |
-| 5 | Merge & Release | finetune-cli merge command, test_merge.py (8 tests) |
+| 5 | Merge & Release | lmtool merge command, test_merge.py (8 tests) |
 | 6 | Documented | README, CONTRIBUTING, api.md, docs/index.md all updated |
 | 7 | CI Tight | ci.yml paths, pytest-timeout, ruff lint section, absolute imports |
 | 8 | DPO | DPOTrainer, validate_dpo_dataset, factory wired, 10 tests |
@@ -36,7 +36,7 @@ Session state. Read both files at the start of every working session.
 | 21 | Meta Sync | CLAUDE.md sprints 13-20, audit_repo.py paths fixed |
 | 23 | Response Distillation | DistillationConfig in core/types.py, ResponseDistillationTrainer, 12 tests, example config |
 | 24 | Feature Distillation | FeatureDistillationConfig, FeatureDistillationTrainer, 21 tests, layer helpers |
-| 25 | TUI Foundation | ✅ FinetuneApp, HomeScreen, 6 CommandCards, `finetune-cli tui`, 16 Pilot tests |
+| 25 | TUI Foundation | ✅ LMToolApp, HomeScreen, 6 CommandCards, `lmtool tui`, 16 Pilot tests |
 | 26 | TUI Train & Recommend | ✅ Complete — TrainScreen, RecommendScreen, RunningScreen, ResultScreen, LogPanel, MetricTable, 30 tests |
 | 27 | TUI Evaluate, Benchmark, Merge | ✅ Complete — EvaluateScreen, BenchmarkScreen, MergeScreen, 46 tests |
 | 28 | TUI Upload + Polish | ✅ Complete — UploadScreen, app.css, docs/tui.md, 55 tests |
