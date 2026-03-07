@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.16.0] — Sprint 33: "Post-Rename Cleanup" — 2026-03-07
+
+### Changed
+- Project renamed from `xlmtec` / `xlmtec` to `xlmtec`
+- `pyproject.toml` — `name`, `scripts` entrypoint, URLs, `packages.find` all updated
+- All Python source files — `from xlmtec.` imports → `from xlmtec.`
+- All patch targets in tests — `xlmtec.` → `xlmtec.`
+- CLI command — `xlmtec` → `xlmtec`
+- `CLAUDE.md`, `CHANGELOG.md`, `README.md`, `docs/` — project name updated
+- Version 3.15.0 → 3.16.0
+
+---
+
+
 All notable changes to this project are documented here.
 
 ---
@@ -217,7 +231,7 @@ All notable changes to this project are documented here.
 
 ### Added
 - `xlmtec/tui/__init__.py` — TUI package.
-- `xlmtec/tui/app.py` — `xlmtecApp(App)`: root Textual app, screen stack
+- `xlmtec/tui/app.py` — `FinetuneApp(App)`: root Textual app, screen stack
   management, global keybindings (q=quit, h/esc=go_home, ctrl+c=quit),
   `on_mount` pushes HomeScreen, global CSS theme.
 - `xlmtec/tui/screens/__init__.py` — screens package.
@@ -248,7 +262,7 @@ All notable changes to this project are documented here.
 
 ### Added
 - `xlmtec/tui/__init__.py` — TUI package init.
-- `xlmtec/tui/app.py` — `xlmtecApp(App)` root Textual app. Global bindings:
+- `xlmtec/tui/app.py` — `FinetuneApp(App)` root Textual app. Global bindings:
   `q`=quit, `h`/`escape`=home, `ctrl+c`=quit. `action_go_home()` pops all screens
   above home. `run()` entry point called by CLI.
 - `xlmtec/tui/screens/__init__.py` — screens package init.
@@ -259,7 +273,7 @@ All notable changes to this project are documented here.
 - `xlmtec/tui/widgets/command_card.py` — `CommandCard(Widget)`: focusable card
   with icon, bold label, description. Hover + focus border highlight via CSS.
   Posts `CommandCard.Selected` on click or Enter. `can_focus = True`.
-- `cli/main.py` — `tui` subcommand added (lazy import of `xlmtecApp`, graceful
+- `cli/main.py` — `tui` subcommand added (lazy import of `FinetuneApp`, graceful
   error if textual not installed).
 - `tests/test_tui.py` — 16 async Pilot tests (headless): app mounts, HomeScreen is
   initial screen, title set, 6 cards rendered, card IDs correct, cards focusable,

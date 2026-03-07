@@ -7,7 +7,7 @@ Context file for AI-assisted development. Read this at the start of every sessio
 ## Project
 
 **xlmtec** — production-grade LLM fine-tuning framework with a modular CLI.
-Version: 3.15.0 | License: MIT | Python: 3.10+
+Version: 3.16.0 | License: MIT | Python: 3.10+
 
 ---
 

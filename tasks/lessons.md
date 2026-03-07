@@ -403,3 +403,14 @@ Cache key must hash pyproject.toml, not requirements.txt.
 If ruff runs without the package installed, it cannot resolve project imports and
 reports false-positive E402/F401 errors that fail CI. Fix: `pip install -e ".[dev]"` 
 in the lint job before `ruff check .`.
+
+## Pattern: Package rename requires 6 touch-points minimum
+When renaming a Python package, ALL of these must change atomically:
+1. The package folder name itself
+2. pyproject.toml: name, scripts entrypoint, packages.find include, URLs
+3. All Python imports: `from old_name.` → `from new_name.`
+4. All test patch targets: `old_name.module.Class` → `new_name.module.Class`
+5. All docs, README, CHANGELOG, CLAUDE.md
+6. CLI command name in pyproject.toml [project.scripts]
+Missing any one of these causes either import errors or the wrong command name
+shipping to PyPI. Use a rename script (rename_to_xlmtec.py) to catch all cases.

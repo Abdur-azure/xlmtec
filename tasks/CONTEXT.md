@@ -36,14 +36,15 @@ Session state. Read both files at the start of every working session.
 | 21 | Meta Sync | CLAUDE.md sprints 13-20, audit_repo.py paths fixed |
 | 23 | Response Distillation | DistillationConfig in core/types.py, ResponseDistillationTrainer, 12 tests, example config |
 | 24 | Feature Distillation | FeatureDistillationConfig, FeatureDistillationTrainer, 21 tests, layer helpers |
-| 25 | TUI Foundation | ✅ xlmtecApp, HomeScreen, 6 CommandCards, `xlmtec tui`, 16 Pilot tests |
+| 25 | TUI Foundation | ✅ FinetuneApp, HomeScreen, 6 CommandCards, `xlmtec tui`, 16 Pilot tests |
 | 26 | TUI Train & Recommend | ✅ Complete — TrainScreen, RecommendScreen, RunningScreen, ResultScreen, LogPanel, MetricTable, 30 tests |
 | 27 | TUI Evaluate, Benchmark, Merge | ✅ Complete — EvaluateScreen, BenchmarkScreen, MergeScreen, 46 tests |
 | 28 | TUI Upload + Polish | ✅ Complete — UploadScreen, app.css, docs/tui.md, 55 tests |
 | 29 | Structured Pruning | ✅ Complete — PruningConfig, StructuredPruner, prune CLI command, 23 tests |
 | 30 | WANDA Pruning | ✅ Complete — WandaConfig, WandaPruner, wanda CLI command, 24 tests |
 | 31 | Integration Hardening | ✅ Complete — 15 new integration tests (distill×2, prune×2, CLI smoke×4), ci.yml fixed |
-| 32 | Stabilise | ✅ Complete — pyproject.toml extras split, ci.yml 5 fixes, audit_repo typo, CLAUDE.md paths, installation.md |
+| 32 | Stabilise |
+| 33 | Post-Rename Cleanup | Renamed xlmtec → xlmtec; pyproject.toml, imports, docs, CLI entrypoint | ✅ Complete — pyproject.toml extras split, ci.yml 5 fixes, audit_repo typo, CLAUDE.md paths, installation.md |
 
 ## TUI Rule
 

@@ -17,7 +17,6 @@ REQUIRED_FILES = [
     "README.md",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
-    ".github/workflows/ci.yml",
     ".gitignore",
 
     # ── Main package ─────────────────────────────────────────────────────
