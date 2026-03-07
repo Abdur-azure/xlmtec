@@ -6,11 +6,10 @@ Provides intelligent recommendations for training methods and configurations.
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 
 from ...trainers import MethodRecommender
-
 
 app = typer.Typer()
 console = Console()
@@ -30,15 +29,15 @@ def method(
 ):
     """
     Get training method recommendation based on constraints.
-    
+
     Example:
         finetune-cli recommend method --model-size 0.124 --vram 8
         finetune-cli recommend method --model-size 7 --vram 12 --task complex
     """
-    
+
     # Convert to parameters
     model_size_params = model_size * 1e9
-    
+
     console.print(Panel.fit(
         f"[bold cyan]Recommendation Parameters[/bold cyan]\n\n"
         f"[yellow]Model Size:[/yellow] {model_size}B parameters\n"
@@ -48,7 +47,7 @@ def method(
         title="💡 Method Recommendation",
         border_style="cyan"
     ))
-    
+
     # Get recommendation
     recommendation = MethodRecommender.recommend(
         model_size_params=model_size_params,
@@ -56,17 +55,17 @@ def method(
         task_complexity=task,
         needs_multiple_adapters=multiple_adapters
     )
-    
+
     # Display results
     if recommendation['recommendation']:
         console.print(f"\n[bold green]✓ Recommended Method:[/bold green] {recommendation['recommendation'].value}")
         console.print(f"[yellow]Reason:[/yellow] {recommendation['reason']}\n")
-        
+
         # Memory estimates
         console.print("[bold]Memory Estimates:[/bold]")
         for method, mem in recommendation['memory_estimates'].items():
             console.print(f"  {method}: {mem}")
-        
+
         # Alternatives
         if recommendation['alternatives']:
             console.print("\n[bold]Alternative Methods:[/bold]")
@@ -92,20 +91,20 @@ def config(
 ):
     """
     Get configuration recommendations for a training method.
-    
+
     Example:
         finetune-cli recommend config lora --dataset-size 5000
     """
-    
+
     console.print(f"\n[bold cyan]Configuration Recommendations for {method.upper()}[/bold cyan]\n")
-    
+
     # Recommendations based on method and dataset size
     if method == "lora":
         table = Table(title="LoRA Configuration", show_header=True)
         table.add_column("Parameter", style="cyan")
         table.add_column("Recommended", style="green")
         table.add_column("Explanation", style="white")
-        
+
         # Determine recommendations based on dataset size
         if dataset_size < 1000:
             lora_r = 4
@@ -123,20 +122,20 @@ def config(
             lora_r = 16
             epochs = 2
             batch_size = 8
-        
+
         table.add_row("lora_r", str(lora_r), "Rank determines adapter capacity")
         table.add_row("lora_alpha", str(lora_r * 4), "Typically 2-4x the rank")
         table.add_row("lora_dropout", "0.1", "Standard regularization")
         table.add_row("epochs", str(epochs), "Based on dataset size")
         table.add_row("batch_size", str(batch_size), "Balanced for memory/speed")
         table.add_row("learning_rate", "2e-4", "Standard for LoRA")
-        
+
     elif method == "qlora":
         table = Table(title="QLoRA Configuration", show_header=True)
         table.add_column("Parameter", style="cyan")
         table.add_column("Recommended", style="green")
         table.add_column("Explanation", style="white")
-        
+
         table.add_row("load_in_4bit", "True", "Memory efficiency")
         table.add_row("lora_r", "16", "Higher rank for quantized models")
         table.add_row("lora_alpha", "64", "4x the rank")
@@ -144,22 +143,22 @@ def config(
         table.add_row("gradient_checkpointing", "True", "Required for QLoRA")
         table.add_row("batch_size", "2-4", "Smaller for large models")
         table.add_row("learning_rate", "2e-4", "Standard")
-        
+
     else:  # full_finetuning
         table = Table(title="Full Fine-tuning Configuration", show_header=True)
         table.add_column("Parameter", style="cyan")
         table.add_column("Recommended", style="green")
         table.add_column("Explanation", style="white")
-        
+
         table.add_row("epochs", "3", "Fewer epochs needed")
         table.add_row("batch_size", "2", "Small to fit in memory")
         table.add_row("gradient_accumulation", "8", "Simulate larger batch")
         table.add_row("gradient_checkpointing", "True", "Save memory")
         table.add_row("learning_rate", "1e-4", "Conservative for full FT")
         table.add_row("warmup_ratio", "0.1", "Gradual warmup")
-    
+
     console.print(table)
-    
+
     # Additional tips
     console.print("\n[bold]Tips:[/bold]")
     console.print("  • Start with these defaults and adjust based on results")
@@ -180,17 +179,17 @@ def hardware(
 ):
     """
     Get hardware requirements for training.
-    
+
     Example:
         finetune-cli recommend hardware 7 --method qlora
     """
-    
+
     console.print(f"\n[bold cyan]Hardware Requirements[/bold cyan]")
     console.print(f"Model: {model_size}B parameters, Method: {method}\n")
-    
+
     # Estimate requirements
     param_memory = model_size * 4  # GB for FP32
-    
+
     requirements = {
         "lora": {
             "vram": param_memory * 2,
@@ -208,32 +207,32 @@ def hardware(
             "notes": "Requires significant memory, best for small models"
         }
     }
-    
+
     req = requirements.get(method, requirements["lora"])
-    
+
     table = Table(show_header=True)
     table.add_column("Component", style="cyan")
     table.add_column("Requirement", style="yellow")
-    
+
     table.add_row("Minimum VRAM", f"~{req['vram']:.1f} GB")
     table.add_row("Recommended VRAM", f"~{req['vram'] * 1.2:.1f} GB")
     table.add_row("System RAM", f"{req['system_ram']} GB+")
     table.add_row("GPU", "NVIDIA GPU with CUDA support")
-    
+
     console.print(table)
     console.print(f"\n[yellow]Note:[/yellow] {req['notes']}")
-    
+
     # GPU recommendations
     console.print("\n[bold]Recommended GPUs:[/bold]")
-    
+
     if req['vram'] <= 8:
         console.print("  ✓ RTX 3060 (12GB)")
         console.print("  ✓ RTX 4060 Ti (16GB)")
-    
+
     if req['vram'] <= 12:
         console.print("  ✓ RTX 3090 (24GB)")
         console.print("  ✓ RTX 4090 (24GB)")
-    
+
     if req['vram'] <= 24:
         console.print("  ✓ A100 (40GB/80GB)")
         console.print("  ✓ H100 (80GB)")

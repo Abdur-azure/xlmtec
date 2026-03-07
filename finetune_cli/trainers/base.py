@@ -9,12 +9,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
-from transformers import PreTrainedModel, PreTrainedTokenizer
 from datasets import Dataset, DatasetDict
+from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import TrainingConfig, LoRAConfig
 from ..core.exceptions import TrainingError
+from ..core.types import LoRAConfig, TrainingConfig
 from ..utils.logging import get_logger
+
 
 @dataclass
 class TrainingState:
@@ -191,7 +192,7 @@ class BaseTrainer(ABC):
 
     def _build_hf_trainer(self, training_args, train_dataset, eval_dataset):
         """Construct the HuggingFace Trainer."""
-        from transformers import Trainer, DataCollatorForLanguageModeling
+        from transformers import DataCollatorForLanguageModeling, Trainer
 
         data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokenizer,

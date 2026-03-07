@@ -13,10 +13,9 @@ import pytest
 from datasets import Dataset
 
 from finetune_cli.core.types import TrainingConfig, TrainingMethod
-from finetune_cli.trainers.full_trainer import FullFineTuner, _VRAM_WARNING_THRESHOLD
-from finetune_cli.trainers.base import TrainingResult
 from finetune_cli.trainers import TrainerFactory
-
+from finetune_cli.trainers.base import TrainingResult
+from finetune_cli.trainers.full_trainer import _VRAM_WARNING_THRESHOLD, FullFineTuner
 
 # ============================================================================
 # HELPERS

@@ -14,7 +14,6 @@ from transformers import PreTrainedModel, PreTrainedTokenizer
 from ..core.types import TrainingConfig
 from .base import BaseTrainer
 
-
 # Parameter count above which we warn about VRAM
 _VRAM_WARNING_THRESHOLD = 1_000_000_000  # 1B
 

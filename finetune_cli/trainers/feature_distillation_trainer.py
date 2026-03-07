@@ -33,17 +33,16 @@ import torch.nn.functional as F
 from datasets import Dataset, DatasetDict
 from transformers import (
     AutoModelForCausalLM,
+    DataCollatorForLanguageModeling,
     PreTrainedModel,
     PreTrainedTokenizer,
-    DataCollatorForLanguageModeling,
     Trainer,
 )
 
-from ..core.types import TrainingConfig, FeatureDistillationConfig
-from ..core.exceptions import TrainingError, MissingConfigError
+from ..core.exceptions import MissingConfigError, TrainingError
+from ..core.types import FeatureDistillationConfig, TrainingConfig
 from ..utils.logging import get_logger
 from .base import BaseTrainer, TrainingResult
-
 
 _VRAM_WARNING_THRESHOLD = 1_000_000_000  # 1B params
 

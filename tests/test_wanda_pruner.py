@@ -7,19 +7,19 @@ Model loading and save_pretrained are mocked.
 
 import warnings
 from pathlib import Path
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
+
 import pytest
 import torch
 
-from finetune_cli.core.types import WandaConfig
 from finetune_cli.core.exceptions import FineTuneError
+from finetune_cli.core.types import WandaConfig
 from finetune_cli.trainers.wanda_pruner import (
     WandaPruner,
     WandaResult,
-    _wanda_score,
     _apply_wanda_mask,
+    _wanda_score,
 )
-
 
 # ============================================================================
 # Helpers

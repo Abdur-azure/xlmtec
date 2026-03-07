@@ -1,6 +1,7 @@
 """Model loading utilities."""
 
 from typing import List, Tuple
+
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from ..core.types import ModelConfig

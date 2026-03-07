@@ -13,8 +13,8 @@ import pytest
 # Install with: pip install "textual>=0.52.0" pytest-asyncio
 pytest.importorskip("textual", reason="textual not installed")
 
-from finetune_cli.tui.app import FinetuneApp           # noqa: E402
-from finetune_cli.tui.screens.home import HomeScreen    # noqa: E402
+from finetune_cli.tui.app import FinetuneApp  # noqa: E402
+from finetune_cli.tui.screens.home import HomeScreen  # noqa: E402
 from finetune_cli.tui.widgets.command_card import CommandCard  # noqa: E402
 
 
@@ -190,11 +190,12 @@ class TestCommandCard:
 # Sprint 26 — Train & Recommend screens
 # ============================================================================
 
-from finetune_cli.tui.screens.train import TrainScreen          # noqa: E402
+from textual.widgets import Checkbox  # noqa: E402
+
 from finetune_cli.tui.screens.recommend import RecommendScreen  # noqa: E402
-from finetune_cli.tui.screens.running import RunningScreen      # noqa: E402
-from finetune_cli.tui.screens.result import ResultScreen        # noqa: E402
-from textual.widgets import Checkbox                            # noqa: E402
+from finetune_cli.tui.screens.result import ResultScreen  # noqa: E402
+from finetune_cli.tui.screens.running import RunningScreen  # noqa: E402
+from finetune_cli.tui.screens.train import TrainScreen  # noqa: E402
 
 
 class TestTrainScreen:
@@ -382,9 +383,9 @@ class TestResultScreen:
 # Sprint 27 — Evaluate, Benchmark, Merge screens
 # ============================================================================
 
-from finetune_cli.tui.screens.evaluate import EvaluateScreen    # noqa: E402
 from finetune_cli.tui.screens.benchmark import BenchmarkScreen  # noqa: E402
-from finetune_cli.tui.screens.merge import MergeScreen          # noqa: E402
+from finetune_cli.tui.screens.evaluate import EvaluateScreen  # noqa: E402
+from finetune_cli.tui.screens.merge import MergeScreen  # noqa: E402
 
 
 class TestEvaluateScreen:
@@ -591,8 +592,9 @@ class TestMergeScreen:
 # Sprint 28 — Upload screen + all 6 cards reachable
 # ============================================================================
 
-from finetune_cli.tui.screens.upload import UploadScreen   # noqa: E402
-from textual.widgets import Switch, Input                   # noqa: E402
+from textual.widgets import Input, Switch  # noqa: E402
+
+from finetune_cli.tui.screens.upload import UploadScreen  # noqa: E402
 
 
 class TestUploadScreen:

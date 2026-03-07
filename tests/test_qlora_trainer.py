@@ -4,17 +4,16 @@ Unit tests for QLoRATrainer.
 All HuggingFace and PEFT calls are mocked — no GPU, no downloads.
 """
 
-from unittest.mock import MagicMock, patch, call
 from pathlib import Path
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
 
-from finetune_cli.core.types import TrainingConfig, LoRAConfig, ModelConfig, TrainingMethod
 from finetune_cli.core.exceptions import MissingConfigError
-from finetune_cli.trainers.qlora_trainer import QLoRATrainer
+from finetune_cli.core.types import LoRAConfig, ModelConfig, TrainingConfig, TrainingMethod
 from finetune_cli.trainers.factory import TrainerFactory
-
+from finetune_cli.trainers.qlora_trainer import QLoRATrainer
 
 # ============================================================================
 # FIXTURES (mock_model, mock_tokenizer, tmp_output_dir come from conftest.py)

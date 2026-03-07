@@ -2,10 +2,10 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, Input, Button
-from textual.containers import Vertical, Horizontal
 from textual.validation import Length
+from textual.widgets import Button, Footer, Header, Input, Label
 
 
 class RecommendScreen(Screen):

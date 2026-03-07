@@ -4,15 +4,15 @@ Unit tests for DPOTrainer.
 All HF / TRL / PEFT ops are mocked — no GPU, no downloads, no trl install required.
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 from datasets import Dataset
 
-from finetune_cli.core.types import TrainingMethod, TrainingConfig, LoRAConfig
 from finetune_cli.core.exceptions import DatasetError, TrainingError
+from finetune_cli.core.types import LoRAConfig, TrainingConfig, TrainingMethod
 from finetune_cli.trainers.dpo_trainer import DPOTrainer, validate_dpo_dataset
-
 
 # ============================================================================
 # FIXTURES
@@ -214,8 +214,8 @@ class TestDPOTrainer:
 
     def test_factory_dpo_requires_lora_config(self, mock_model, mock_tokenizer, training_config):
         """TrainerFactory.create() raises MissingConfigError if lora_config is None."""
-        from finetune_cli.trainers.factory import TrainerFactory
         from finetune_cli.core.exceptions import MissingConfigError
+        from finetune_cli.trainers.factory import TrainerFactory
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(
                 model=mock_model,

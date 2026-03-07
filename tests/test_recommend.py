@@ -4,14 +4,14 @@ Unit tests for the `recommend` CLI subcommand.
 Mocks AutoConfig and torch.cuda so tests run without network or GPU.
 """
 
-import pytest
-import yaml
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
+import yaml
 from typer.testing import CliRunner
 
 from finetune_cli.cli.main import app
-
 
 runner = CliRunner()
 

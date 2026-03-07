@@ -1,13 +1,12 @@
 """HomeScreen -- main menu with 6 command cards in a 2x3 grid."""
 
+from textual import events
 from textual.app import ComposeResult
+from textual.containers import Grid
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Label
-from textual.containers import Grid
-from textual import events
 
 from finetune_cli.tui.widgets.command_card import CommandCard
-
 
 _COMMANDS = [
     {"id": "train",     "label": "Train",     "description": "Fine-tune with LoRA, QLoRA, DPO and more",       "icon": "🚀"},

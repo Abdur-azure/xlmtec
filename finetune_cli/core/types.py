@@ -1,9 +1,9 @@
 """Core type definitions — enums, dataclasses, protocols."""
 
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union
-from dataclasses import dataclass, field
 
 import torch
 

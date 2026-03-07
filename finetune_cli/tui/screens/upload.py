@@ -2,10 +2,10 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal, ScrollableContainer, Vertical
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, Input, Switch, Button
-from textual.containers import Vertical, Horizontal, ScrollableContainer
 from textual.validation import Length
+from textual.widgets import Button, Footer, Header, Input, Label, Switch
 
 
 class UploadScreen(Screen):

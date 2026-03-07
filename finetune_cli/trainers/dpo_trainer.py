@@ -20,16 +20,16 @@ Usage::
 import warnings
 from typing import Optional, Union
 
-from transformers import PreTrainedModel, PreTrainedTokenizer
 from datasets import Dataset, DatasetDict
-from peft import LoraConfig, get_peft_model, TaskType
+from peft import LoraConfig, TaskType, get_peft_model
+from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import TrainingConfig, LoRAConfig as LoRAConfigType
-from ..core.exceptions import TrainingError, DatasetError
+from ..core.exceptions import DatasetError, TrainingError
+from ..core.types import LoRAConfig as LoRAConfigType
+from ..core.types import TrainingConfig
 from ..models.loader import detect_target_modules
 from ..utils.logging import get_logger
 from .base import BaseTrainer, TrainingResult
-
 
 # Required columns for DPO datasets
 _DPO_REQUIRED_COLUMNS = {"prompt", "chosen", "rejected"}
@@ -144,7 +144,8 @@ class DPOTrainer(BaseTrainer):
         import time
 
         try:
-            from trl import DPOTrainer as TRLDPOTrainer, DPOConfig
+            from trl import DPOConfig
+            from trl import DPOTrainer as TRLDPOTrainer
         except ImportError as exc:
             raise TrainingError(
                 "dpo",

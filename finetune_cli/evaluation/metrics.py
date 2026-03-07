@@ -14,10 +14,9 @@ from typing import Dict, List, Optional
 import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import EvaluationMetric
 from ..core.exceptions import EvaluationError
+from ..core.types import EvaluationMetric
 from ..utils.logging import get_logger
-
 
 logger = get_logger(__name__)
 
@@ -103,8 +102,8 @@ class BleuMetric(Metric):
 
     def compute(self, predictions: List[str], references: List[str]) -> float:
         try:
-            from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
             from nltk.tokenize import word_tokenize
+            from nltk.translate.bleu_score import SmoothingFunction, corpus_bleu
         except ImportError:
             raise EvaluationError(
                 "nltk not installed. Run: pip install nltk"

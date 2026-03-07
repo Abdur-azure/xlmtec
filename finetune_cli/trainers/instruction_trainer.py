@@ -11,9 +11,9 @@ from typing import Optional
 from datasets import Dataset, DatasetDict
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import TrainingConfig, LoRAConfig as LoRAConfigType
+from ..core.types import LoRAConfig as LoRAConfigType
+from ..core.types import TrainingConfig
 from .lora_trainer import LoRATrainer
-
 
 # Default prompt template — matches the Stanford Alpaca format
 _PROMPT_WITH_INPUT = (

@@ -7,19 +7,18 @@ All imports are absolute per lessons.md.
 
 import warnings
 from pathlib import Path
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
 
-from finetune_cli.core.types import TrainingConfig, DistillationConfig, TrainingMethod
 from finetune_cli.core.exceptions import MissingConfigError, TrainingError
-from finetune_cli.trainers.response_distillation_trainer import (
-    ResponseDistillationTrainer,
-    _VRAM_WARNING_THRESHOLD,
-)
+from finetune_cli.core.types import DistillationConfig, TrainingConfig, TrainingMethod
 from finetune_cli.trainers.factory import TrainerFactory
-
+from finetune_cli.trainers.response_distillation_trainer import (
+    _VRAM_WARNING_THRESHOLD,
+    ResponseDistillationTrainer,
+)
 
 # ============================================================================
 # HELPERS

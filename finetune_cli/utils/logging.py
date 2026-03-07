@@ -2,9 +2,9 @@
 
 import logging
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Optional
-from contextlib import contextmanager
 
 from ..core.types import LogLevel
 

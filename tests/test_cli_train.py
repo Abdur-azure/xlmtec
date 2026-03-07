@@ -6,13 +6,13 @@ without crashing. No model loading, no GPU required — all heavy ops mocked.
 """
 
 import json
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 from typer.testing import CliRunner
 
 from finetune_cli.cli.main import app
-
 
 runner = CliRunner()
 

@@ -5,21 +5,20 @@ HuggingFace Trainer and PEFT are mocked so tests run without GPU
 or large model downloads.
 """
 
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock, PropertyMock, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
 
-from finetune_cli.core.types import TrainingConfig, LoRAConfig, TrainingMethod, ModelConfig
 from finetune_cli.core.exceptions import MissingConfigError
-from finetune_cli.trainers import TrainingResult, TrainerFactory
+from finetune_cli.core.types import LoRAConfig, ModelConfig, TrainingConfig, TrainingMethod
+from finetune_cli.trainers import TrainerFactory, TrainingResult
 from finetune_cli.trainers.base import BaseTrainer
-from finetune_cli.trainers.lora_trainer import LoRATrainer
 from finetune_cli.trainers.factory import TrainerFactory
-
+from finetune_cli.trainers.lora_trainer import LoRATrainer
 
 # ============================================================================
 # FIXTURES
@@ -100,7 +99,7 @@ class TestTrainerFactory:
 
     def test_all_implemented_methods_are_handled(self, mock_model, mock_tokenizer, tmp_output_dir):
         """All currently-implemented methods are handled by factory without NotImplementedError.
-        
+
         TrainingMethod enum contains aspirational values (adalora, rlhf, etc.) not yet
         implemented. Only assert the 5 methods that have concrete trainer classes.
         """

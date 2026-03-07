@@ -1,6 +1,6 @@
 """MetricTable widget — displays key/value result pairs in a DataTable."""
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 from textual.app import ComposeResult
 from textual.widget import Widget

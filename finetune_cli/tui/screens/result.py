@@ -1,12 +1,12 @@
 """ResultScreen — displays command outcome with a metric table and back button."""
 
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, Button
-from textual.containers import Vertical, Horizontal
+from textual.widgets import Button, Footer, Header, Label
 
 from finetune_cli.tui.widgets.metric_table import MetricTable
 

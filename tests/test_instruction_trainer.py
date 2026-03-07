@@ -7,11 +7,10 @@ No GPU required — training is mocked.
 import pytest
 from datasets import Dataset, DatasetDict
 
-from finetune_cli.trainers.instruction_trainer import InstructionTrainer, format_instruction_dataset
-from finetune_cli.core.types import TrainingConfig, TrainingMethod, LoRAConfig
-from finetune_cli.trainers import TrainerFactory
 from finetune_cli.core.exceptions import MissingConfigError
-
+from finetune_cli.core.types import LoRAConfig, TrainingConfig, TrainingMethod
+from finetune_cli.trainers import TrainerFactory
+from finetune_cli.trainers.instruction_trainer import InstructionTrainer, format_instruction_dataset
 
 # ============================================================================
 # FIXTURES

@@ -3,18 +3,17 @@ Benchmarking pipeline — computes metrics before and after fine-tuning
 and produces a structured comparison report.
 """
 
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
-import time
 
 from datasets import Dataset
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from ..core.types import EvaluationConfig, EvaluationMetric
 from ..utils.logging import get_logger
-from .metrics import MetricRegistry, Metric
-
+from .metrics import Metric, MetricRegistry
 
 logger = get_logger(__name__)
 

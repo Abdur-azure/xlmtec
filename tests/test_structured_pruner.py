@@ -6,19 +6,19 @@ All torch and model interactions are mocked — no GPU, no HF downloads.
 
 import warnings
 from pathlib import Path
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock, PropertyMock, patch
+
 import pytest
 
-from finetune_cli.core.types import PruningConfig
 from finetune_cli.core.exceptions import FineTuneError
+from finetune_cli.core.types import PruningConfig
 from finetune_cli.trainers.structured_pruner import (
-    StructuredPruner,
     PruningResult,
+    StructuredPruner,
+    _count_params,
     _head_importance_scores,
     _zero_head_rows,
-    _count_params,
 )
-
 
 # ============================================================================
 # Helpers

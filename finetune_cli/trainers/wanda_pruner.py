@@ -32,10 +32,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from finetune_cli.core.types import WandaConfig
 from finetune_cli.core.exceptions import FineTuneError
+from finetune_cli.core.types import WandaConfig
 from finetune_cli.utils.logging import get_logger
-
 
 # ---------------------------------------------------------------------------
 # Default target layer type names

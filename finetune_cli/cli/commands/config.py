@@ -4,17 +4,17 @@ Configuration management commands for CLI.
 Provides commands for creating, validating, and managing configuration files.
 """
 
-import typer
-from typing import Optional
+import json
 from pathlib import Path
+from typing import Optional
+
+import typer
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
-import json
 
-from ...core.types import TrainingMethod, DatasetSource, EvaluationMetric
 from ...core.config import ConfigBuilder, PipelineConfig
-
+from ...core.types import DatasetSource, EvaluationMetric, TrainingMethod
 
 app = typer.Typer()
 console = Console()
@@ -33,11 +33,11 @@ def generate(
 ):
     """
     Generate a configuration template.
-    
+
     Example:
         finetune-cli config generate --output my_config.json --method lora
     """
-    
+
     console.print(Panel.fit(
         f"[bold cyan]Generating Configuration[/bold cyan]\n\n"
         f"[yellow]Method:[/yellow] {method}\n"
@@ -46,11 +46,11 @@ def generate(
         title="⚙️ Config Generator",
         border_style="cyan"
     ))
-    
+
     try:
         # Build template configuration
         method_enum = TrainingMethod(method)
-        
+
         config = ConfigBuilder() \
             .with_model(
                 "gpt2",
@@ -69,11 +69,11 @@ def generate(
                 batch_size=4,
                 learning_rate=2e-4
             )
-        
+
         # Add method-specific config
         if method in ['lora', 'qlora']:
             config.with_lora(r=8, lora_alpha=32, lora_dropout=0.1)
-        
+
         # Add evaluation config
         config.with_evaluation(
             metrics=[
@@ -82,12 +82,12 @@ def generate(
                 EvaluationMetric.ROUGE_L
             ]
         )
-        
+
         pipeline_config = config.build()
-        
+
         # Save configuration
         output.parent.mkdir(parents=True, exist_ok=True)
-        
+
         if format == "json":
             pipeline_config.to_json(output)
         elif format == "yaml":
@@ -95,20 +95,20 @@ def generate(
         else:
             console.print(f"[red]Error:[/red] Unknown format '{format}'")
             raise typer.Exit(1)
-        
+
         console.print(f"[green]✓[/green] Configuration generated: {output}")
-        
+
         # Display preview
         console.print("\n[bold]Preview:[/bold]\n")
-        
+
         with open(output, 'r') as f:
             content = f.read()
-        
+
         syntax = Syntax(content, "json" if format == "json" else "yaml", theme="monokai")
         console.print(syntax)
-        
+
         console.print("\n[bold cyan]Edit this file to customize your configuration[/bold cyan]")
-        
+
     except Exception as e:
         console.print(f"[red]Error:[/red] {e}")
         raise typer.Exit(1)
@@ -125,19 +125,19 @@ def validate(
 ):
     """
     Validate a configuration file.
-    
+
     Example:
         finetune-cli config validate ./config.json
     """
-    
+
     console.print(f"[bold cyan]Validating configuration:[/bold cyan] {config_file}\n")
-    
+
     try:
         # Check file exists
         if not config_file.exists():
             console.print(f"[red]✗[/red] File not found: {config_file}")
             raise typer.Exit(1)
-        
+
         # Load and validate
         if config_file.suffix == '.json':
             config = PipelineConfig.from_json(config_file)
@@ -146,10 +146,10 @@ def validate(
         else:
             console.print(f"[red]✗[/red] Unknown file format: {config_file.suffix}")
             raise typer.Exit(1)
-        
+
         # Validation successful (Pydantic handles this)
         console.print("[green]✓[/green] Configuration is valid!\n")
-        
+
         # Display summary
         console.print("[bold]Configuration Summary:[/bold]")
         console.print(f"  Model: {config.model.name}")
@@ -157,14 +157,14 @@ def validate(
         console.print(f"  Method: {config.training.method.value}")
         console.print(f"  Epochs: {config.training.num_epochs}")
         console.print(f"  Batch Size: {config.training.batch_size}")
-        
+
         if config.lora:
             console.print(f"  LoRA Rank: {config.lora.r}")
-        
+
         if config.evaluation:
             metrics = [m.value for m in config.evaluation.metrics]
             console.print(f"  Metrics: {', '.join(metrics)}")
-        
+
     except ValueError as e:
         console.print(f"[red]✗[/red] Validation failed: {e}")
         raise typer.Exit(1)
@@ -185,46 +185,46 @@ def show(
 ):
     """
     Display configuration file contents.
-    
+
     Example:
         finetune-cli config show ./config.json
         finetune-cli config show ./config.json --section training
     """
-    
+
     try:
         if not config_file.exists():
             console.print(f"[red]Error:[/red] File not found: {config_file}")
             raise typer.Exit(1)
-        
+
         # Load config
         if config_file.suffix == '.json':
             config = PipelineConfig.from_json(config_file)
         else:
             config = PipelineConfig.from_yaml(config_file)
-        
+
         config_dict = config.to_dict()
-        
+
         # Filter by section if requested
         if section:
             if section not in config_dict:
                 console.print(f"[red]Error:[/red] Unknown section '{section}'")
                 console.print(f"Available sections: {', '.join(config_dict.keys())}")
                 raise typer.Exit(1)
-            
+
             display_dict = {section: config_dict[section]}
         else:
             display_dict = config_dict
-        
+
         # Display
         content = json.dumps(display_dict, indent=2)
         syntax = Syntax(content, "json", theme="monokai")
-        
+
         console.print(Panel(
             syntax,
             title=f"📄 {config_file.name}" + (f" - {section}" if section else ""),
             border_style="cyan"
         ))
-        
+
     except Exception as e:
         console.print(f"[red]Error:[/red] {e}")
         raise typer.Exit(1)
@@ -239,18 +239,18 @@ def show(
 def templates():
     """
     Show available configuration templates.
-    
+
     Example:
         finetune-cli config templates
     """
-    
+
     from rich.table import Table
-    
+
     table = Table(title="📋 Configuration Templates", show_header=True)
     table.add_column("Template", style="cyan")
     table.add_column("Description", style="white")
     table.add_column("Command", style="yellow")
-    
+
     templates = [
         (
             "LoRA Training",
@@ -268,10 +268,10 @@ def templates():
             "config generate --method full_finetuning"
         ),
     ]
-    
+
     for name, desc, cmd in templates:
         table.add_row(name, desc, cmd)
-    
+
     console.print(table)
     console.print("\n[bold cyan]Generate a template:[/bold cyan]")
     console.print("  finetune-cli config generate --method <method> --output config.json")

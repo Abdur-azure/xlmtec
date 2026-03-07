@@ -5,13 +5,13 @@ All model loading and PEFT ops are mocked — no GPU, no downloads required.
 """
 
 import json
-import pytest
 from pathlib import Path
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
+
+import pytest
 from typer.testing import CliRunner
 
 from finetune_cli.cli.main import app
-
 
 runner = CliRunner()
 

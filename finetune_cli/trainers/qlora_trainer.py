@@ -5,10 +5,11 @@ Extends LoRATrainer by preparing the base model for 4-bit
 quantized training via BitsAndBytes before attaching adapters.
 """
 
-from transformers import PreTrainedModel, PreTrainedTokenizer
 from peft import prepare_model_for_kbit_training
+from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import TrainingConfig, LoRAConfig as LoRAConfigType, ModelConfig
+from ..core.types import LoRAConfig as LoRAConfigType
+from ..core.types import ModelConfig, TrainingConfig
 from .lora_trainer import LoRATrainer
 
 

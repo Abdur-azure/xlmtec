@@ -7,10 +7,11 @@ weights while the base model remains frozen.
 
 from typing import Optional
 
+from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import PreTrainedModel, PreTrainedTokenizer
-from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
 
-from ..core.types import TrainingConfig, LoRAConfig as LoRAConfigType
+from ..core.types import LoRAConfig as LoRAConfigType
+from ..core.types import TrainingConfig
 from ..models.loader import detect_target_modules
 from .base import BaseTrainer
 

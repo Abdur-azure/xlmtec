@@ -12,8 +12,8 @@ High-level interface:
 - quick_evaluate: Fast evaluation without config
 - benchmark_models: Compare base vs fine-tuned
 """
-from .metrics import RougeMetric, BleuMetric, PerplexityMetric, MetricRegistry
-from .benchmarker import BenchmarkRunner, BenchmarkReport, EvaluationResult
+from .benchmarker import BenchmarkReport, BenchmarkRunner, EvaluationResult
+from .metrics import BleuMetric, MetricRegistry, PerplexityMetric, RougeMetric
 
 __all__ = [
     "RougeMetric", "BleuMetric", "PerplexityMetric", "MetricRegistry",

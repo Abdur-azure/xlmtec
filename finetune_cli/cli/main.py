@@ -21,15 +21,14 @@ import typer
 from rich.console import Console
 from rich.panel import Panel
 
-from ..core.types import (
-    TrainingMethod,
-    DatasetSource,
-    EvaluationMetric,
-)
 from ..core.config import ConfigBuilder
 from ..core.exceptions import FineTuneError
-from ..utils.logging import setup_logger, LogLevel
-
+from ..core.types import (
+    DatasetSource,
+    EvaluationMetric,
+    TrainingMethod,
+)
+from ..utils.logging import LogLevel, setup_logger
 
 app = typer.Typer(
     name="finetune-cli",
@@ -171,9 +170,9 @@ def evaluate(
     max_gen_length: int = typer.Option(100, "--max-gen-length"),
 ):
     """Evaluate a saved model checkpoint and print metric scores."""
-    from ..models.loader import load_model_and_tokenizer
-    from ..core.types import ModelConfig, DeviceType, EvaluationConfig
+    from ..core.types import DeviceType, EvaluationConfig, ModelConfig
     from ..evaluation import BenchmarkRunner
+    from ..models.loader import load_model_and_tokenizer
 
     if dataset is None and hf_dataset is None:
         console.print("[red]Error:[/red] Provide --dataset or --hf-dataset")
@@ -237,9 +236,9 @@ def benchmark(
     max_gen_length: int = typer.Option(100, "--max-gen-length"),
 ):
     """Compare base model vs fine-tuned model on key metrics."""
+    from ..core.types import DeviceType, EvaluationConfig, ModelConfig
+    from ..evaluation import BenchmarkReport, BenchmarkRunner
     from ..models.loader import load_model_and_tokenizer
-    from ..core.types import ModelConfig, DeviceType, EvaluationConfig
-    from ..evaluation import BenchmarkRunner, BenchmarkReport
 
     if dataset is None and hf_dataset is None:
         console.print("[red]Error:[/red] Provide --dataset or --hf-dataset")
@@ -325,9 +324,10 @@ def upload(
             raise typer.Exit(code=1)
         console.print(f"Merging LoRA adapter with base model '{base_model}'...")
         try:
+            import tempfile
+
             from peft import PeftModel
             from transformers import AutoModelForCausalLM, AutoTokenizer
-            import tempfile
 
             base = AutoModelForCausalLM.from_pretrained(base_model)
             merged = PeftModel.from_pretrained(base, str(model_path)).merge_and_unload()
@@ -388,9 +388,9 @@ def merge(
         finetune-cli merge ./outputs/gpt2_lora ./outputs/gpt2_merged --base-model gpt2
     """
     try:
+        import torch
         from peft import PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        import torch
     except ImportError as exc:
         console.print(f"[red]Error:[/red] Missing dependency: {exc}")
         raise typer.Exit(code=1)
@@ -488,8 +488,8 @@ def prune(
 
         finetune-cli prune ./outputs/gpt2_lora --output ./outputs/gpt2_pruned --sparsity 0.3
     """
-    from finetune_cli.core.types import ModelConfig, PruningConfig
     from finetune_cli.core.exceptions import FineTuneError
+    from finetune_cli.core.types import ModelConfig, PruningConfig
     from finetune_cli.trainers.structured_pruner import StructuredPruner
 
     if not model_path.exists():
@@ -578,8 +578,8 @@ def wanda(
         finetune-cli wanda ./outputs/gpt2_lora --output ./outputs/gpt2_wanda \\
             --sparsity 0.5 --dataset ./data/sample.jsonl
     """
-    from finetune_cli.core.types import ModelConfig, WandaConfig
     from finetune_cli.core.exceptions import FineTuneError
+    from finetune_cli.core.types import ModelConfig, WandaConfig
     from finetune_cli.trainers.wanda_pruner import WandaPruner
 
     if not model_path.exists():
@@ -615,10 +615,13 @@ def wanda(
                 raise typer.Exit(code=1)
             with console.status("[bold green]Preparing calibration data..."):
                 import torch
-                from finetune_cli.data import quick_load, prepare_dataset
+
                 from finetune_cli.core.types import (
-                    DatasetConfig, DatasetSource, TokenizationConfig,
+                    DatasetConfig,
+                    DatasetSource,
+                    TokenizationConfig,
                 )
+                from finetune_cli.data import prepare_dataset, quick_load
                 ds_cfg = DatasetConfig(
                     source=DatasetSource.LOCAL_FILE,
                     path=str(dataset),

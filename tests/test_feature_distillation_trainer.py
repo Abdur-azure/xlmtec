@@ -12,20 +12,19 @@ from unittest.mock import MagicMock, patch
 import pytest
 from datasets import Dataset, DatasetDict
 
+from finetune_cli.core.exceptions import MissingConfigError, TrainingError
 from finetune_cli.core.types import (
-    TrainingConfig,
     FeatureDistillationConfig,
+    TrainingConfig,
     TrainingMethod,
 )
-from finetune_cli.core.exceptions import MissingConfigError, TrainingError
-from finetune_cli.trainers.feature_distillation_trainer import (
-    FeatureDistillationTrainer,
-    _select_layers,
-    _map_teacher_layer,
-    _VRAM_WARNING_THRESHOLD,
-)
 from finetune_cli.trainers.factory import TrainerFactory
-
+from finetune_cli.trainers.feature_distillation_trainer import (
+    _VRAM_WARNING_THRESHOLD,
+    FeatureDistillationTrainer,
+    _map_teacher_layer,
+    _select_layers,
+)
 
 # ============================================================================
 # HELPERS

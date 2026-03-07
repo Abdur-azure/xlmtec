@@ -5,13 +5,13 @@ All model loading, dataset loading, and evaluation are mocked.
 No GPU, no network, no real model files required.
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 from typer.testing import CliRunner
 
 from finetune_cli.cli.main import app
-
 
 runner = CliRunner()
 

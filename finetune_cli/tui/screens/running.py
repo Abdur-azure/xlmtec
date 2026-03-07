@@ -9,12 +9,12 @@ import subprocess
 import time
 from typing import List
 
+from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, Button
-from textual.containers import Vertical, Horizontal
-from textual import work
+from textual.widgets import Button, Footer, Header, Label
 from textual.worker import Worker, WorkerState
 
 from finetune_cli.tui.widgets.log_panel import LogPanel

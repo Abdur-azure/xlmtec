@@ -1,11 +1,16 @@
 """Tests for core configuration — ConfigBuilder and Pydantic validation."""
 
-import pytest
 from pathlib import Path
 
+import pytest
+
 from finetune_cli.core.config import ConfigBuilder, PipelineConfig
-from finetune_cli.core.types import TrainingMethod, DatasetSource, EvaluationMetric
-from finetune_cli.core.exceptions import InvalidConfigError, IncompatibleConfigError, MissingConfigError
+from finetune_cli.core.exceptions import (
+    IncompatibleConfigError,
+    InvalidConfigError,
+    MissingConfigError,
+)
+from finetune_cli.core.types import DatasetSource, EvaluationMetric, TrainingMethod
 
 
 class TestConfigBuilder:

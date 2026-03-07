@@ -4,9 +4,10 @@ Unit tests for the `finetune-cli prune` CLI subcommand.
 All model loading and pruning are mocked — no GPU, no real model required.
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 from typer.testing import CliRunner
 
 from finetune_cli.cli.main import app
