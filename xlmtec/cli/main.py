@@ -24,6 +24,7 @@ from xlmtec.cli.commands.dry_run import execute_dry_run
 from xlmtec.cli.commands.config_validate import app as config_app
 from xlmtec.cli.commands.ai_suggest import app as ai_suggest_app
 from xlmtec.cli.commands.hub import app as hub_app
+from xlmtec.cli.commands.resume import resume
 from rich.panel import Panel
 
 from ..core.config import ConfigBuilder
@@ -40,6 +41,7 @@ app = typer.Typer(name="xlmtec", add_completion=False, rich_markup_mode="rich")
 app.add_typer(config_app, name="config")
 app.add_typer(ai_suggest_app, name="ai-suggest")
 app.add_typer(hub_app, name="hub")
+app.command()(resume)
 
 def _version_callback(value: bool) -> None:
     if value:
