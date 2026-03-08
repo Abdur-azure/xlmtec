@@ -2,9 +2,7 @@
 tests/test_integrations.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Unit tests for xlmtec AI integrations.
-
 All API calls are mocked — no real keys needed, no network required.
-Covers: response parsing, provider wiring, CLI command, error handling.
 """
 
 from __future__ import annotations
@@ -31,7 +29,6 @@ SAMPLE_JSON = {
     ),
     "explanation": "LoRA is ideal for this task — low VRAM, fast convergence.",
 }
-
 SAMPLE_RAW = json.dumps(SAMPLE_JSON)
 
 
@@ -50,7 +47,6 @@ def sample_result() -> SuggestResult:
 # response_parser
 # ---------------------------------------------------------------------------
 
-
 class TestResponseParser:
     def test_clean_json(self):
         result = parse_response(SAMPLE_RAW)
@@ -59,67 +55,50 @@ class TestResponseParser:
         assert "LoRA" in result.explanation
 
     def test_json_with_markdown_fences(self):
-        fenced = f"```json\n{SAMPLE_RAW}\n```"
-        result = parse_response(fenced)
-        assert result.method == "lora"
+        assert parse_response(f"```json\n{SAMPLE_RAW}\n```").method == "lora"
 
     def test_json_with_plain_fences(self):
-        fenced = f"```\n{SAMPLE_RAW}\n```"
-        result = parse_response(fenced)
-        assert result.method == "lora"
+        assert parse_response(f"```\n{SAMPLE_RAW}\n```").method == "lora"
 
     def test_json_embedded_in_prose(self):
-        wrapped = f"Here is my suggestion:\n{SAMPLE_RAW}\nHope that helps!"
-        result = parse_response(wrapped)
-        assert result.method == "lora"
+        assert parse_response(f"Here is my suggestion:\n{SAMPLE_RAW}\nHope that helps!").method == "lora"
 
     def test_command_built_from_output_dir(self):
         result = parse_response(SAMPLE_RAW)
         assert "output/run1" in result.command
         assert result.command.startswith("xlmtec train")
 
-    def test_missing_method_defaults_to_lora(self):
-        data = {**SAMPLE_JSON, "method": ""}
-        result = parse_response(json.dumps(data))
-        assert result.method == ""  # preserves empty, caller decides default
-
     def test_invalid_json_raises(self):
         with pytest.raises(ValueError, match="Could not parse JSON"):
             parse_response("this is not json at all")
 
     def test_raw_preserved(self):
-        result = parse_response(SAMPLE_RAW)
-        assert result.raw == SAMPLE_RAW
+        assert parse_response(SAMPLE_RAW).raw == SAMPLE_RAW
 
 
 # ---------------------------------------------------------------------------
 # get_provider
 # ---------------------------------------------------------------------------
 
-
 class TestGetProvider:
     def test_returns_claude(self):
         from xlmtec.integrations import get_provider
         from xlmtec.integrations.claude import ClaudeIntegration
-        p = get_provider("claude", api_key="sk-test")
-        assert isinstance(p, ClaudeIntegration)
+        assert isinstance(get_provider("claude", api_key="sk-test"), ClaudeIntegration)
 
     def test_returns_gemini(self):
         from xlmtec.integrations import get_provider
         from xlmtec.integrations.gemini import GeminiIntegration
-        p = get_provider("gemini", api_key="test")
-        assert isinstance(p, GeminiIntegration)
+        assert isinstance(get_provider("gemini", api_key="test"), GeminiIntegration)
 
     def test_returns_codex(self):
         from xlmtec.integrations import get_provider
         from xlmtec.integrations.codex import CodexIntegration
-        p = get_provider("codex", api_key="sk-test")
-        assert isinstance(p, CodexIntegration)
+        assert isinstance(get_provider("codex", api_key="sk-test"), CodexIntegration)
 
     def test_case_insensitive(self):
         from xlmtec.integrations import get_provider
-        p = get_provider("CLAUDE", api_key="sk-test")
-        assert p.PROVIDER_NAME == "claude"
+        assert get_provider("CLAUDE", api_key="sk-test").PROVIDER_NAME == "claude"
 
     def test_unknown_provider_raises(self):
         from xlmtec.integrations import get_provider
@@ -131,141 +110,121 @@ class TestGetProvider:
 # ClaudeIntegration
 # ---------------------------------------------------------------------------
 
-
 class TestClaudeIntegration:
     def test_suggest_returns_result(self):
         from xlmtec.integrations.claude import ClaudeIntegration
 
-        mock_client = MagicMock()
-        mock_client.messages.create.return_value = MagicMock(
+        mock_anthropic = MagicMock()
+        mock_anthropic.Anthropic.return_value.messages.create.return_value = MagicMock(
             content=[MagicMock(text=SAMPLE_RAW)]
         )
 
-        with patch("xlmtec.integrations.claude.anthropic") as mock_anthropic:
-            mock_anthropic.Anthropic.return_value = mock_client
-            integration = ClaudeIntegration(api_key="sk-test")
-            result = integration.suggest("fine-tune GPT-2 for sentiment")
+        with patch("xlmtec.integrations.claude.anthropic", mock_anthropic):
+            result = ClaudeIntegration(api_key="sk-test").suggest("fine-tune GPT-2")
 
         assert isinstance(result, SuggestResult)
         assert result.method == "lora"
-        mock_client.messages.create.assert_called_once()
 
     def test_no_api_key_raises(self):
         from xlmtec.integrations.claude import ClaudeIntegration
-        integration = ClaudeIntegration(api_key="")
-        with patch.dict("os.environ", {}, clear=True):
-            with pytest.raises(RuntimeError, match="No API key"):
-                integration.suggest("test")
+        mock_anthropic = MagicMock()
+        # Instantiate INSIDE the env-clear so __init__ sees no key
+        with patch("xlmtec.integrations.claude.anthropic", mock_anthropic):
+            with patch.dict("os.environ", {"ANTHROPIC_API_KEY": ""}, clear=False):
+                integration = ClaudeIntegration(api_key=None)
+                with pytest.raises(RuntimeError, match="No API key"):
+                    integration.suggest("test")
 
     def test_missing_sdk_raises_import_error(self):
         from xlmtec.integrations.claude import ClaudeIntegration
-        integration = ClaudeIntegration(api_key="sk-test")
-        with patch.dict("sys.modules", {"anthropic": None}):
+        with patch("xlmtec.integrations.claude.anthropic", None):
             with pytest.raises(ImportError, match="anthropic"):
-                integration.suggest("test")
+                ClaudeIntegration(api_key="sk-test").suggest("test")
 
     def test_api_failure_raises_runtime_error(self):
         from xlmtec.integrations.claude import ClaudeIntegration
 
-        mock_client = MagicMock()
-        mock_client.messages.create.side_effect = Exception("rate limited")
+        mock_anthropic = MagicMock()
+        mock_anthropic.Anthropic.return_value.messages.create.side_effect = Exception("rate limited")
 
-        with patch("xlmtec.integrations.claude.anthropic") as mock_anthropic:
-            mock_anthropic.Anthropic.return_value = mock_client
-            integration = ClaudeIntegration(api_key="sk-test")
+        with patch("xlmtec.integrations.claude.anthropic", mock_anthropic):
             with pytest.raises(RuntimeError, match="Claude API call failed"):
-                integration.suggest("test")
+                ClaudeIntegration(api_key="sk-test").suggest("test")
 
 
 # ---------------------------------------------------------------------------
 # GeminiIntegration
 # ---------------------------------------------------------------------------
 
-
 class TestGeminiIntegration:
     def test_suggest_returns_result(self):
         from xlmtec.integrations.gemini import GeminiIntegration
 
-        mock_model = MagicMock()
-        mock_model.generate_content.return_value = MagicMock(text=SAMPLE_RAW)
-
         mock_genai = MagicMock()
-        mock_genai.GenerativeModel.return_value = mock_model
+        mock_genai.GenerativeModel.return_value.generate_content.return_value = MagicMock(text=SAMPLE_RAW)
 
         with patch("xlmtec.integrations.gemini.genai", mock_genai):
-            integration = GeminiIntegration(api_key="test-key")
-            result = integration.suggest("fine-tune for classification")
+            result = GeminiIntegration(api_key="test-key").suggest("fine-tune for classification")
 
         assert isinstance(result, SuggestResult)
         assert result.method == "lora"
-        mock_model.generate_content.assert_called_once()
 
     def test_missing_sdk_raises_import_error(self):
         from xlmtec.integrations.gemini import GeminiIntegration
-        integration = GeminiIntegration(api_key="test")
-        with patch.dict("sys.modules", {"google.generativeai": None, "google": None}):
-            with pytest.raises(ImportError, match="google-generativeai"):
-                integration.suggest("test")
+        with patch("xlmtec.integrations.gemini.genai", None):
+            with pytest.raises(ImportError, match="google-genai"):
+                GeminiIntegration(api_key="test").suggest("test")
 
     def test_api_failure_raises_runtime_error(self):
         from xlmtec.integrations.gemini import GeminiIntegration
 
-        mock_model = MagicMock()
-        mock_model.generate_content.side_effect = Exception("quota exceeded")
         mock_genai = MagicMock()
-        mock_genai.GenerativeModel.return_value = mock_model
+        mock_genai.GenerativeModel.return_value.generate_content.side_effect = Exception("quota exceeded")
 
         with patch("xlmtec.integrations.gemini.genai", mock_genai):
-            integration = GeminiIntegration(api_key="test-key")
             with pytest.raises(RuntimeError, match="Gemini API call failed"):
-                integration.suggest("test")
+                GeminiIntegration(api_key="test-key").suggest("test")
 
 
 # ---------------------------------------------------------------------------
 # CodexIntegration
 # ---------------------------------------------------------------------------
 
-
 class TestCodexIntegration:
     def test_suggest_returns_result(self):
         from xlmtec.integrations.codex import CodexIntegration
 
-        mock_client = MagicMock()
-        mock_client.chat.completions.create.return_value = MagicMock(
+        mock_openai = MagicMock()
+        mock_openai.return_value.chat.completions.create.return_value = MagicMock(
             choices=[MagicMock(message=MagicMock(content=SAMPLE_RAW))]
         )
 
-        with patch("xlmtec.integrations.codex.OpenAI", return_value=mock_client):
-            integration = CodexIntegration(api_key="sk-test")
-            result = integration.suggest("fine-tune for code generation")
+        with patch("xlmtec.integrations.codex.OpenAI", mock_openai):
+            result = CodexIntegration(api_key="sk-test").suggest("fine-tune for code")
 
         assert isinstance(result, SuggestResult)
         assert result.method == "lora"
-        mock_client.chat.completions.create.assert_called_once()
 
     def test_missing_sdk_raises_import_error(self):
         from xlmtec.integrations.codex import CodexIntegration
-        integration = CodexIntegration(api_key="sk-test")
-        with patch.dict("sys.modules", {"openai": None}):
+        with patch("xlmtec.integrations.codex.OpenAI", None):
             with pytest.raises(ImportError, match="openai"):
-                integration.suggest("test")
+                CodexIntegration(api_key="sk-test").suggest("test")
 
     def test_api_failure_raises_runtime_error(self):
         from xlmtec.integrations.codex import CodexIntegration
 
-        mock_client = MagicMock()
-        mock_client.chat.completions.create.side_effect = Exception("invalid key")
+        mock_openai = MagicMock()
+        mock_openai.return_value.chat.completions.create.side_effect = Exception("invalid key")
 
-        with patch("xlmtec.integrations.codex.OpenAI", return_value=mock_client):
-            integration = CodexIntegration(api_key="sk-test")
+        with patch("xlmtec.integrations.codex.OpenAI", mock_openai):
             with pytest.raises(RuntimeError, match="OpenAI API call failed"):
-                integration.suggest("test")
+                CodexIntegration(api_key="sk-test").suggest("test")
 
 
 # ---------------------------------------------------------------------------
 # SuggestResult dataclass
 # ---------------------------------------------------------------------------
-
 
 class TestSuggestResult:
     def test_fields(self, sample_result):

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xlmtec"
-version = "3.16.0"
+version = "3.17.0"
 description = "Production-grade LLM fine-tuning framework with CLI"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
@@ -85,6 +85,22 @@ docs = [
     "pymdown-extensions>=10.0.0",
 ]
 
+# AI provider integrations (for ai-suggest command)
+claude = [
+    "anthropic>=0.20.0",
+]
+gemini = [
+    "google-genai>=0.8.0",
+]
+codex = [
+    "openai>=1.10.0",
+]
+ai = [
+    "anthropic>=0.20.0",
+    "google-genai>=0.8.0",
+    "openai>=1.10.0",
+]
+
 # Convenience: everything
 full = [
     "torch>=2.0.0",
@@ -131,6 +147,10 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short"
 timeout = 120
 asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::FutureWarning:google",
+    "ignore::FutureWarning:google.api_core",
+]
 
 # ---------------------------------------------------------------------------
 # Ruff
