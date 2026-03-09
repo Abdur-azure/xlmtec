@@ -29,6 +29,8 @@ from xlmtec.cli.commands.template import app as template_app
 from xlmtec.cli.commands.dashboard import app as dashboard_app
 from xlmtec.cli.commands.export import export
 from xlmtec.cli.commands.predict import predict
+from xlmtec.cli.commands.plugin import app as plugin_app
+from xlmtec.plugins.loader import PluginLoader
 
 from rich.panel import Panel
 
@@ -51,6 +53,7 @@ app.add_typer(template_app, name="template")
 app.add_typer(dashboard_app, name="dashboard")
 app.command()(export)
 app.command()(predict)
+app.add_typer(plugin_app, name="plugin")
 
 
 def _version_callback(value: bool) -> None:
@@ -62,7 +65,7 @@ def _version_callback(value: bool) -> None:
 def main(
     version: bool = typer.Option(None, "--version", "-V", callback=_version_callback, is_eager=True, help="Show version and exit."),
 ) -> None:
-    pass
+    PluginLoader().load()  
 
 console = Console()
 

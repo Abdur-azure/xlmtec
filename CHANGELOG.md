@@ -1,5 +1,143 @@
 # Changelog
 
+## [3.25.0] — Sprint 45: "CONTEXT.md Sweep" — 2026-03-09
+
+### Added
+- `xlmtec/hub/CONTEXT.md` — hub client, commands, rules, extension pattern
+- `xlmtec/checkpoints/CONTEXT.md` — CheckpointManager API, rules, extension pattern
+- `xlmtec/templates/CONTEXT.md` — built-in templates table, reserved names, extension pattern
+- `xlmtec/dashboard/CONTEXT.md` — key types, winner selection logic, extension pattern
+- `xlmtec/export/CONTEXT.md` — backends, CRITICAL circular import rules, formats + quantise table
+- `xlmtec/inference/CONTEXT.md` — auto-detect column priority, key types, extension pattern
+- `xlmtec/plugins/CONTEXT.md` — store schema, startup wiring, reserved names rules
+
+### Changed
+- `tasks/roadmap.md` — Sprints 34–44 history table + Sprints 45–49 upcoming table added
+- `tasks/todo.md` — Sprint 45–49 checklists added
+- `audit_repo.py` — 7 new CONTEXT.md paths registered
+- `pyproject.toml` — version 3.24.0 → 3.25.0
+
+---
+
+## [3.24.0] — Sprint 44: "CHANGELOG + Audit" — 2026-03-09
+
+### Fixed (catch-up)
+- `CHANGELOG.md` — Sprints 34–43 entries added
+- `audit_repo.py` — all new modules from Sprints 34–43 registered
+- `tasks/CONTEXT.md` — sprint rows 34–43 added
+- `pyproject.toml` — version 3.23.0 → 3.24.0
+
+---
+
+## [3.23.0] — Sprint 43: "Plugin System" — 2026-03-09
+
+### Added
+- `xlmtec/plugins/__init__.py` — package init
+- `xlmtec/plugins/store.py` — `PluginStore`, `register_template`, `register_provider`, `remove_plugin`; persists to `~/.xlmtec/plugins.json`
+- `xlmtec/plugins/loader.py` — `PluginLoader` injects custom templates/providers into live registries at startup
+- `xlmtec/cli/commands/plugin.py` — CLI: `add-template`, `add-provider`, `list`, `remove`
+- `tests/test_plugins.py` — 21 tests: store I/O, register/remove, loader injection, error handling
+
+---
+
+## [3.22.0] — Sprint 42: "Batch Inference" — 2026-03-09
+
+### Added
+- `xlmtec/inference/__init__.py` — package init
+- `xlmtec/inference/data_loader.py` — `DataLoader`: reads JSONL/CSV, auto-detects text column
+- `xlmtec/inference/writer.py` — `PredictionWriter`: writes predictions to JSONL or CSV
+- `xlmtec/inference/predictor.py` — `BatchPredictor`: batched text generation over a dataset
+- `xlmtec/cli/commands/predict.py` — CLI: `xlmtec predict` with `--dry-run`, `--batch-size`, `--max-new-tokens`
+- `generate_inference_data.py` — zero-dep helper to create dummy model dir + test data
+- `tests/test_inference.py` — 24 tests: DataLoader (JSONL/CSV, auto-detect, errors), PredictionWriter (JSONL/CSV, dirs), CLI logic
+
+---
+
+## [3.21.0] — Sprint 41: "Export Formats" — 2026-03-09
+
+### Added
+- `xlmtec/export/__init__.py` — package init
+- `xlmtec/export/formats.py` — `ExportFormat` enum + `FormatMeta` per-format metadata
+- `xlmtec/export/exporter.py` — `ModelExporter` dispatches to format backends
+- `xlmtec/export/backends/__init__.py` — backends package
+- `xlmtec/export/backends/safetensors.py` — export via `safetensors`
+- `xlmtec/export/backends/onnx.py` — export via `optimum` (lazy import after dry-run check)
+- `xlmtec/export/backends/gguf.py` — export via llama.cpp convert script
+- `xlmtec/cli/commands/export.py` — CLI: `xlmtec export --format safetensors|onnx|gguf --dry-run`
+- `tests/test_export.py` — 30 tests: format enum, per-backend dry-run, exporter dispatch, CLI logic
+- `pyproject.toml` — `[onnx]` and `[gguf]` extras added; `[full]` bundle updated
+
+---
+
+## [3.20.0] — Sprint 40: "Evaluation Dashboard" — 2026-03-09
+
+### Added
+- `xlmtec/dashboard/__init__.py` — package init
+- `xlmtec/dashboard/reader.py` — `RunReader`: parses `trainer_state.json`, config, eval results
+- `xlmtec/dashboard/comparator.py` — `RunComparator`: side-by-side metric comparison, winner selection, config diff
+- `xlmtec/cli/commands/dashboard.py` — CLI: `xlmtec dashboard compare` (rich table + winner panel + config diff) and `xlmtec dashboard show`
+- `generate_dummy_runs.py` — zero-dep helper creates 3 dummy runs for testing
+- `tests/test_dashboard.py` — 22 tests: RunReader, RunComparator, diff_configs, ComparisonResult
+
+---
+
+## [3.19.0] — Sprint 39: "Config Templates" — 2026-03-09
+
+### Added
+- `xlmtec/templates/__init__.py` — package init
+- `xlmtec/templates/registry.py` — 7 built-in templates: `sentiment`, `classification`, `qa`, `summarisation`, `code`, `chat`, `dpo`; `get_template()`, `list_templates()`
+- `xlmtec/cli/commands/template.py` — CLI: `xlmtec template list|show|use` with `--model`, `--data`, `--epochs` overrides
+- `tests/test_templates.py` — 26 tests: list, get, as_dict overrides, YAML validity, per-template spot checks
+
+### Also (Sprint 38: "Checkpoint Resume")
+- `xlmtec/checkpoints/__init__.py` — package init
+- `xlmtec/checkpoints/manager.py` — `CheckpointManager`: list, latest, get, summary
+- `xlmtec/cli/commands/resume.py` — CLI: `xlmtec resume <output-dir> --dry-run --checkpoint --epochs`
+- `tests/test_checkpoints.py` — 22 tests: list/latest/get/summary, resume_training dry-run logic
+
+---
+
+## [3.18.0] — Sprint 37: "Docs Overhaul" — 2026-03-09
+
+### Changed
+- `README.md` — full rewrite: xlmtec branding, PyPI badges, all commands table, AI providers, quickstart
+- `docs/installation.md` — Python 3.10+, extras-based install, GPU setup, HF token
+- `docs/usage.md` — all commands: hub, ai-suggest, config validate, --dry-run, template, resume, predict, export, dashboard
+- `docs/ai_integrations.md` — NEW: ai-suggest guide, all 3 providers, output format, how it works
+- `docs/hub.md` — NEW: hub search/info/trending guide, workflow example
+
+---
+
+## [3.17.0] — Sprint 34–36: "AI Integrations + CLI UX + Model Hub" — 2026-03-08
+
+### Added (Sprint 34 — AI Integrations)
+- `xlmtec/integrations/__init__.py` — `get_provider(name, api_key)` factory
+- `xlmtec/integrations/base.py` — `AIIntegration` ABC, `SuggestResult` dataclass
+- `xlmtec/integrations/claude.py` — Anthropic Claude provider
+- `xlmtec/integrations/gemini.py` — Google Gemini provider (`google-genai>=0.8.0`)
+- `xlmtec/integrations/codex.py` — OpenAI GPT provider
+- `xlmtec/integrations/prompt_builder.py` — shared system + user prompt templates
+- `xlmtec/integrations/response_parser.py` — parses raw JSON → `SuggestResult`
+- `xlmtec/cli/commands/ai_suggest.py` — CLI: `xlmtec ai-suggest "<task>" --provider`
+- `tests/test_integrations.py` — 24 tests, zero real API calls
+- `pyproject.toml` — `[claude]`, `[gemini]`, `[codex]`, `[ai]` extras
+
+### Added (Sprint 35 — CLI UX Polish)
+- `xlmtec/cli/ux.py` — `get_version`, `print_error`, `print_success`, `task_progress`, `make_training_progress`
+- `xlmtec/cli/commands/dry_run.py` — `execute_dry_run(path)` pure function
+- `xlmtec/cli/commands/config_validate.py` — `validate_config(path, strict)` + CLI wrapper
+- `tests/test_ux.py` — 22 tests
+- `xlmtec --version` / `-V` flag wired
+
+### Added (Sprint 36 — Model Hub)
+- `xlmtec/hub/__init__.py` — re-exports `HubClient`, `ModelSummary`, `ModelDetail`
+- `xlmtec/hub/client.py` — `HubClient` wrapping `HfApi`
+- `xlmtec/hub/formatter.py` — rich tables for search/trending/info
+- `xlmtec/cli/commands/hub.py` — CLI: `xlmtec hub search|info|trending`
+- `tests/test_hub.py` — 21 tests
+
+---
+
 ## [3.16.0] — Sprint 33: "Post-Rename Cleanup" — 2026-03-07
 
 ### Changed

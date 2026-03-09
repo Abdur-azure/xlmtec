@@ -112,6 +112,89 @@ REQUIRED_FILES = [
     "tests/test_data.py",
     "tests/test_integration.py",
     "tests/CONTEXT.md",
+    # Sprints 34–43
+    "tests/test_integrations.py",
+    "tests/test_ux.py",
+    "tests/test_hub.py",
+    "tests/test_checkpoints.py",
+    "tests/test_templates.py",
+    "tests/test_dashboard.py",
+    "tests/test_export.py",
+    "tests/test_inference.py",
+    "tests/test_plugins.py",
+
+    # ── Integrations (Sprint 34) ───────────────────────────────────────────
+    "xlmtec/integrations/__init__.py",
+    "xlmtec/integrations/base.py",
+    "xlmtec/integrations/claude.py",
+    "xlmtec/integrations/gemini.py",
+    "xlmtec/integrations/codex.py",
+    "xlmtec/integrations/prompt_builder.py",
+    "xlmtec/integrations/response_parser.py",
+
+    # ── CLI UX + commands (Sprints 35–36, 38–43) ──────────────────────────
+    "xlmtec/cli/ux.py",
+    "xlmtec/cli/commands/ai_suggest.py",
+    "xlmtec/cli/commands/dry_run.py",
+    "xlmtec/cli/commands/config_validate.py",
+    "xlmtec/cli/commands/hub.py",
+    "xlmtec/cli/commands/resume.py",
+    "xlmtec/cli/commands/template.py",
+    "xlmtec/cli/commands/dashboard.py",
+    "xlmtec/cli/commands/export.py",
+    "xlmtec/cli/commands/predict.py",
+    "xlmtec/cli/commands/plugin.py",
+
+    # ── Hub (Sprint 36) ───────────────────────────────────────────────────
+    "xlmtec/hub/__init__.py",
+    "xlmtec/hub/client.py",
+    "xlmtec/hub/formatter.py",
+
+    # ── Checkpoints (Sprint 38) ───────────────────────────────────────────
+    "xlmtec/checkpoints/__init__.py",
+    "xlmtec/checkpoints/manager.py",
+
+    # ── Templates (Sprint 39) ─────────────────────────────────────────────
+    "xlmtec/templates/__init__.py",
+    "xlmtec/templates/registry.py",
+
+    # ── Dashboard (Sprint 40) ─────────────────────────────────────────────
+    "xlmtec/dashboard/__init__.py",
+    "xlmtec/dashboard/reader.py",
+    "xlmtec/dashboard/comparator.py",
+
+    # ── Export (Sprint 41) ────────────────────────────────────────────────
+    "xlmtec/export/__init__.py",
+    "xlmtec/export/formats.py",
+    "xlmtec/export/exporter.py",
+    "xlmtec/export/backends/__init__.py",
+    "xlmtec/export/backends/safetensors.py",
+    "xlmtec/export/backends/onnx.py",
+    "xlmtec/export/backends/gguf.py",
+
+    # ── Inference (Sprint 42) ─────────────────────────────────────────────
+    "xlmtec/inference/__init__.py",
+    "xlmtec/inference/data_loader.py",
+    "xlmtec/inference/writer.py",
+    "xlmtec/inference/predictor.py",
+
+    # ── Plugins (Sprint 43) ───────────────────────────────────────────────
+    "xlmtec/plugins/__init__.py",
+    "xlmtec/plugins/store.py",
+    "xlmtec/plugins/loader.py",
+
+    # ── CONTEXT.md files (Sprint 45) ──────────────────────────────────────
+    "xlmtec/hub/CONTEXT.md",
+    "xlmtec/checkpoints/CONTEXT.md",
+    "xlmtec/templates/CONTEXT.md",
+    "xlmtec/dashboard/CONTEXT.md",
+    "xlmtec/export/CONTEXT.md",
+    "xlmtec/inference/CONTEXT.md",
+    "xlmtec/plugins/CONTEXT.md",
+
+    # ── Docs (Sprint 37) ──────────────────────────────────────────────────
+    "docs/ai_integrations.md",
+    "docs/hub.md",
 
     # ── Tasks ─────────────────────────────────────────────────────────────
     "tasks/todo.md",

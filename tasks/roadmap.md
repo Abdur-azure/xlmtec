@@ -124,3 +124,33 @@ textual>=0.52.0   add to pyproject.toml [project.dependencies] in Sprint 25
 | 26 | TUI Train & Recommend | 3.9.0 |
 | 27 | TUI Evaluate, Benchmark, Merge | 3.10.0 |
 | 28 | TUI Upload + Polish | 3.11.0 |
+
+---
+
+## CLI & Tooling (Sprints 34–44)
+
+| Sprint | Name | Status | Delivers |
+|--------|------|--------|----------|
+| 34 | AI Integrations | ✅ Complete | Claude/Gemini/Codex providers, ai-suggest, 24 tests |
+| 35 | CLI UX Polish | ✅ Complete | --version, dry-run, config validate, rich panels, 22 tests |
+| 36 | Model Hub | ✅ Complete | hub search/info/trending, HfApi wrapper, 21 tests |
+| 37 | Docs Overhaul | ✅ Complete | README, installation, usage, ai_integrations, hub docs |
+| 38 | Checkpoint Resume | ✅ Complete | CheckpointManager, xlmtec resume, 22 tests |
+| 39 | Config Templates | ✅ Complete | 7 built-in templates, xlmtec template list/show/use, 26 tests |
+| 40 | Evaluation Dashboard | ✅ Complete | RunReader, RunComparator, xlmtec dashboard compare/show, 22 tests |
+| 41 | Export Formats | ✅ Complete | ONNX/GGUF/safetensors backends, xlmtec export, 30 tests |
+| 42 | Batch Inference | ✅ Complete | DataLoader, BatchPredictor, xlmtec predict, 24 tests |
+| 43 | Plugin System | ✅ Complete | PluginStore, PluginLoader, xlmtec plugin add/list/remove, 21 tests |
+| 44 | CHANGELOG + Audit | ✅ Complete | CHANGELOG Sprints 34-43, audit_repo all new files, v3.24.0 |
+
+---
+
+## Upcoming Sprints (45–49)
+
+| Sprint | Name | Version | Delivers |
+|--------|------|---------|----------|
+| 45 | CONTEXT.md Sweep | 3.25.0 | CONTEXT.md for hub, checkpoints, templates, dashboard, export, inference, plugins |
+| 46 | Docs Complete | 3.26.0 | mkdocs pages for export, predict, plugin, template, dashboard, resume commands |
+| 47 | Training Notifications | 3.27.0 | Slack/email/desktop alert on training finish; `--notify` flag |
+| 48 | Hyperparameter Sweep | 3.28.0 | `xlmtec sweep config.yaml` — Optuna grid/random search over lr/batch/r |
+| 49 | CI Hardening | 3.29.0 | Python 3.10/3.11/3.12 matrix, coverage badge, ruff + mypy in CI |
