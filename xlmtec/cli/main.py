@@ -27,7 +27,7 @@ from xlmtec.cli.commands.hub import app as hub_app
 from xlmtec.cli.commands.resume import resume
 from xlmtec.cli.commands.template import app as template_app
 from xlmtec.cli.commands.dashboard import app as dashboard_app
-
+from xlmtec.cli.commands.export import export
 
 from rich.panel import Panel
 
@@ -48,6 +48,7 @@ app.add_typer(hub_app, name="hub")
 app.command()(resume)
 app.add_typer(template_app, name="template")
 app.add_typer(dashboard_app, name="dashboard")
+app.command()(export)
 
 def _version_callback(value: bool) -> None:
     if value:

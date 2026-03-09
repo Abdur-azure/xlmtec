@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xlmtec"
-version = "3.17.0"
+version = "3.21.0"
 description = "Production-grade LLM fine-tuning framework with CLI"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
@@ -85,6 +85,16 @@ docs = [
     "pymdown-extensions>=10.0.0",
 ]
 
+# Export formats
+onnx = [
+    "optimum[exporters]>=1.16.0",
+    "onnx>=1.14.0",
+    "onnxruntime>=1.16.0",
+]
+gguf = [
+    "gguf>=0.6.0",
+]
+
 # AI provider integrations (for ai-suggest command)
 claude = [
     "anthropic>=0.20.0",
@@ -111,6 +121,10 @@ full = [
     "bitsandbytes>=0.41.0",
     "textual>=0.52.0",
     "trl>=0.7.0",
+    "optimum[exporters]>=1.16.0",
+    "onnx>=1.14.0",
+    "onnxruntime>=1.16.0",
+    "gguf>=0.6.0",
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
