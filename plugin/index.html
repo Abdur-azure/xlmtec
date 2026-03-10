@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://Abdur-azure.github.io/xlmtec/ai_integrations/">
+        <link rel="canonical" href="https://Abdur-azure.github.io/xlmtec/plugin/">
       
       
-        <link rel="prev" href="../configuration/">
+        <link rel="prev" href="../predict/">
       
       
-        <link rel="next" href="../hub/">
+        <link rel="next" href="../tui/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>AI Suggest - xlmtec</title>
+        <title>Plugin System - xlmtec</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ai-integrations" class="md-skip">
+        <a href="#plugin-system" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AI Suggest
+              Plugin System
             
           </span>
         </div>
@@ -389,37 +389,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    AI Suggest
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ai_integrations/" class="md-nav__link">
         
   
   
@@ -435,131 +408,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#supported-providers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported providers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#claude" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gemini" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gemini
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpt-codex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GPT (Codex)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#all-providers-at-once" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All providers at once
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How it works
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -737,10 +585,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../plugin/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin System
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -756,6 +631,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom templates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-ai-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom AI providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plugin-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reserved-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserved names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#listing-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing plugins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-a-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing a plugin
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -966,10 +938,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-providers" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported providers
+        Quick start
       
     </span>
   </a>
@@ -977,71 +949,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#custom-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#claude" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gemini" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gemini
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpt-codex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GPT (Codex)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#all-providers-at-once" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All providers at once
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage
+        Custom templates
       
     </span>
   </a>
@@ -1049,10 +960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
+  <a href="#custom-ai-providers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output
+        Custom AI providers
       
     </span>
   </a>
@@ -1060,10 +971,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#plugin-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it works
+        Plugin storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reserved-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserved names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#listing-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing plugins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-a-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing a plugin
       
     </span>
   </a>
@@ -1090,119 +1034,138 @@
   
 
 
-<h1 id="ai-integrations">AI Integrations<a class="headerlink" href="#ai-integrations" title="Permanent link">&para;</a></h1>
-<p>The <code>xlmtec ai-suggest</code> command uses an AI provider to turn a plain-English task description into a ready-to-run training config.</p>
+<h1 id="plugin-system">Plugin System<a class="headerlink" href="#plugin-system" title="Permanent link">&para;</a></h1>
+<p>Extend xlmtec with custom templates and AI providers — no source code changes needed.</p>
 <hr />
-<h2 id="supported-providers">Supported providers<a class="headerlink" href="#supported-providers" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Provider</th>
-<th>Package</th>
-<th>Env variable</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Claude (Anthropic)</td>
-<td><code>xlmtec[claude]</code></td>
-<td><code>ANTHROPIC_API_KEY</code></td>
-</tr>
-<tr>
-<td>Gemini (Google)</td>
-<td><code>xlmtec[gemini]</code></td>
-<td><code>GEMINI_API_KEY</code></td>
-</tr>
-<tr>
-<td>GPT (OpenAI)</td>
-<td><code>xlmtec[codex]</code></td>
-<td><code>OPENAI_API_KEY</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
-<h3 id="claude">Claude<a class="headerlink" href="#claude" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>claude<span class="o">]</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span>sk-ant-...
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for sentiment analysis&quot;</span><span class="w"> </span>--provider<span class="w"> </span>claude
-</code></pre></div>
+<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Register a custom config template</span>
+xlmtec<span class="w"> </span>plugin<span class="w"> </span>add-template<span class="w"> </span>my_task<span class="w"> </span>templates/my_task.yaml
 
-<h3 id="gemini">Gemini<a class="headerlink" href="#gemini" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>gemini<span class="o">]</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_API_KEY</span><span class="o">=</span>...
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for sentiment analysis&quot;</span><span class="w"> </span>--provider<span class="w"> </span>gemini
-</code></pre></div>
+<span class="c1"># Register a custom AI provider</span>
+xlmtec<span class="w"> </span>plugin<span class="w"> </span>add-provider<span class="w"> </span>my_llm<span class="w"> </span>providers/my_llm.py<span class="w"> </span>--class<span class="w"> </span>MyLLMIntegration
 
-<h3 id="gpt-codex">GPT (Codex)<a class="headerlink" href="#gpt-codex" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>codex<span class="o">]</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for sentiment analysis&quot;</span><span class="w"> </span>--provider<span class="w"> </span>codex
-</code></pre></div>
+<span class="c1"># List all registered plugins</span>
+xlmtec<span class="w"> </span>plugin<span class="w"> </span>list
 
-<h3 id="all-providers-at-once">All providers at once<a class="headerlink" href="#all-providers-at-once" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>ai<span class="o">]</span>
+<span class="c1"># Remove a plugin</span>
+xlmtec<span class="w"> </span>plugin<span class="w"> </span>remove<span class="w"> </span>my_task
 </code></pre></div>
 
 <hr />
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Basic</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune GPT-2 for customer support classification&quot;</span>
+<h2 id="custom-templates">Custom templates<a class="headerlink" href="#custom-templates" title="Permanent link">&para;</a></h2>
+<p>A template is a standard xlmtec YAML config file. Once registered, it appears in <code>xlmtec template list</code> alongside built-ins.</p>
+<p><strong>1. Create a YAML file:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># templates/legal_ner.yaml</span>
+<span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lora</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NER</span><span class="nv"> </span><span class="s">fine-tuning</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">legal</span><span class="nv"> </span><span class="s">documents&quot;</span>
+<span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token-classification</span>
+<span class="nt">base_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bert-base-uncased</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bert-base-uncased</span>
+<span class="nt">dataset</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local_file</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/legal_ner.jsonl</span>
+<span class="w">  </span><span class="nt">text_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">  </span><span class="nt">label_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">labels</span>
+<span class="nt">lora</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">alpha</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+<span class="w">  </span><span class="nt">dropout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">  </span><span class="nt">target_modules</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">query</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">value</span><span class="p p-Indicator">]</span>
+<span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output/legal_ner</span>
+<span class="w">  </span><span class="nt">num_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0002</span>
+</code></pre></div>
 
-<span class="c1"># Specify provider</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;qlora llama for code generation&quot;</span><span class="w"> </span>--provider<span class="w"> </span>gemini
+<p><strong>2. Register it:</strong></p>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>plugin<span class="w"> </span>add-template<span class="w"> </span>legal_ner<span class="w"> </span>templates/legal_ner.yaml
+</code></pre></div>
 
-<span class="c1"># Save config to file</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;instruction tune for QA&quot;</span><span class="w"> </span>--provider<span class="w"> </span>claude<span class="w"> </span>--save<span class="w"> </span>config.yaml
-
-<span class="c1"># Pass API key directly</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;summarise medical notes&quot;</span><span class="w"> </span>--provider<span class="w"> </span>codex<span class="w"> </span>--api-key<span class="w"> </span>sk-...
+<p><strong>3. Use it like any built-in:</strong></p>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>template<span class="w"> </span>list<span class="w">          </span><span class="c1"># legal_ner appears here</span>
+xlmtec<span class="w"> </span>template<span class="w"> </span>show<span class="w"> </span>legal_ner
+xlmtec<span class="w"> </span>template<span class="w"> </span>use<span class="w"> </span>legal_ner<span class="w"> </span>--output<span class="w"> </span>config.yaml
 </code></pre></div>
 
 <hr />
-<h2 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h2>
-<p>Each suggestion includes:</p>
-<ul>
-<li><strong>Method</strong> — recommended fine-tuning method (LoRA, QLoRA, full, instruction, DPO)</li>
-<li><strong>YAML config</strong> — complete, ready-to-run <code>xlmtec train</code> configuration</li>
-<li><strong>Explanation</strong> — why this config was chosen for your task</li>
-<li><strong>Command</strong> — exact command to run</li>
-</ul>
-<p>Example output:</p>
-<div class="codehilite"><pre><span></span><code>Recommendation
-──────────────
-Method: lora
-Why: LoRA is ideal for text classification — low VRAM requirement,
-     fast convergence, and strong performance on GPT-2 scale models.
+<h2 id="custom-ai-providers">Custom AI providers<a class="headerlink" href="#custom-ai-providers" title="Permanent link">&para;</a></h2>
+<p>A provider is a Python class that subclasses <code>xlmtec.integrations.base.AIIntegration</code>. Once registered, it can be used with <code>xlmtec ai-suggest --provider my_llm</code>.</p>
+<p><strong>1. Create the provider class:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># providers/my_llm.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xlmtec.integrations.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIIntegration</span><span class="p">,</span> <span class="n">SuggestResult</span>
 
-Generated config:
-model:
-  name: gpt2
-dataset:
-  source: local_file
-  path: data/train.jsonl
-lora:
-  r: 16
-  alpha: 32
-training:
-  output_dir: output/run1
-  num_epochs: 3
-  batch_size: 4
-  learning_rate: 2e-4
+<span class="k">class</span><span class="w"> </span><span class="nc">MyLLMIntegration</span><span class="p">(</span><span class="n">AIIntegration</span><span class="p">):</span>
+    <span class="n">PROVIDER_NAME</span> <span class="o">=</span> <span class="s2">&quot;my_llm&quot;</span>
+    <span class="n">ENV_KEY</span> <span class="o">=</span> <span class="s2">&quot;MY_LLM_API_KEY&quot;</span>
+    <span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="s2">&quot;my-model-v1&quot;</span>
 
-Run this:
-xlmtec train --method lora --config config.yaml --output-dir output/run1
+    <span class="k">def</span><span class="w"> </span><span class="nf">suggest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SuggestResult</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_require_api_key</span><span class="p">()</span>
+        <span class="c1"># call your LLM API here …</span>
+        <span class="k">return</span> <span class="n">SuggestResult</span><span class="p">(</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;lora&quot;</span><span class="p">,</span>
+            <span class="n">explanation</span><span class="o">=</span><span class="s2">&quot;LoRA is efficient for this task.&quot;</span><span class="p">,</span>
+            <span class="n">yaml_config</span><span class="o">=</span><span class="s2">&quot;model:</span><span class="se">\n</span><span class="s2">  name: gpt2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;xlmtec train --config config.yaml&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div>
+
+<p><strong>2. Register it:</strong></p>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>plugin<span class="w"> </span>add-provider<span class="w"> </span>my_llm<span class="w"> </span>providers/my_llm.py<span class="w"> </span>--class<span class="w"> </span>MyLLMIntegration
+</code></pre></div>
+
+<p><strong>3. Use it:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MY_LLM_API_KEY</span><span class="o">=</span>...
+xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for legal NER&quot;</span><span class="w"> </span>--provider<span class="w"> </span>my_llm
 </code></pre></div>
 
 <hr />
-<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Your task description is sent to the chosen AI provider</li>
-<li>The provider returns a structured JSON response with method, YAML, and explanation</li>
-<li>xlmtec parses and displays the result — no raw JSON exposed</li>
-<li>Optionally saves the YAML to disk with <code>--save</code></li>
-</ol>
-<p>All three providers use the same system prompt and return identical output structure, so results are comparable across providers.</p>
+<h2 id="plugin-storage">Plugin storage<a class="headerlink" href="#plugin-storage" title="Permanent link">&para;</a></h2>
+<p>Plugins are stored in <code>~/.xlmtec/plugins.json</code>. The file is created automatically on first registration.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;templates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;legal_ner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;legal_ner&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/abs/path/templates/legal_ner.yaml&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;registered_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-03-09T12:00:00+00:00&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Source paths are absolute</p>
+<p>xlmtec stores the absolute path to your YAML/Python file. If you move the file, re-register it with <code>xlmtec plugin add-template</code>.</p>
+</div>
+<hr />
+<h2 id="reserved-names">Reserved names<a class="headerlink" href="#reserved-names" title="Permanent link">&para;</a></h2>
+<p>These names are reserved and cannot be used for plugins:</p>
+<p><strong>Templates:</strong> <code>sentiment</code>, <code>classification</code>, <code>qa</code>, <code>summarisation</code>, <code>code</code>, <code>chat</code>, <code>dpo</code></p>
+<p><strong>Providers:</strong> <code>claude</code>, <code>gemini</code>, <code>codex</code></p>
+<hr />
+<h2 id="listing-plugins">Listing plugins<a class="headerlink" href="#listing-plugins" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>plugin<span class="w"> </span>list
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>╭── Custom Templates ──────────────────────────────────────────╮
+│ Name         │ Source                          │ Registered  │
+│ legal_ner    │ /home/user/templates/legal_ner… │ 2026-03-09  │
+╰──────────────────────────────────────────────────────────────╯
+
+╭── Custom Providers ──────────────────────────────────────────╮
+│  no custom providers                                         │
+╰──────────────────────────────────────────────────────────────╯
+</code></pre></div>
+
+<hr />
+<h2 id="removing-a-plugin">Removing a plugin<a class="headerlink" href="#removing-a-plugin" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>plugin<span class="w"> </span>remove<span class="w"> </span>legal_ner
+</code></pre></div>
+
+<p>This unregisters the plugin. The original YAML/Python file is not deleted.</p>
 
 
 

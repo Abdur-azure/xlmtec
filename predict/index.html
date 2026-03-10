@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://Abdur-azure.github.io/xlmtec/ai_integrations/">
+        <link rel="canonical" href="https://Abdur-azure.github.io/xlmtec/predict/">
       
       
-        <link rel="prev" href="../configuration/">
+        <link rel="prev" href="../export/">
       
       
-        <link rel="next" href="../hub/">
+        <link rel="next" href="../plugin/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>AI Suggest - xlmtec</title>
+        <title>Batch Inference - xlmtec</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ai-integrations" class="md-skip">
+        <a href="#batch-inference" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AI Suggest
+              Batch Inference
             
           </span>
         </div>
@@ -389,37 +389,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    AI Suggest
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ai_integrations/" class="md-nav__link">
         
   
   
@@ -435,131 +408,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#supported-providers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported providers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#claude" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gemini" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gemini
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpt-codex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GPT (Codex)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#all-providers-at-once" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All providers at once
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How it works
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -709,10 +557,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../predict/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Batch Inference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -728,6 +603,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-detected-text-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-detected text columns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dry-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dry run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generating-test-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating test data
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -966,10 +938,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-providers" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported providers
+        Quick start
       
     </span>
   </a>
@@ -977,71 +949,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Setup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#claude" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gemini" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gemini
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gpt-codex" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GPT (Codex)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#all-providers-at-once" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All providers at once
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage
+        Options
       
     </span>
   </a>
@@ -1049,10 +960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
+  <a href="#input-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output
+        Input formats
       
     </span>
   </a>
@@ -1060,10 +971,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#auto-detected-text-columns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it works
+        Auto-detected text columns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dry-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dry run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generating-test-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating test data
       
     </span>
   </a>
@@ -1090,119 +1034,143 @@
   
 
 
-<h1 id="ai-integrations">AI Integrations<a class="headerlink" href="#ai-integrations" title="Permanent link">&para;</a></h1>
-<p>The <code>xlmtec ai-suggest</code> command uses an AI provider to turn a plain-English task description into a ready-to-run training config.</p>
+<h1 id="batch-inference">Batch Inference<a class="headerlink" href="#batch-inference" title="Permanent link">&para;</a></h1>
+<p>Run predictions over a dataset using a fine-tuned model — no custom inference code needed.</p>
 <hr />
-<h2 id="supported-providers">Supported providers<a class="headerlink" href="#supported-providers" title="Permanent link">&para;</a></h2>
+<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Preview without loading the model</span>
+xlmtec<span class="w"> </span>predict<span class="w"> </span>output/run1<span class="w"> </span>--data<span class="w"> </span>data/test.jsonl<span class="w"> </span>--dry-run
+
+<span class="c1"># Run predictions, save to JSONL</span>
+xlmtec<span class="w"> </span>predict<span class="w"> </span>output/run1<span class="w"> </span>--data<span class="w"> </span>data/test.jsonl<span class="w"> </span>--output<span class="w"> </span>predictions.jsonl
+
+<span class="c1"># Read CSV, write CSV</span>
+xlmtec<span class="w"> </span>predict<span class="w"> </span>output/run1<span class="w"> </span>--data<span class="w"> </span>data/test.csv<span class="w"> </span>--output<span class="w"> </span>predictions.csv<span class="w"> </span>--format<span class="w"> </span>csv
+
+<span class="c1"># Tune generation settings</span>
+xlmtec<span class="w"> </span>predict<span class="w"> </span>output/run1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span>data/test.jsonl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--batch-size<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-new-tokens<span class="w"> </span><span class="m">256</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--temperature<span class="w"> </span><span class="m">0</span>.7
+</code></pre></div>
+
+<hr />
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Provider</th>
-<th>Package</th>
-<th>Env variable</th>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Claude (Anthropic)</td>
-<td><code>xlmtec[claude]</code></td>
-<td><code>ANTHROPIC_API_KEY</code></td>
+<td><code>--data</code></td>
+<td>required</td>
+<td>Input file (<code>.jsonl</code> or <code>.csv</code>)</td>
 </tr>
 <tr>
-<td>Gemini (Google)</td>
-<td><code>xlmtec[gemini]</code></td>
-<td><code>GEMINI_API_KEY</code></td>
+<td><code>--output</code></td>
+<td><code>predictions.jsonl</code></td>
+<td>Output file path</td>
 </tr>
 <tr>
-<td>GPT (OpenAI)</td>
-<td><code>xlmtec[codex]</code></td>
-<td><code>OPENAI_API_KEY</code></td>
+<td><code>--format</code></td>
+<td><code>jsonl</code></td>
+<td>Output format: <code>jsonl</code> or <code>csv</code></td>
+</tr>
+<tr>
+<td><code>--text-column</code></td>
+<td>auto-detect</td>
+<td>Column containing input text</td>
+</tr>
+<tr>
+<td><code>--batch-size</code></td>
+<td><code>8</code></td>
+<td>Records processed per batch</td>
+</tr>
+<tr>
+<td><code>--max-new-tokens</code></td>
+<td><code>128</code></td>
+<td>Max tokens to generate per input</td>
+</tr>
+<tr>
+<td><code>--temperature</code></td>
+<td><code>1.0</code></td>
+<td>Sampling temperature (<code>1.0</code> = greedy)</td>
+</tr>
+<tr>
+<td><code>--device</code></td>
+<td><code>auto</code></td>
+<td><code>auto</code>, <code>cpu</code>, or <code>cuda</code></td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td>off</td>
+<td>Validate input without loading model</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
-<h3 id="claude">Claude<a class="headerlink" href="#claude" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>claude<span class="o">]</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span>sk-ant-...
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for sentiment analysis&quot;</span><span class="w"> </span>--provider<span class="w"> </span>claude
+<h2 id="input-formats">Input formats<a class="headerlink" href="#input-formats" title="Permanent link">&para;</a></h2>
+<p><strong>JSONL</strong> — one JSON object per line:</p>
+<div class="codehilite"><pre><span></span><code>{&quot;text&quot;: &quot;The product arrived damaged and the customer service was unhelpful.&quot;}
+{&quot;text&quot;: &quot;Excellent quality, fast shipping, highly recommended!&quot;}
 </code></pre></div>
 
-<h3 id="gemini">Gemini<a class="headerlink" href="#gemini" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>gemini<span class="o">]</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">GEMINI_API_KEY</span><span class="o">=</span>...
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for sentiment analysis&quot;</span><span class="w"> </span>--provider<span class="w"> </span>gemini
-</code></pre></div>
-
-<h3 id="gpt-codex">GPT (Codex)<a class="headerlink" href="#gpt-codex" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>codex<span class="o">]</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune for sentiment analysis&quot;</span><span class="w"> </span>--provider<span class="w"> </span>codex
-</code></pre></div>
-
-<h3 id="all-providers-at-once">All providers at once<a class="headerlink" href="#all-providers-at-once" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>xlmtec<span class="o">[</span>ai<span class="o">]</span>
+<p><strong>CSV</strong> — standard comma-separated:</p>
+<div class="codehilite"><pre><span></span><code>text,label
+&quot;Great product, fast delivery&quot;,positive
+&quot;Broken on arrival&quot;,negative
 </code></pre></div>
 
 <hr />
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Basic</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;fine-tune GPT-2 for customer support classification&quot;</span>
-
-<span class="c1"># Specify provider</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;qlora llama for code generation&quot;</span><span class="w"> </span>--provider<span class="w"> </span>gemini
-
-<span class="c1"># Save config to file</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;instruction tune for QA&quot;</span><span class="w"> </span>--provider<span class="w"> </span>claude<span class="w"> </span>--save<span class="w"> </span>config.yaml
-
-<span class="c1"># Pass API key directly</span>
-xlmtec<span class="w"> </span>ai-suggest<span class="w"> </span><span class="s2">&quot;summarise medical notes&quot;</span><span class="w"> </span>--provider<span class="w"> </span>codex<span class="w"> </span>--api-key<span class="w"> </span>sk-...
+<h2 id="auto-detected-text-columns">Auto-detected text columns<a class="headerlink" href="#auto-detected-text-columns" title="Permanent link">&para;</a></h2>
+<p>If <code>--text-column</code> is not set, xlmtec checks these column names in order:</p>
+<p><code>text</code> → <code>input</code> → <code>prompt</code> → <code>sentence</code> → <code>content</code> → <code>question</code> → <code>context</code> → <code>document</code> → <code>instruction</code></p>
+<p>If none are found, the command exits with an error. Use <code>--text-column</code> to specify your column explicitly:</p>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>predict<span class="w"> </span>output/run1<span class="w"> </span>--data<span class="w"> </span>data.jsonl<span class="w"> </span>--text-column<span class="w"> </span>review_body
 </code></pre></div>
 
 <hr />
-<h2 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h2>
-<p>Each suggestion includes:</p>
-<ul>
-<li><strong>Method</strong> — recommended fine-tuning method (LoRA, QLoRA, full, instruction, DPO)</li>
-<li><strong>YAML config</strong> — complete, ready-to-run <code>xlmtec train</code> configuration</li>
-<li><strong>Explanation</strong> — why this config was chosen for your task</li>
-<li><strong>Command</strong> — exact command to run</li>
-</ul>
-<p>Example output:</p>
-<div class="codehilite"><pre><span></span><code>Recommendation
-──────────────
-Method: lora
-Why: LoRA is ideal for text classification — low VRAM requirement,
-     fast convergence, and strong performance on GPT-2 scale models.
+<h2 id="output-format">Output format<a class="headerlink" href="#output-format" title="Permanent link">&para;</a></h2>
+<p>Each prediction row adds a <code>prediction</code> field to the input record:</p>
+<p><strong>JSONL output:</strong></p>
+<div class="codehilite"><pre><span></span><code>{&quot;text&quot;: &quot;Great product!&quot;, &quot;prediction&quot;: &quot;positive&quot;}
+{&quot;text&quot;: &quot;Broken on arrival.&quot;, &quot;prediction&quot;: &quot;negative&quot;}
+</code></pre></div>
 
-Generated config:
-model:
-  name: gpt2
-dataset:
-  source: local_file
-  path: data/train.jsonl
-lora:
-  r: 16
-  alpha: 32
-training:
-  output_dir: output/run1
-  num_epochs: 3
-  batch_size: 4
-  learning_rate: 2e-4
-
-Run this:
-xlmtec train --method lora --config config.yaml --output-dir output/run1
+<p><strong>CSV output:</strong></p>
+<div class="codehilite"><pre><span></span><code>text,prediction
+&quot;Great product!&quot;,&quot;positive&quot;
+&quot;Broken on arrival.&quot;,&quot;negative&quot;
 </code></pre></div>
 
 <hr />
-<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Your task description is sent to the chosen AI provider</li>
-<li>The provider returns a structured JSON response with method, YAML, and explanation</li>
-<li>xlmtec parses and displays the result — no raw JSON exposed</li>
-<li>Optionally saves the YAML to disk with <code>--save</code></li>
-</ol>
-<p>All three providers use the same system prompt and return identical output structure, so results are comparable across providers.</p>
+<h2 id="dry-run">Dry run<a class="headerlink" href="#dry-run" title="Permanent link">&para;</a></h2>
+<p>Validates the input file, detects the text column, and prints a summary — without loading the model:</p>
+<div class="codehilite"><pre><span></span><code>xlmtec<span class="w"> </span>predict<span class="w"> </span>output/run1<span class="w"> </span>--data<span class="w"> </span>data/test.jsonl<span class="w"> </span>--dry-run
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>┌─ Batch Inference Plan ────────────────────────────┐
+│  Model dir    : output/run1                       │
+│  Input        : data/test.jsonl  (450 records)    │
+│  Text column  : text  (auto-detected)             │
+│  Output       : predictions.jsonl                 │
+│  Batch size   : 8  → 57 batches                   │
+│  Max tokens   : 128                               │
+│  Device       : auto                              │
+└───────────────────────────────────────────────────┘
+Remove --dry-run to run inference.
+</code></pre></div>
+
+<hr />
+<h2 id="generating-test-data">Generating test data<a class="headerlink" href="#generating-test-data" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>generate_inference_data.py
+xlmtec<span class="w"> </span>predict<span class="w"> </span>output/dummy_model<span class="w"> </span>--data<span class="w"> </span>data/test.jsonl<span class="w"> </span>--dry-run
+</code></pre></div>
 
 
 

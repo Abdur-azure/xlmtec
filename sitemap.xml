@@ -2,54 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/ARCHITECTURE/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/ai_integrations/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/api/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/configuration/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
+    </url>
+    <url>
+         <loc>https://Abdur-azure.github.io/xlmtec/dashboard/</loc>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/examples/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
+    </url>
+    <url>
+         <loc>https://Abdur-azure.github.io/xlmtec/export/</loc>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/hub/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/installation/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
+    </url>
+    <url>
+         <loc>https://Abdur-azure.github.io/xlmtec/plugin/</loc>
+         <lastmod>2026-03-10</lastmod>
+    </url>
+    <url>
+         <loc>https://Abdur-azure.github.io/xlmtec/predict/</loc>
+         <lastmod>2026-03-10</lastmod>
+    </url>
+    <url>
+         <loc>https://Abdur-azure.github.io/xlmtec/resume/</loc>
+         <lastmod>2026-03-10</lastmod>
+    </url>
+    <url>
+         <loc>https://Abdur-azure.github.io/xlmtec/template/</loc>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/training_and_evaluation/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/troubleshooting/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/tui/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/usage/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
     <url>
          <loc>https://Abdur-azure.github.io/xlmtec/vanilla_distillation/</loc>
-         <lastmod>2026-03-09</lastmod>
+         <lastmod>2026-03-10</lastmod>
     </url>
 </urlset>
