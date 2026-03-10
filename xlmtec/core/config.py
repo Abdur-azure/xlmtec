@@ -1,10 +1,21 @@
-"""Configuration management — Pydantic models + ConfigBuilder."""
+"""
+xlmtec.core.config
+~~~~~~~~~~~~~~~~~~~
+Pydantic validation models for PipelineConfig.
+
+Responsibility: validate user-supplied dicts/YAML/JSON into typed configs.
+ConfigBuilder lives in config_builder.py — import it from there.
+
+Public API (re-exported via core/__init__.py):
+    PipelineConfig, ConfigBuilder
+"""
+
+from __future__ import annotations
 
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-import torch
 import yaml
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -23,8 +34,12 @@ from .types import (
 )
 
 # ============================================================================
-# PYDANTIC MODELS
+# PYDANTIC MODELS  (internal — used by PipelineConfig only)
 # ============================================================================
+
+_VALID_DTYPES  = {"float32", "float16", "bfloat16", "auto"}
+_VALID_PADDING = {"max_length", "longest", "do_not_pad"}
+_VALID_BIAS    = {"none", "all", "lora_only"}
 
 
 class ModelConfigModel(BaseModel):
@@ -41,31 +56,20 @@ class ModelConfigModel(BaseModel):
     @field_validator("torch_dtype", mode="before")
     @classmethod
     def validate_dtype(cls, v):
-        if v is None:
-            return None
-        valid = ["float32", "float16", "bfloat16", "auto"]
-        if v not in valid:
-            raise InvalidConfigError(f"Invalid torch_dtype '{v}'. Must be one of {valid}")
+        if v is not None and v not in _VALID_DTYPES:
+            raise InvalidConfigError(f"Invalid torch_dtype '{v}'. Valid: {_VALID_DTYPES}")
         return v
 
     @model_validator(mode="after")
     def validate_quantization(self):
         if self.load_in_8bit and self.load_in_4bit:
-            raise IncompatibleConfigError(
-                "Cannot enable both 8-bit and 4-bit quantization",
-                ["load_in_8bit", "load_in_4bit"],
-            )
+            raise IncompatibleConfigError("Cannot set both load_in_8bit and load_in_4bit.")
         return self
 
     def to_config(self) -> ModelConfig:
-        dtype_map = {"float32": torch.float32, "float16": torch.float16,
-                     "bfloat16": torch.bfloat16, "auto": None}
         return ModelConfig(
-            name=self.name,
-            device=self.device,
-            torch_dtype=dtype_map.get(self.torch_dtype) if self.torch_dtype else None,
-            load_in_8bit=self.load_in_8bit,
-            load_in_4bit=self.load_in_4bit,
+            name=self.name, device=self.device, torch_dtype=self.torch_dtype,
+            load_in_8bit=self.load_in_8bit, load_in_4bit=self.load_in_4bit,
             use_flash_attention=self.use_flash_attention,
             trust_remote_code=self.trust_remote_code,
             revision=self.revision,
@@ -75,7 +79,7 @@ class ModelConfigModel(BaseModel):
 
 class DatasetConfigModel(BaseModel):
     source: DatasetSource
-    path: str
+    path: str = ""
     split: str = "train"
     config_name: Optional[str] = None
     data_files: Optional[Union[str, List[str]]] = None
@@ -84,13 +88,6 @@ class DatasetConfigModel(BaseModel):
     streaming: bool = False
     shuffle: bool = True
     seed: int = 42
-
-    @model_validator(mode="after")
-    def validate_source_path(self):
-        if self.source == DatasetSource.LOCAL_FILE:
-            if not Path(self.path).exists():
-                raise InvalidConfigError(f"Local file not found: {self.path}")
-        return self
 
     def to_config(self) -> DatasetConfig:
         return DatasetConfig(
@@ -111,9 +108,8 @@ class TokenizationConfigModel(BaseModel):
     @field_validator("padding")
     @classmethod
     def validate_padding(cls, v):
-        valid = ["max_length", "longest", "do_not_pad"]
-        if v not in valid:
-            raise InvalidConfigError(f"Invalid padding '{v}'")
+        if v not in _VALID_PADDING:
+            raise InvalidConfigError(f"Invalid padding '{v}'. Valid: {_VALID_PADDING}")
         return v
 
     def to_config(self) -> TokenizationConfig:
@@ -136,30 +132,30 @@ class LoRAConfigModel(BaseModel):
     @field_validator("bias")
     @classmethod
     def validate_bias(cls, v):
-        valid = ["none", "all", "lora_only"]
-        if v not in valid:
-            raise InvalidConfigError(f"Invalid bias '{v}'")
+        if v not in _VALID_BIAS:
+            raise InvalidConfigError(f"Invalid bias '{v}'. Valid: {_VALID_BIAS}")
         return v
 
     def to_config(self) -> LoRAConfig:
         return LoRAConfig(
             r=self.r, lora_alpha=self.lora_alpha, lora_dropout=self.lora_dropout,
-            target_modules=self.target_modules, bias=self.bias,  # type: ignore
-            fan_in_fan_out=self.fan_in_fan_out, init_lora_weights=self.init_lora_weights,  # type: ignore
+            target_modules=self.target_modules, bias=self.bias,  # type: ignore[arg-type]
+            fan_in_fan_out=self.fan_in_fan_out, init_lora_weights=self.init_lora_weights,  # type: ignore[arg-type]
         )
 
 
 class TrainingConfigModel(BaseModel):
     method: TrainingMethod
-    output_dir: str
+    output_dir: str = "output/"
     num_epochs: int = Field(3, ge=1)
     batch_size: int = Field(4, ge=1)
-    gradient_accumulation_steps: int = Field(4, ge=1)
-    learning_rate: float = Field(2e-4, gt=0.0)
-    weight_decay: float = Field(0.01, ge=0.0)
+    learning_rate: float = Field(2e-4, gt=0)
     warmup_ratio: float = Field(0.1, ge=0.0)
     lr_scheduler_type: str = "cosine"
-    max_grad_norm: float = Field(1.0, gt=0.0)
+    weight_decay: float = Field(0.01, ge=0)
+    gradient_accumulation_steps: int = Field(4, ge=1)
+    gradient_checkpointing: bool = False
+    max_grad_norm: float = Field(1.0, gt=0)
     fp16: bool = False
     bf16: bool = False
     logging_steps: int = Field(10, ge=1)
@@ -168,32 +164,39 @@ class TrainingConfigModel(BaseModel):
     evaluation_strategy: str = "no"
     load_best_model_at_end: bool = False
     seed: int = 42
-    gradient_checkpointing: bool = False
 
     @model_validator(mode="after")
     def validate_mixed_precision(self):
         if self.fp16 and self.bf16:
-            raise IncompatibleConfigError("Cannot enable both FP16 and BF16", ["fp16", "bf16"])
+            raise IncompatibleConfigError("Cannot enable both fp16 and bf16.")
         return self
 
     def to_config(self) -> TrainingConfig:
         return TrainingConfig(
-            method=self.method, output_dir=Path(self.output_dir),
-            num_epochs=self.num_epochs, batch_size=self.batch_size,
+            method=self.method,
+            output_dir=self.output_dir,
+            num_epochs=self.num_epochs,
+            batch_size=self.batch_size,
+            learning_rate=self.learning_rate,
+            warmup_ratio=self.warmup_ratio,
+            lr_scheduler_type=self.lr_scheduler_type,
+            weight_decay=self.weight_decay,
             gradient_accumulation_steps=self.gradient_accumulation_steps,
-            learning_rate=self.learning_rate, weight_decay=self.weight_decay,
-            warmup_ratio=self.warmup_ratio, lr_scheduler_type=self.lr_scheduler_type,
-            max_grad_norm=self.max_grad_norm, fp16=self.fp16, bf16=self.bf16,
-            logging_steps=self.logging_steps, save_steps=self.save_steps,
-            save_strategy=self.save_strategy,  # type: ignore
-            evaluation_strategy=self.evaluation_strategy,  # type: ignore
+            gradient_checkpointing=self.gradient_checkpointing,
+            max_grad_norm=self.max_grad_norm,
+            fp16=self.fp16,
+            bf16=self.bf16,
+            logging_steps=self.logging_steps,
+            save_steps=self.save_steps,
+            save_strategy=self.save_strategy,
+            evaluation_strategy=self.evaluation_strategy,
             load_best_model_at_end=self.load_best_model_at_end,
-            seed=self.seed, gradient_checkpointing=self.gradient_checkpointing,
+            seed=self.seed,
         )
 
 
 class EvaluationConfigModel(BaseModel):
-    metrics: List[EvaluationMetric]
+    metrics: List[EvaluationMetric] = Field(default_factory=lambda: [EvaluationMetric.ROUGE_L])
     batch_size: int = Field(8, ge=1)
     num_samples: Optional[int] = None
     generation_max_length: int = Field(100, ge=1)
@@ -204,7 +207,8 @@ class EvaluationConfigModel(BaseModel):
     def to_config(self) -> EvaluationConfig:
         return EvaluationConfig(
             metrics=self.metrics, batch_size=self.batch_size,
-            num_samples=self.num_samples, generation_max_length=self.generation_max_length,
+            num_samples=self.num_samples,
+            generation_max_length=self.generation_max_length,
             generation_temperature=self.generation_temperature,
             generation_top_p=self.generation_top_p,
             generation_do_sample=self.generation_do_sample,
@@ -226,12 +230,18 @@ class PipelineConfig(BaseModel):
 
     @model_validator(mode="after")
     def validate_method_config(self):
-        if self.training.method == TrainingMethod.LORA and self.lora is None:
+        lora_methods = {
+            TrainingMethod.LORA,
+            TrainingMethod.QLORA,
+            TrainingMethod.INSTRUCTION_TUNING,
+            TrainingMethod.DPO,
+        }
+        if self.training.method in lora_methods and self.lora is None:
             raise MissingConfigError("lora", "PipelineConfig")
         return self
 
     def to_dict(self) -> Dict[str, Any]:
-        return self.model_dump()
+        return json.loads(self.model_dump_json())
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "PipelineConfig":
@@ -249,52 +259,18 @@ class PipelineConfig(BaseModel):
 
     def to_json(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
-            json.dump(self.to_dict(), f, indent=2)
+        path.write_text(json.dumps(self.to_dict(), indent=2))
 
     def to_yaml(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        import json
-        # model_dump with mode='json' converts enums to strings
-        data = json.loads(self.model_dump_json())
         with open(path, "w") as f:
-            yaml.dump(data, f, default_flow_style=False)
+            yaml.dump(self.to_dict(), f, default_flow_style=False)
 
 
 # ============================================================================
-# CONFIG BUILDER
+# CONFIG BUILDER  (kept here for backward compat — also in config_builder.py)
 # ============================================================================
 
+from .config_builder import ConfigBuilder  # noqa: E402 — intentional re-export
 
-class ConfigBuilder:
-    def __init__(self):
-        self._config: Dict[str, Any] = {}
-
-    def with_model(self, name: str, **kwargs) -> "ConfigBuilder":
-        self._config["model"] = {"name": name, **kwargs}
-        return self
-
-    def with_dataset(self, path: str, source: DatasetSource = DatasetSource.LOCAL_FILE,
-                     **kwargs) -> "ConfigBuilder":
-        self._config["dataset"] = {"source": source, "path": path, **kwargs}
-        return self
-
-    def with_tokenization(self, **kwargs) -> "ConfigBuilder":
-        self._config["tokenization"] = kwargs
-        return self
-
-    def with_training(self, method: TrainingMethod, output_dir: str,
-                      **kwargs) -> "ConfigBuilder":
-        self._config["training"] = {"method": method, "output_dir": output_dir, **kwargs}
-        return self
-
-    def with_lora(self, **kwargs) -> "ConfigBuilder":
-        self._config["lora"] = kwargs
-        return self
-
-    def with_evaluation(self, metrics: List[EvaluationMetric], **kwargs) -> "ConfigBuilder":
-        self._config["evaluation"] = {"metrics": metrics, **kwargs}
-        return self
-
-    def build(self) -> PipelineConfig:
-        return PipelineConfig.from_dict(self._config)
+__all__ = ["PipelineConfig", "ConfigBuilder"]

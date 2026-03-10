@@ -184,8 +184,8 @@ class TestDPOTrainer:
         mock_trl_module.DPOConfig.return_value = mock_dpo_config
 
         with patch.dict("sys.modules", {"trl": mock_trl_module}):
-            with patch("xlmtec.trainers.dpo_trainer.get_peft_model", return_value=mock_model):
-                with patch("xlmtec.trainers.dpo_trainer.detect_target_modules", return_value=["q_proj"]):
+            with patch("xlmtec.trainers.lora_trainer.get_peft_model", return_value=mock_model):
+                with patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"]):
                     result = trainer.train(dpo_dataset)
 
         assert result.train_loss == pytest.approx(0.42)
@@ -196,8 +196,8 @@ class TestDPOTrainer:
         self, mock_model, mock_tokenizer, training_config, lora_config
     ):
         trainer = self._make_trainer(mock_model, mock_tokenizer, training_config, lora_config)
-        with patch("xlmtec.trainers.dpo_trainer.get_peft_model", return_value=mock_model) as mock_gpm:
-            with patch("xlmtec.trainers.dpo_trainer.detect_target_modules", return_value=["q_proj"]):
+        with patch("xlmtec.trainers.lora_trainer.get_peft_model", return_value=mock_model) as mock_gpm:
+            with patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"]):
                 trainer._setup_peft(mock_model)
         mock_gpm.assert_called_once()
 

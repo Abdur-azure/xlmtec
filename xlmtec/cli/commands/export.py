@@ -2,6 +2,9 @@
 xlmtec.cli.commands.export
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CLI command: xlmtec export
+
+Registered in main.py as:
+    app.command("export")(export)
 """
 
 from __future__ import annotations
@@ -43,7 +46,6 @@ def export_model(
 
     meta = FORMAT_META[export_fmt]
 
-    # Validate quantize option
     if quantize and meta.quantize_options and quantize not in meta.quantize_options:
         print_error(
             "Invalid quantise type",
@@ -52,7 +54,6 @@ def export_model(
         )
         return 1
 
-    # Print plan
     lines = [
         f"[bold]Source:[/bold]   {model_dir}",
         f"[bold]Output:[/bold]   {output_dir}",
@@ -100,10 +101,6 @@ def export_model(
     return 0
 
 
-app = typer.Typer(help="Export a fine-tuned model to ONNX, GGUF, or safetensors.")
-
-
-@app.command("export")
 def export(
     model_dir: Path = typer.Argument(
         ..., help="Trained model directory (e.g. output/run1)."

@@ -1,9 +1,11 @@
 """
+xlmtec.trainers.dpo_trainer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 DPO (Direct Preference Optimization) trainer.
 
-Trains a model on preference data — {prompt, chosen, rejected} triples —
-using TRL's DPOTrainer. Attaches a LoRA adapter; the base model acts as
-the implicit reference model.
+Extends LoRATrainer — inherits _setup_peft so there is no duplicate
+LoRA setup code. Only the training loop is overridden because DPO uses
+TRL's DPOTrainer instead of the standard HF Trainer.
 
 Dataset requirements:
     Each example must have three string columns:
@@ -11,64 +13,46 @@ Dataset requirements:
         - ``chosen``   — the preferred completion
         - ``rejected`` — the dispreferred completion
 
-Usage::
-
+Usage:
     trainer = DPOTrainer(model, tokenizer, training_config, lora_config)
     result = trainer.train(dataset)
 """
 
-import warnings
-from typing import Optional, Union
+from __future__ import annotations
+
+from typing import Union
 
 from datasets import Dataset, DatasetDict
-from peft import LoraConfig, TaskType, get_peft_model
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from ..core.exceptions import DatasetError, TrainingError
 from ..core.types import LoRAConfig as LoRAConfigType
 from ..core.types import TrainingConfig
-from ..models.loader import detect_target_modules
-from ..utils.logging import get_logger
-from .base import BaseTrainer, TrainingResult
+from .base import TrainingResult
+from .lora_trainer import LoRATrainer
 
-# Required columns for DPO datasets
 _DPO_REQUIRED_COLUMNS = {"prompt", "chosen", "rejected"}
-
-logger = get_logger(__name__)
 
 
 def validate_dpo_dataset(dataset: Dataset) -> None:
-    """
-    Raise ``DatasetError`` if the dataset is missing DPO-required columns.
-
-    Args:
-        dataset: HuggingFace Dataset to validate.
-
-    Raises:
-        DatasetError: If any of prompt / chosen / rejected columns are absent.
-    """
+    """Raise DatasetError if the dataset is missing DPO-required columns."""
     missing = _DPO_REQUIRED_COLUMNS - set(dataset.column_names)
     if missing:
         raise DatasetError(
             f"DPO dataset is missing required columns: {sorted(missing)}. "
-            f"Expected: prompt, chosen, rejected. "
-            f"Got: {sorted(dataset.column_names)}"
+            f"Expected: prompt, chosen, rejected. Got: {sorted(dataset.column_names)}"
         )
 
 
-class DPOTrainer(BaseTrainer):
+class DPOTrainer(LoRATrainer):
     """
-    Trainer for Direct Preference Optimization (DPO).
+    DPO trainer — extends LoRATrainer.
 
-    Wraps TRL's ``DPOTrainer`` with LoRA adapter setup. The base model
-    serves as the implicit reference model — no separate reference copy
-    is required in memory.
+    Inherits _setup_peft from LoRATrainer (no duplicate LoRA code).
+    Overrides train() to use TRL's DPOTrainer instead of HF Trainer.
 
-    Requires ``trl>=0.7.0``.
+    Requires trl>=0.7.0 — install with: pip install xlmtec[dpo]
     """
-
-    # TRL minimum version required
-    _TRL_MIN_VERSION = (0, 7, 0)
 
     def __init__(
         self,
@@ -77,71 +61,17 @@ class DPOTrainer(BaseTrainer):
         training_config: TrainingConfig,
         lora_config: LoRAConfigType,
         beta: float = 0.1,
-    ):
-        """
-        Args:
-            model: Base model to fine-tune.
-            tokenizer: Corresponding tokenizer.
-            training_config: Core training hyper-parameters.
-            lora_config: LoRA adapter configuration.
-            beta: DPO temperature — controls deviation from reference policy.
-                  Lower = closer to reference. Default 0.1 is a sensible start.
-        """
-        super().__init__(model, tokenizer, training_config)
-        self.lora_config = lora_config
+    ) -> None:
+        super().__init__(model, tokenizer, training_config, lora_config)
         self.beta = beta
+        self.logger.info(f"DPO beta={beta}")
 
-        self.logger.info(
-            f"DPO config — beta={beta}, r={lora_config.r}, "
-            f"alpha={lora_config.lora_alpha}, "
-            f"target_modules={lora_config.target_modules or 'auto-detect'}"
-        )
+    # _setup_peft is inherited from LoRATrainer — no duplication needed
 
-    # ------------------------------------------------------------------
-    # BaseTrainer hooks
-    # ------------------------------------------------------------------
-
-    def _setup_peft(self, model: PreTrainedModel) -> PreTrainedModel:
-        """Attach LoRA adapters for DPO training."""
-        target_modules = self.lora_config.target_modules or detect_target_modules(model)
-        self.logger.info(f"DPO LoRA target modules: {target_modules}")
-
-        peft_config = LoraConfig(
-            task_type=TaskType.CAUSAL_LM,
-            r=self.lora_config.r,
-            lora_alpha=self.lora_config.lora_alpha,
-            lora_dropout=self.lora_config.lora_dropout,
-            target_modules=target_modules,
-            bias=self.lora_config.bias,
-        )
-        peft_model = get_peft_model(model, peft_config)
-
-        trainable = sum(p.numel() for p in peft_model.parameters() if p.requires_grad)
-        total = sum(p.numel() for p in peft_model.parameters())
-        self.logger.info(
-            f"DPO trainable params: {trainable:,} / {total:,} "
-            f"({100 * trainable / total:.2f}%)"
-        )
-        return peft_model
-
-    def train(
-        self,
-        dataset: Union[Dataset, DatasetDict],
-    ) -> TrainingResult:
-        """
-        Run DPO training end-to-end.
-
-        Validates dataset columns, sets up LoRA, builds TRL DPOTrainer,
-        runs training, saves adapter.
-
-        Args:
-            dataset: Dataset or DatasetDict with 'train' / optional 'validation'.
-                     Must have ``prompt``, ``chosen``, ``rejected`` columns.
-
-        Returns:
-            TrainingResult with loss, steps, and output path.
-        """
+    def train(self, dataset: Union[Dataset, DatasetDict]) -> TrainingResult:
+        """Run DPO training using TRL's DPOTrainer."""
         import time
+        from pathlib import Path
 
         try:
             from trl import DPOConfig
@@ -149,31 +79,29 @@ class DPOTrainer(BaseTrainer):
         except ImportError as exc:
             raise TrainingError(
                 "dpo",
-                "trl is not installed. Install it with: pip install trl>=0.7.0",
+                "trl is not installed. Install with: pip install xlmtec[dpo]",
             ) from exc
 
         # Unpack splits
         if isinstance(dataset, DatasetDict):
             train_dataset = dataset["train"]
-            eval_dataset = dataset.get("validation")
+            eval_dataset  = dataset.get("validation")
         else:
             train_dataset = dataset
-            eval_dataset = None
+            eval_dataset  = None
 
         # Validate columns
         validate_dpo_dataset(train_dataset)
         if eval_dataset is not None:
             validate_dpo_dataset(eval_dataset)
 
-        # Ensure tokenizer has a pad token
+        # Ensure pad token
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
-            self.logger.info("pad_token set to eos_token for DPO training")
 
-        # Setup PEFT
+        # Attach LoRA adapters (from LoRATrainer._setup_peft)
         self.model = self._setup_peft(self.model)
 
-        # Build DPOConfig (TRL's replacement for TrainingArguments in DPO)
         cfg = self.training_config
         dpo_config = DPOConfig(
             output_dir=str(cfg.output_dir),
@@ -195,7 +123,6 @@ class DPOTrainer(BaseTrainer):
             remove_unused_columns=False,
         )
 
-        # Build TRL DPOTrainer
         trl_trainer = TRLDPOTrainer(
             model=self.model,
             args=dpo_config,
@@ -204,7 +131,6 @@ class DPOTrainer(BaseTrainer):
             tokenizer=self.tokenizer,
         )
 
-        # Train
         self.logger.info("Starting DPO training...")
         start = time.time()
         try:
@@ -213,23 +139,17 @@ class DPOTrainer(BaseTrainer):
             raise TrainingError("dpo", str(exc)) from exc
         elapsed = time.time() - start
 
-        # Save
-        from pathlib import Path
         output_dir = Path(cfg.output_dir)
         trl_trainer.save_model(str(output_dir))
         self.tokenizer.save_pretrained(str(output_dir))
         self.logger.info(f"DPO adapter saved to {output_dir}")
 
         logs = trl_trainer.state.log_history
-        eval_loss = self._extract_last(logs, "eval_loss")
-
         return TrainingResult(
             output_dir=output_dir,
             train_loss=train_output.training_loss,
-            eval_loss=eval_loss,
-            epochs_completed=int(
-                train_output.metrics.get("epoch", cfg.num_epochs)
-            ),
+            eval_loss=self._extract_last(logs, "eval_loss"),
+            epochs_completed=int(train_output.metrics.get("epoch", cfg.num_epochs)),
             steps_completed=train_output.global_step,
             training_time_seconds=elapsed,
             trainer_logs={str(i): e for i, e in enumerate(logs)},

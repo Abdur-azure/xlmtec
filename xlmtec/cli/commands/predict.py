@@ -2,15 +2,18 @@
 xlmtec.cli.commands.predict
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CLI command: xlmtec predict
+
+Registered in main.py as:
+    app.command("predict")(predict)
 """
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import typer
-from rich.panel import Panel
 
 from xlmtec.cli.ux import console, print_error, print_success
 
@@ -18,9 +21,9 @@ try:
     from xlmtec.inference.data_loader import DataLoader
     from xlmtec.inference.predictor import BatchPredictor, PredictConfig
 except ImportError:
-    DataLoader = None       # type: ignore[assignment,misc]
-    BatchPredictor = None   # type: ignore[assignment,misc]
-    PredictConfig = None    # type: ignore[assignment,misc]
+    DataLoader = None     # type: ignore[assignment,misc]
+    BatchPredictor = None # type: ignore[assignment,misc]
+    PredictConfig = None  # type: ignore[assignment,misc]
 
 
 def run_predict(
@@ -35,7 +38,21 @@ def run_predict(
     device: str,
     dry_run: bool,
 ) -> int:
-    """Core predict logic. Returns exit code. Separated for testability."""
+    """Core inference logic. Returns exit code 0/1. Separated for testability."""
+    from rich.panel import Panel
+
+    if DataLoader is None:
+        print_error("Missing dependency", "xlmtec.inference not found.")
+        return 1
+
+    _VALID_FORMATS = {"jsonl", "csv"}
+    if output_format not in _VALID_FORMATS:
+        print_error(
+            "Invalid format",
+            f"{output_format!r} is not supported. Use: {', '.join(sorted(_VALID_FORMATS))}"
+        )
+        return 1
+
     if not model_dir.exists():
         print_error("Model not found", f"Directory does not exist: {model_dir}")
         return 1
@@ -44,28 +61,20 @@ def run_predict(
         print_error("Data not found", f"File does not exist: {data_path}")
         return 1
 
-    if output_format not in ("jsonl", "csv"):
-        print_error("Invalid format", f"Output format must be 'jsonl' or 'csv', got {output_format!r}")
-        return 1
-
-    # Detect text column early so dry-run can report it
     try:
         loader = DataLoader(data_path, text_column=text_column)
         records = loader.load()
-        detected_col = loader.text_column or loader.detect_column()
     except (FileNotFoundError, ValueError) as exc:
-        print_error("Data error", str(exc))
+        print_error("Data load failed", str(exc))
         return 1
 
-    # Print plan
     lines = [
-        f"[bold]Model:[/bold]         {model_dir}",
-        f"[bold]Input:[/bold]         {data_path}  ({len(records)} records)",
-        f"[bold]Text column:[/bold]   {detected_col}",
-        f"[bold]Output:[/bold]        {output_path}  ({output_format})",
-        f"[bold]Batch size:[/bold]    {batch_size}",
-        f"[bold]Max new tokens:[/bold] {max_new_tokens}",
-        f"[bold]Device:[/bold]        {device}",
+        f"[bold]Model:[/bold]      {model_dir}",
+        f"[bold]Input:[/bold]      {data_path}  ({len(records)} records)",
+        f"[bold]Output:[/bold]     {output_path}  ({output_format})",
+        f"[bold]Batch size:[/bold] {batch_size}",
+        f"[bold]Max tokens:[/bold] {max_new_tokens}",
+        f"[bold]Device:[/bold]     {device}",
     ]
     if dry_run:
         lines.append("\n[yellow]Dry run — model will not be loaded.[/yellow]")
@@ -111,10 +120,6 @@ def run_predict(
     return 0
 
 
-app = typer.Typer(help="Run batch predictions using a fine-tuned model.")
-
-
-@app.command("predict")
 def predict(
     model_dir: Path = typer.Argument(
         ..., help="Fine-tuned model directory (e.g. output/run1)."
@@ -159,10 +164,9 @@ def predict(
     """Run batch predictions on a dataset using a fine-tuned model.
 
     Examples:\n
-        xlmtec predict output/run1 --data data/test.jsonl\n
-        xlmtec predict output/run1 --data data/test.jsonl --dry-run\n
-        xlmtec predict output/run1 --data data/test.csv --output predictions.csv --format csv\n
-        xlmtec predict output/run1 --data data/test.jsonl --batch-size 16 --max-new-tokens 256
+        xlmtec predict output/run1 --data inputs.jsonl\n
+        xlmtec predict output/run1 --data inputs.csv --format csv\n
+        xlmtec predict output/run1 --data inputs.jsonl --dry-run
     """
     raise typer.Exit(
         run_predict(

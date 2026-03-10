@@ -31,6 +31,7 @@ from xlmtec.cli.commands.export import export
 from xlmtec.cli.commands.predict import predict
 from xlmtec.cli.commands.plugin import app as plugin_app
 from xlmtec.plugins.loader import PluginLoader
+from xlmtec.cli.commands.sweep import sweep
 
 from rich.panel import Panel
 
@@ -48,12 +49,13 @@ app = typer.Typer(name="xlmtec", add_completion=False, rich_markup_mode="rich")
 app.add_typer(config_app, name="config")
 app.add_typer(ai_suggest_app, name="ai-suggest")
 app.add_typer(hub_app, name="hub")
-app.command()(resume)
 app.add_typer(template_app, name="template")
 app.add_typer(dashboard_app, name="dashboard")
-app.command()(export)
-app.command()(predict)
 app.add_typer(plugin_app, name="plugin")
+app.command("resume")(resume)
+app.command("export")(export)
+app.command("predict")(predict)
+app.command("sweep")(sweep)
 
 
 def _version_callback(value: bool) -> None:

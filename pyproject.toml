@@ -137,6 +137,10 @@ full = [
     "mypy>=1.0.0",
 ]
 
+# Sweep
+sweep = ["optuna>=3.0.0"]
+
+
 # ---------------------------------------------------------------------------
 [project.urls]
 Homepage = "https://github.com/Abdur-azure/xlmtec"

@@ -1,19 +1,23 @@
 """
-Trainer factory — selects and constructs the right trainer for a given method.
+xlmtec.trainers.factory
+~~~~~~~~~~~~~~~~~~~~~~~~
+TrainerFactory — single entry point for all training.
 
-Usage::
+Uses a registry dict + lazy imports so that heavy deps (peft, trl, torch)
+are only imported when a specific trainer is actually needed, keeping
+`xlmtec --help` fast even without the [ml] extra installed.
 
+Usage:
     result = TrainerFactory.train(
-        model=model,
-        tokenizer=tokenizer,
-        dataset=dataset,
+        model=model, tokenizer=tokenizer, dataset=dataset,
         training_config=config.training.to_config(),
         lora_config=config.lora.to_config(),
     )
 """
 
-from pathlib import Path
-from typing import Optional
+from __future__ import annotations
+
+from typing import Optional, Union
 
 from datasets import Dataset, DatasetDict
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -28,26 +32,47 @@ from ..core.types import (
     TrainingMethod,
 )
 from .base import BaseTrainer, TrainingResult
-from .dpo_trainer import DPOTrainer, validate_dpo_dataset
-from .feature_distillation_trainer import FeatureDistillationTrainer
-from .full_trainer import FullFineTuner
-from .instruction_trainer import InstructionTrainer
-from .lora_trainer import LoRATrainer
-from .qlora_trainer import QLoRATrainer
-from .response_distillation_trainer import ResponseDistillationTrainer
 
-# ============================================================================
-# FACTORY
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Registry — maps TrainingMethod → (module_path, class_name)
+# Trainers are imported lazily inside create() so heavy deps load on demand.
+# ---------------------------------------------------------------------------
+
+_REGISTRY: dict[TrainingMethod, tuple[str, str]] = {
+    TrainingMethod.LORA:                 ("xlmtec.trainers.lora_trainer",                    "LoRATrainer"),
+    TrainingMethod.QLORA:                ("xlmtec.trainers.qlora_trainer",                   "QLoRATrainer"),
+    TrainingMethod.FULL_FINETUNING:      ("xlmtec.trainers.full_trainer",                    "FullFineTuner"),
+    TrainingMethod.INSTRUCTION_TUNING:   ("xlmtec.trainers.instruction_trainer",             "InstructionTrainer"),
+    TrainingMethod.DPO:                  ("xlmtec.trainers.dpo_trainer",                     "DPOTrainer"),
+    TrainingMethod.VANILLA_DISTILLATION: ("xlmtec.trainers.response_distillation_trainer",   "ResponseDistillationTrainer"),
+    TrainingMethod.FEATURE_DISTILLATION: ("xlmtec.trainers.feature_distillation_trainer",    "FeatureDistillationTrainer"),
+}
+
+# Methods that require lora_config
+_LORA_METHODS = {
+    TrainingMethod.LORA,
+    TrainingMethod.QLORA,
+    TrainingMethod.INSTRUCTION_TUNING,
+    TrainingMethod.DPO,
+}
+
+
+def _load_trainer_class(method: TrainingMethod):
+    """Import and return the trainer class for *method*."""
+    if method not in _REGISTRY:
+        known = ", ".join(m.value for m in _REGISTRY)
+        raise NotImplementedError(
+            f"No trainer registered for '{method.value}'. "
+            f"Supported: {known}"
+        )
+    module_path, class_name = _REGISTRY[method]
+    import importlib
+    module = importlib.import_module(module_path)
+    return getattr(module, class_name)
 
 
 class TrainerFactory:
-    """
-    Creates the appropriate trainer for a given ``TrainingMethod``.
-
-    Validates that method-specific config objects are present before
-    constructing the trainer.
-    """
+    """Creates the right trainer for a given TrainingMethod."""
 
     @staticmethod
     def create(
@@ -59,99 +84,56 @@ class TrainerFactory:
         distillation_config: Optional[DistillationConfig] = None,
         feature_distillation_config: Optional[FeatureDistillationConfig] = None,
     ) -> BaseTrainer:
-        """
-        Instantiate the correct trainer.
-
-        Args:
-            model: The (possibly quantized) model to fine-tune.
-            tokenizer: Corresponding tokenizer.
-            training_config: Core training hyper-parameters.
-            lora_config: Required for LORA / QLORA / INSTRUCTION_TUNING / DPO.
-            model_config: Required for QLORA (to check quantization flags).
-            distillation_config: Required for VANILLA_DISTILLATION.
-
-        Returns:
-            A configured ``BaseTrainer`` subclass instance.
+        """Validate required configs then instantiate the correct trainer.
 
         Raises:
-            MissingConfigError: If a required config object is absent.
-            NotImplementedError: If the method is not yet supported.
+            MissingConfigError: If a method-specific config is absent.
+            NotImplementedError: If method has no registered trainer.
         """
         method = training_config.method
+        trainer_cls = _load_trainer_class(method)
 
-        if method == TrainingMethod.LORA:
+        # Validate + construct per method
+        if method in _LORA_METHODS:
             if lora_config is None:
-                raise MissingConfigError("lora_config", "LoRA training")
-            return LoRATrainer(model, tokenizer, training_config, lora_config)
+                raise MissingConfigError("lora_config", method.value)
 
         if method == TrainingMethod.QLORA:
-            if lora_config is None:
-                raise MissingConfigError("lora_config", "QLoRA training")
             if model_config is None:
-                raise MissingConfigError("model_config", "QLoRA training")
-            return QLoRATrainer(model, tokenizer, training_config, lora_config, model_config)
+                raise MissingConfigError("model_config", method.value)
+            return trainer_cls(model, tokenizer, training_config, lora_config, model_config)
 
-        if method == TrainingMethod.FULL_FINETUNING:
-            return FullFineTuner(model, tokenizer, training_config)
-
-        if method == TrainingMethod.INSTRUCTION_TUNING:
-            if lora_config is None:
-                raise MissingConfigError("lora_config", "instruction tuning")
-            return InstructionTrainer(model, tokenizer, training_config, lora_config)
+        if method in {TrainingMethod.LORA, TrainingMethod.INSTRUCTION_TUNING}:
+            return trainer_cls(model, tokenizer, training_config, lora_config)
 
         if method == TrainingMethod.DPO:
-            if lora_config is None:
-                raise MissingConfigError("lora_config", "DPO training")
-            return DPOTrainer(model, tokenizer, training_config, lora_config)
+            return trainer_cls(model, tokenizer, training_config, lora_config)
 
         if method == TrainingMethod.VANILLA_DISTILLATION:
             if distillation_config is None:
-                raise MissingConfigError("distillation_config", "response distillation")
-            return ResponseDistillationTrainer(
-                model, tokenizer, training_config, distillation_config
-            )
+                raise MissingConfigError("distillation_config", method.value)
+            return trainer_cls(model, tokenizer, training_config, distillation_config)
 
         if method == TrainingMethod.FEATURE_DISTILLATION:
             if feature_distillation_config is None:
-                raise MissingConfigError(
-                    "feature_distillation_config", "feature distillation"
-                )
-            return FeatureDistillationTrainer(
-                model, tokenizer, training_config, feature_distillation_config
-            )
+                raise MissingConfigError("feature_distillation_config", method.value)
+            return trainer_cls(model, tokenizer, training_config, feature_distillation_config)
 
-        raise NotImplementedError(
-            f"Training method '{method.value}' is not yet implemented. "
-            f"Supported methods: lora, qlora, full_finetuning, "
-            f"instruction_tuning, dpo, vanilla_distillation, feature_distillation."
-        )
+        # FULL_FINETUNING and STRUCTURED_PRUNING — no extra config needed
+        return trainer_cls(model, tokenizer, training_config)
 
     @staticmethod
     def train(
         model: PreTrainedModel,
         tokenizer: PreTrainedTokenizer,
-        dataset: Dataset | DatasetDict,
+        dataset: Union[Dataset, DatasetDict],
         training_config: TrainingConfig,
         lora_config: Optional[LoRAConfig] = None,
         model_config: Optional[ModelConfig] = None,
         distillation_config: Optional[DistillationConfig] = None,
         feature_distillation_config: Optional[FeatureDistillationConfig] = None,
     ) -> TrainingResult:
-        """
-        One-call convenience: create trainer and run training.
-
-        Args:
-            model: Model to fine-tune.
-            tokenizer: Tokenizer.
-            dataset: Train dataset or DatasetDict with 'train'/'validation'.
-            training_config: Training hyper-parameters.
-            lora_config: Required for LoRA / QLoRA / Instruction / DPO.
-            model_config: Required for QLoRA.
-            distillation_config: Required for vanilla distillation.
-
-        Returns:
-            ``TrainingResult`` with metrics and saved model path.
-        """
+        """One-call convenience: create trainer and run training."""
         trainer = TrainerFactory.create(
             model=model,
             tokenizer=tokenizer,

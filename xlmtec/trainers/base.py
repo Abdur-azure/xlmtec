@@ -16,15 +16,6 @@ from ..core.exceptions import TrainingError
 from ..core.types import LoRAConfig, TrainingConfig
 from ..utils.logging import get_logger
 
-
-@dataclass
-class TrainingState:
-    """Mutable training state tracked during a run."""
-    current_epoch: int = 0
-    current_step: int = 0
-    best_loss: float = float("inf")
-    is_complete: bool = False
-
 # ============================================================================
 # RESULT TYPE
 # ============================================================================
