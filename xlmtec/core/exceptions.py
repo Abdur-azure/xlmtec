@@ -6,6 +6,14 @@ from typing import List, Optional
 class FineTuneError(Exception):
     """Base exception for all framework errors."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            from xlmtec.utils.telemetry import AppLogger
+            AppLogger.log_error(self)
+        except Exception:
+            pass  # telemetry must never crash the app
+
 
 # ============================================================================
 # CONFIGURATION ERRORS

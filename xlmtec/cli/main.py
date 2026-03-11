@@ -32,6 +32,9 @@ from xlmtec.cli.commands.predict import predict
 from xlmtec.cli.commands.plugin import app as plugin_app
 from xlmtec.plugins.loader import PluginLoader
 from xlmtec.cli.commands.sweep import sweep
+from xlmtec.cli.commands.report import report
+from xlmtec.utils.telemetry import AppLogger
+from xlmtec.utils.crash_report import CrashReporter
 
 from rich.panel import Panel
 
@@ -56,6 +59,7 @@ app.command("resume")(resume)
 app.command("export")(export)
 app.command("predict")(predict)
 app.command("sweep")(sweep)
+app.command("report")(report)
 
 
 def _version_callback(value: bool) -> None:
@@ -65,9 +69,11 @@ def _version_callback(value: bool) -> None:
 
 @app.callback()
 def main(
+    ctx: typer.Context,
     version: bool = typer.Option(None, "--version", "-V", callback=_version_callback, is_eager=True, help="Show version and exit."),
-) -> None:
-    PluginLoader().load()  
+):
+    PluginLoader().load()
+    AppLogger.start(cmd=ctx.invoked_subcommand or "unknown")  
 
 console = Console()
 
