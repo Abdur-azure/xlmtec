@@ -194,6 +194,12 @@ REQUIRED_FILES = [
     "xlmtec/notifications/CONTEXT.md",
     "tests/test_notifications.py",
 
+    # Telemetry / App Insights (Sprint 49-A) ──────────────────────────
+    "xlmtec/utils/telemetry.py",
+    "xlmtec/utils/crash_report.py",
+    "xlmtec/cli/commands/report.py",
+    "tests/test_telemetry.py",
+
     # ── CONTEXT.md files (Sprint 45) ──────────────────────────────────────
     "xlmtec/hub/CONTEXT.md",
     "xlmtec/checkpoints/CONTEXT.md",

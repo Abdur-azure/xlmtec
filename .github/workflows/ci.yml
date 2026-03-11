@@ -1,0 +1,160 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs for the same branch when a new push arrives
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# ============================================================================
+# TEST JOB  —  Python 3.10, 3.11, 3.12
+# ============================================================================
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false          # keep all 3 versions running even if one fails
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Cache pip downloads — key includes Python version AND pyproject.toml hash
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            pip-${{ matrix.python-version }}-
+
+      - name: Install package (dev extras, no GPU stack)
+        run: pip install -e ".[dev]"
+        # [dev] includes: pytest, pytest-cov, pytest-timeout, pytest-asyncio,
+        #                 ruff, mypy, pydantic, typer, rich — no torch/transformers
+
+      - name: Run unit tests with coverage
+        run: |
+          pytest tests/ \
+            --ignore=tests/test_integration.py \
+            --cov=xlmtec \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --timeout=60 \
+            -q
+        # Paths cross-checked against audit_repo.py: tests live at tests/ (no xlmtec/ prefix)
+
+      # Upload coverage XML — only from 3.11 to avoid duplicate reports
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: matrix.python-version == '3.11'
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
+  # ============================================================================
+  # INTEGRATION JOB  — Python 3.11 only, heavy ML stack, long timeout
+  # ============================================================================
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    # Only run on pushes to main/develop — skip on every PR to save CI minutes
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-integration-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install package (ml + tui + dev extras)
+        run: pip install -e ".[ml,tui,dev]"
+
+      - name: Run integration tests
+        run: |
+          pytest tests/test_integration.py \
+            --timeout=600 \
+            -v
+        # 600 s — cold runner needs time to download GPT-2 weights on first run
+
+  # ============================================================================
+  # LINT JOB  —  ruff + mypy, Python 3.11
+  # ============================================================================
+  lint:
+    name: Lint (ruff + mypy)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-lint-${{ hashFiles('pyproject.toml') }}
+
+      # CRITICAL: install the package first so ruff can resolve all project imports.
+      # Without this, ruff reports false-positive E402/F401 errors and fails CI.
+      - name: Install package (dev extras)
+        run: pip install -e ".[dev]"
+
+      - name: ruff check
+        run: ruff check xlmtec/
+        # Config: pyproject.toml [tool.ruff.lint] — select E,F,W,I  ignore E501
+
+      - name: ruff format check
+        run: ruff format --check xlmtec/
+
+      - name: mypy type check
+        run: mypy xlmtec/
+        # Config: pyproject.toml [tool.mypy] — ignore_missing_imports = true
+
+  # ============================================================================
+  # COVERAGE COMMENT  —  posts coverage % as a PR comment
+  # ============================================================================
+  coverage:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-xml
+
+      - name: Post coverage comment
+        uses: orgoro/coverage@v3.2
+        with:
+          coverageFile: coverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          thresholdAll: 0.70        # fail PR if total coverage drops below 70%
+          thresholdNew: 0.80        # fail PR if new-code coverage drops below 80%
+          thresholdModified: 0.70

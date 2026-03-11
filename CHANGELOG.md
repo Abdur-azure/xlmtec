@@ -1,5 +1,55 @@
 # Changelog
 
+## [3.29.0] — Sprint 49: "CI Hardening" — 2026-03-11
+
+### Added
+- `.github/workflows/ci.yml` — Python 3.10/3.11/3.12 test matrix; each version
+  installs `.[dev]` and runs `pytest tests/ --ignore=test_integration.py --cov=xlmtec`.
+- `.github/workflows/ci.yml` — dedicated `lint` job: `ruff check xlmtec/` +
+  `ruff format --check xlmtec/` + `mypy xlmtec/`. Package installed before ruff
+  runs to avoid false-positive import errors (per lessons.md).
+- `.github/workflows/ci.yml` — `coverage` job posts coverage % as a PR comment
+  via `orgoro/coverage`; thresholds: 70% overall, 80% new code.
+- `.github/workflows/ci.yml` — `integration` job (push-only, 600 s timeout)
+  installs `.[ml,tui,dev]` and runs `tests/test_integration.py`.
+- `pyproject.toml` — `pytest-cov>=4.0.0` added to `[dev]` extra.
+- `pyproject.toml` — `[tool.coverage.run]` and `[tool.coverage.report]` sections
+  added; `fail_under = 60`.
+- `README.md` — CI status badge and coverage badge added.
+
+### Changed
+- `pyproject.toml` — version `3.28.0` → `3.29.0`.
+- `audit_repo.py` — four telemetry files registered (Sprint 49-A close-out).
+
+---
+
+## [3.28.1] — Sprint 49-A: "App Insights / Telemetry" — 2026-03-11
+
+### Added
+- `xlmtec/utils/telemetry.py` — `Session` (JSONL log file per invocation),
+  `_AppLogger` singleton (`AppLogger`), `@track` decorator. Zero new dependencies
+  (stdlib only). Logs live at `~/.xlmtec/logs/session_<ts>_<cmd>.jsonl`. Sensitive
+  keys (api/token/secret/password) auto-redacted; paths reduced to basename.
+- `xlmtec/utils/crash_report.py` — `CrashReporter.write()` generates a
+  human-readable `.txt` crash file with version, OS, GPU, traceback, and last 10
+  session events. `latest()` and `list_recent()` for discovery. Rotates to max 20
+  crash files.
+- `xlmtec/cli/commands/report.py` — `xlmtec report` command. Shows latest crash
+  inline; `--last N` lists recent crashes as a table; `--sessions` lists session
+  files; `--open` opens crash file in `$EDITOR`.
+- `tests/test_telemetry.py` — 38 tests: `Session`, `_AppLogger`, `@track`,
+  `CrashReporter`, and `run_report`. All use `tmp_path` — nothing written to
+  `~/.xlmtec` during tests.
+
+### Changed
+- `xlmtec/core/exceptions.py` — `FineTuneError.__init__` now calls
+  `AppLogger.log_error(self)` via lazy import. All subclasses inherit this
+  automatically.
+- `xlmtec/cli/main.py` — `@app.callback()` calls `AppLogger.start(cmd=...)`;
+  `app.command("report")(report)` registered.
+
+---
+
 ## [3.27.0] — Sprint 47: "Training Notifications" — 2026-03-09
 
 ### Added

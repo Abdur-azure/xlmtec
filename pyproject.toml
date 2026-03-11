@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xlmtec"
-version = "3.28.0"
+version = "3.29.0"
 description = "Production-grade LLM fine-tuning CLI: LoRA, QLoRA, DPO, distillation, pruning, hyperparameter sweep, export, and inference in one tool"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
@@ -245,3 +245,12 @@ ignore = ["E501"]
 python_version = "3.10"
 ignore_missing_imports = true
 warn_return_any = false
+
+[tool.coverage.run]
+source = ["xlmtec"]
+omit = ["xlmtec/tui/*", "tests/*", "examples/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 60
