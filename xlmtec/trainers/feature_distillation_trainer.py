@@ -39,9 +39,8 @@ from transformers import (
     Trainer,
 )
 
-from ..core.exceptions import MissingConfigError, TrainingError
+from ..core.exceptions import TrainingError
 from ..core.types import FeatureDistillationConfig, TrainingConfig
-from ..utils.logging import get_logger
 from .base import BaseTrainer, TrainingResult
 
 _VRAM_WARNING_THRESHOLD = 1_000_000_000  # 1B params
@@ -137,9 +136,7 @@ class FeatureDistillationTrainer(BaseTrainer):
             param.requires_grad = True
         trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
         total = sum(p.numel() for p in model.parameters())
-        self.logger.info(
-            f"Student trainable parameters: {trainable:,} / {total:,} (100%)"
-        )
+        self.logger.info(f"Student trainable parameters: {trainable:,} / {total:,} (100%)")
         return model
 
     # ------------------------------------------------------------------
@@ -199,12 +196,8 @@ class FeatureDistillationTrainer(BaseTrainer):
             n_teacher = 12
 
         student_layers = _select_layers(n_student, fdcfg.feature_layers)
-        teacher_layers = [
-            _map_teacher_layer(sl, n_teacher, n_student) for sl in student_layers
-        ]
-        self.logger.info(
-            f"Layer mapping — student {student_layers} → teacher {teacher_layers}"
-        )
+        teacher_layers = [_map_teacher_layer(sl, n_teacher, n_student) for sl in student_layers]
+        self.logger.info(f"Layer mapping — student {student_layers} → teacher {teacher_layers}")
 
         # Setup student
         self.model = self._setup_peft(self.model)
@@ -229,9 +222,7 @@ class FeatureDistillationTrainer(BaseTrainer):
             args=training_args,
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
-            data_collator=DataCollatorForLanguageModeling(
-                tokenizer=self.tokenizer, mlm=False
-            ),
+            data_collator=DataCollatorForLanguageModeling(tokenizer=self.tokenizer, mlm=False),
         )
 
         start = time.time()
@@ -253,9 +244,7 @@ class FeatureDistillationTrainer(BaseTrainer):
             output_dir=output_dir,
             train_loss=train_output.training_loss,
             eval_loss=eval_loss,
-            epochs_completed=int(
-                train_output.metrics.get("epoch", cfg.num_epochs)
-            ),
+            epochs_completed=int(train_output.metrics.get("epoch", cfg.num_epochs)),
             steps_completed=train_output.global_step,
             training_time_seconds=elapsed,
             trainer_logs={str(i): e for i, e in enumerate(logs)},
@@ -299,9 +288,7 @@ class _FeatureDistillationTrainer(Trainer):
         # Teacher forward (no grad)
         with torch.no_grad():
             teacher_inputs = {k: v for k, v in inputs.items() if k != "labels"}
-            teacher_outputs = self.teacher(
-                **teacher_inputs, output_hidden_states=True
-            )
+            teacher_outputs = self.teacher(**teacher_inputs, output_hidden_states=True)
             teacher_logits = teacher_outputs.logits
 
         # ── Output KL loss ──────────────────────────────────────────────
@@ -310,7 +297,7 @@ class _FeatureDistillationTrainer(Trainer):
             F.log_softmax(student_logits / T, dim=-1),
             F.softmax(teacher_logits / T, dim=-1),
             reduction="batchmean",
-        ) * (T ** 2)
+        ) * (T**2)
 
         # ── Feature MSE loss ────────────────────────────────────────────
         mse_losses = []
@@ -320,7 +307,7 @@ class _FeatureDistillationTrainer(Trainer):
         for sl, tl in zip(self.student_layers, self.teacher_layers):
             if sl + 1 >= len(s_hidden) or tl + 1 >= len(t_hidden):
                 continue
-            s_feat = s_hidden[sl + 1]   # +1 because index 0 is embedding
+            s_feat = s_hidden[sl + 1]  # +1 because index 0 is embedding
             t_feat = t_hidden[tl + 1]
 
             # If hidden dims differ, project via mean pooling over dim=-1
@@ -331,9 +318,7 @@ class _FeatureDistillationTrainer(Trainer):
 
             mse_losses.append(F.mse_loss(s_feat, t_feat.detach()))
 
-        feature_loss = (
-            torch.stack(mse_losses).mean() if mse_losses else torch.tensor(0.0)
-        )
+        feature_loss = torch.stack(mse_losses).mean() if mse_losses else torch.tensor(0.0)
 
         # ── Combined loss ───────────────────────────────────────────────
         gamma = max(0.0, 1.0 - self.alpha - self.beta)

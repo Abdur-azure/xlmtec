@@ -14,8 +14,8 @@ from typing import Any
 
 class NotifyEvent(str, Enum):
     TRAINING_COMPLETE = "training_complete"
-    TRAINING_FAILED   = "training_failed"
-    EPOCH_END         = "epoch_end"
+    TRAINING_FAILED = "training_failed"
+    EPOCH_END = "epoch_end"
 
 
 @dataclass
@@ -30,8 +30,8 @@ class NotifyPayload:
     def title(self) -> str:
         titles = {
             NotifyEvent.TRAINING_COMPLETE: f"✅ Training complete — {self.run_name}",
-            NotifyEvent.TRAINING_FAILED:   f"❌ Training failed — {self.run_name}",
-            NotifyEvent.EPOCH_END:         f"📈 Epoch done — {self.run_name}",
+            NotifyEvent.TRAINING_FAILED: f"❌ Training failed — {self.run_name}",
+            NotifyEvent.EPOCH_END: f"📈 Epoch done — {self.run_name}",
         }
         return titles.get(self.event, self.run_name)
 

@@ -10,18 +10,18 @@ from pathlib import Path
 from typing import Optional
 
 import typer
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.table import Table
-from rich import box
 
 from xlmtec.cli.ux import print_error, print_success
 
 try:
     from xlmtec.templates.registry import get_template, list_templates
 except ImportError:
-    get_template = None   # type: ignore[assignment]
+    get_template = None  # type: ignore[assignment]
     list_templates = None  # type: ignore[assignment]
 
 console = Console()
@@ -82,16 +82,18 @@ def show(
         raise typer.Exit(1)
 
     console.print()
-    console.print(Panel(
-        f"[bold]{template.description}[/bold]\n\n"
-        f"[bold]Task:[/bold]        {template.task}\n"
-        f"[bold]Method:[/bold]      {template.method}\n"
-        f"[bold]Base model:[/bold]  {template.base_model}\n"
-        f"[bold]Tags:[/bold]        {', '.join(template.tags)}",
-        title=f"[bold cyan]Template: {template.name}[/bold cyan]",
-        border_style="cyan",
-        padding=(1, 2),
-    ))
+    console.print(
+        Panel(
+            f"[bold]{template.description}[/bold]\n\n"
+            f"[bold]Task:[/bold]        {template.task}\n"
+            f"[bold]Method:[/bold]      {template.method}\n"
+            f"[bold]Base model:[/bold]  {template.base_model}\n"
+            f"[bold]Tags:[/bold]        {', '.join(template.tags)}",
+            title=f"[bold cyan]Template: {template.name}[/bold cyan]",
+            border_style="cyan",
+            padding=(1, 2),
+        )
+    )
 
     console.print("\n[bold]Config:[/bold]")
     console.print(Syntax(template.to_yaml(), "yaml", theme="monokai", line_numbers=False))
@@ -104,23 +106,32 @@ def show(
 def use(
     name: str = typer.Argument(..., help="Template name e.g. sentiment"),
     output: Path = typer.Option(
-        Path("config.yaml"), "--output", "-o",
+        Path("config.yaml"),
+        "--output",
+        "-o",
         help="Path to save the generated config.",
     ),
     model: Optional[str] = typer.Option(
-        None, "--model", "-m",
+        None,
+        "--model",
+        "-m",
         help="Override the base model name.",
     ),
     data_path: Optional[str] = typer.Option(
-        None, "--data", "-d",
+        None,
+        "--data",
+        "-d",
         help="Override the dataset path.",
     ),
     epochs: Optional[int] = typer.Option(
-        None, "--epochs", "-e",
+        None,
+        "--epochs",
+        "-e",
         help="Override number of training epochs.",
     ),
     output_dir: Optional[str] = typer.Option(
-        None, "--output-dir",
+        None,
+        "--output-dir",
         help="Override the training output directory.",
     ),
 ) -> None:
@@ -154,11 +165,8 @@ def use(
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(yaml_str, encoding="utf-8")
 
-    print_success(
-        "Config saved",
-        f"Template [bold]{name}[/bold] saved to [bold]{output}[/bold]"
-    )
-    console.print(f"\n[dim]Next steps:[/dim]")
+    print_success("Config saved", f"Template [bold]{name}[/bold] saved to [bold]{output}[/bold]")
+    console.print("\n[dim]Next steps:[/dim]")
     console.print(f"  [cyan]xlmtec config validate {output}[/cyan]")
     console.print(f"  [cyan]xlmtec train --config {output} --dry-run[/cyan]")
     console.print(f"  [cyan]xlmtec train --config {output}[/cyan]\n")

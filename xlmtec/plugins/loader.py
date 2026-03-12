@@ -18,6 +18,7 @@ from pathlib import Path
 @dataclass
 class LoadResult:
     """Summary of what was loaded."""
+
     templates_loaded: list[str] = field(default_factory=list)
     providers_loaded: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -32,11 +33,13 @@ class PluginLoader:
 
     def __init__(self, plugin_file: Path | None = None) -> None:
         from xlmtec.plugins.store import PLUGIN_FILE
+
         self.plugin_file = plugin_file or PLUGIN_FILE
 
     def load(self) -> LoadResult:
         """Load all registered plugins. Errors are collected, not raised."""
         from xlmtec.plugins.store import load_store
+
         store = load_store(self.plugin_file)
         result = LoadResult()
 
@@ -64,7 +67,8 @@ class PluginLoader:
         """Load a template YAML into the template registry. Returns error string or None."""
         try:
             import yaml
-            from xlmtec.templates.registry import Template, _TEMPLATES
+
+            from xlmtec.templates.registry import _TEMPLATES, Template
 
             source = Path(plugin.source)
             if not source.exists():
@@ -82,7 +86,9 @@ class PluginLoader:
                 method=raw.get("method", "lora"),
                 base_model=raw.get(
                     "base_model",
-                    raw.get("model", {}).get("name", "gpt2") if isinstance(raw.get("model"), dict) else "gpt2"
+                    raw.get("model", {}).get("name", "gpt2")
+                    if isinstance(raw.get("model"), dict)
+                    else "gpt2",
                 ),
                 config=raw,
                 tags=raw.get("tags", ["custom"]),
@@ -97,6 +103,7 @@ class PluginLoader:
         """Dynamically import a provider class and register it. Returns error or None."""
         try:
             import importlib.util
+
             from xlmtec.integrations import _PROVIDERS
 
             source = Path(plugin.source)

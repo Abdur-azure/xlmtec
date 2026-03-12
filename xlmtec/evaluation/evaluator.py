@@ -12,10 +12,9 @@ from datasets import Dataset
 from tqdm import tqdm
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.exceptions import EvaluationError, MetricComputationError
 from ..core.types import EvaluationConfig, EvaluationMetric, EvaluationResult
 from ..utils.logging import LogProgress, get_logger
-from .base import Evaluator, MetricResult
+from .base import Evaluator
 from .metrics import PerplexityMetric, create_metric
 
 logger = get_logger(__name__)
@@ -34,10 +33,7 @@ class StandardEvaluator(Evaluator):
     """
 
     def __init__(
-        self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizer,
-        config: EvaluationConfig
+        self, model: PreTrainedModel, tokenizer: PreTrainedTokenizer, config: EvaluationConfig
     ):
         """
         Initialize evaluator.
@@ -73,9 +69,7 @@ class StandardEvaluator(Evaluator):
                 self.logger.warning(f"Could not initialize {metric_name}: {e}")
 
     def evaluate(
-        self,
-        dataset: Dataset,
-        metrics: Optional[List[EvaluationMetric]] = None
+        self, dataset: Dataset, metrics: Optional[List[EvaluationMetric]] = None
     ) -> EvaluationResult:
         """
         Evaluate model on dataset.
@@ -118,9 +112,7 @@ class StandardEvaluator(Evaluator):
 
             # Build result
             result = EvaluationResult(
-                metrics=metric_scores,
-                num_samples=num_samples,
-                evaluation_time_seconds=eval_time
+                metrics=metric_scores, num_samples=num_samples, evaluation_time_seconds=eval_time
             )
 
             self.logger.info("Evaluation complete!")
@@ -145,8 +137,8 @@ class StandardEvaluator(Evaluator):
         column_names = dataset.column_names
 
         # Common patterns
-        input_candidates = ['text', 'input', 'prompt', 'question', 'instruction']
-        output_candidates = ['label', 'output', 'response', 'answer', 'completion']
+        input_candidates = ["text", "input", "prompt", "question", "instruction"]
+        output_candidates = ["label", "output", "response", "answer", "completion"]
 
         input_col = None
         output_col = None
@@ -180,9 +172,7 @@ class StandardEvaluator(Evaluator):
         return inputs, references
 
     def generate_predictions(
-        self,
-        inputs: List[str],
-        batch_size: Optional[int] = None
+        self, inputs: List[str], batch_size: Optional[int] = None
     ) -> List[str]:
         """
         Generate predictions for inputs.
@@ -203,15 +193,11 @@ class StandardEvaluator(Evaluator):
 
         # Process in batches
         for i in tqdm(range(0, len(inputs), batch_size), desc="Generating"):
-            batch = inputs[i:i + batch_size]
+            batch = inputs[i : i + batch_size]
 
             # Tokenize
             encoded = self.tokenizer(
-                batch,
-                return_tensors="pt",
-                padding=True,
-                truncation=True,
-                max_length=512
+                batch, return_tensors="pt", padding=True, truncation=True, max_length=512
             ).to(self.device)
 
             # Generate
@@ -223,14 +209,11 @@ class StandardEvaluator(Evaluator):
                     top_p=self.config.generation_top_p,
                     do_sample=self.config.generation_do_sample,
                     pad_token_id=self.tokenizer.pad_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id
+                    eos_token_id=self.tokenizer.eos_token_id,
                 )
 
             # Decode
-            batch_predictions = self.tokenizer.batch_decode(
-                outputs,
-                skip_special_tokens=True
-            )
+            batch_predictions = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
             predictions.extend(batch_predictions)
 
@@ -255,7 +238,7 @@ class QuickEvaluator:
         tokenizer: PreTrainedTokenizer,
         test_inputs: List[str],
         test_references: List[str],
-        metrics: List[str] = None
+        metrics: List[str] = None,
     ) -> Dict[str, float]:
         """
         Quick evaluation on test samples.
@@ -271,15 +254,13 @@ class QuickEvaluator:
             Dictionary of metric scores
         """
         if metrics is None:
-            metrics = ['rouge1', 'rouge2', 'rougeL']
+            metrics = ["rouge1", "rouge2", "rougeL"]
 
         # Create minimal config
         from ..core.types import EvaluationConfig, EvaluationMetric
 
         config = EvaluationConfig(
-            metrics=[EvaluationMetric(m) for m in metrics],
-            batch_size=8,
-            generation_max_length=50
+            metrics=[EvaluationMetric(m) for m in metrics], batch_size=8, generation_max_length=50
         )
 
         # Create evaluator
@@ -303,7 +284,7 @@ def evaluate_model(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     dataset: Dataset,
-    config: EvaluationConfig
+    config: EvaluationConfig,
 ) -> EvaluationResult:
     """
     Convenience function for model evaluation.
@@ -343,10 +324,7 @@ def evaluate_model(
 
 
 def quick_evaluate(
-    model: PreTrainedModel,
-    tokenizer: PreTrainedTokenizer,
-    inputs: List[str],
-    references: List[str]
+    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, inputs: List[str], references: List[str]
 ) -> Dict[str, float]:
     """
     Quick evaluation without configuration.

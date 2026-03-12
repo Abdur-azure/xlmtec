@@ -15,6 +15,7 @@ from pathlib import Path
 @dataclass
 class PredictionRecord:
     """A single prediction result."""
+
     index: int
     input_text: str
     prediction: str
@@ -45,9 +46,7 @@ class PredictionWriter:
         elif self.fmt == "csv":
             self._write_csv(records)
         else:
-            raise ValueError(
-                f"Unsupported output format {self.fmt!r}. Use 'jsonl' or 'csv'."
-            )
+            raise ValueError(f"Unsupported output format {self.fmt!r}. Use 'jsonl' or 'csv'.")
         return len(records)
 
     # ------------------------------------------------------------------

@@ -17,7 +17,6 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Literal, Optional, Union
 
-
 # ============================================================================
 # ENUMS
 # ============================================================================
@@ -25,51 +24,53 @@ from typing import List, Literal, Optional, Union
 
 class TrainingMethod(str, Enum):
     """Only lists methods that have a concrete trainer implementation."""
-    FULL_FINETUNING      = "full_finetuning"
-    LORA                 = "lora"
-    QLORA                = "qlora"
-    INSTRUCTION_TUNING   = "instruction_tuning"
-    DPO                  = "dpo"
+
+    FULL_FINETUNING = "full_finetuning"
+    LORA = "lora"
+    QLORA = "qlora"
+    INSTRUCTION_TUNING = "instruction_tuning"
+    DPO = "dpo"
     VANILLA_DISTILLATION = "vanilla_distillation"
     FEATURE_DISTILLATION = "feature_distillation"
-    STRUCTURED_PRUNING   = "structured_pruning"
+    STRUCTURED_PRUNING = "structured_pruning"
 
 
 class DatasetSource(str, Enum):
-    LOCAL_FILE      = "local_file"
+    LOCAL_FILE = "local_file"
     HUGGINGFACE_HUB = "huggingface_hub"
 
 
 class FileFormat(str, Enum):
-    JSON    = "json"
-    JSONL   = "jsonl"
-    CSV     = "csv"
+    JSON = "json"
+    JSONL = "jsonl"
+    CSV = "csv"
     PARQUET = "parquet"
-    TXT     = "txt"
+    TXT = "txt"
 
 
 class EvaluationMetric(str, Enum):
     """Only lists metrics actually computed by xlmtec.evaluation."""
-    ROUGE_1    = "rouge1"
-    ROUGE_2    = "rouge2"
-    ROUGE_L    = "rougeL"
-    BLEU       = "bleu"
+
+    ROUGE_1 = "rouge1"
+    ROUGE_2 = "rouge2"
+    ROUGE_L = "rougeL"
+    BLEU = "bleu"
     PERPLEXITY = "perplexity"
     ACCURACY = "accuracy"
 
 
 class LogLevel(str, Enum):
-    DEBUG    = "debug"
-    INFO     = "info"
-    WARNING  = "warning"
-    ERROR    = "error"
+    DEBUG = "debug"
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
     CRITICAL = "critical"
 
 
 class DeviceType(str, Enum):
-    CPU  = "cpu"
+    CPU = "cpu"
     CUDA = "cuda"
-    MPS  = "mps"
+    MPS = "mps"
     AUTO = "auto"
 
 
@@ -82,7 +83,7 @@ class DeviceType(str, Enum):
 class ModelConfig:
     name: str
     device: DeviceType = DeviceType.AUTO
-    torch_dtype: Optional[str] = None      # "float32" | "float16" | "bfloat16" | "auto"
+    torch_dtype: Optional[str] = None  # "float32" | "float16" | "bfloat16" | "auto"
     load_in_8bit: bool = False
     load_in_4bit: bool = False
     use_flash_attention: bool = False
@@ -150,9 +151,7 @@ class TrainingConfig:
 
 @dataclass(frozen=True)
 class EvaluationConfig:
-    metrics: List[EvaluationMetric] = field(
-        default_factory=lambda: [EvaluationMetric.ROUGE_L]
-    )
+    metrics: List[EvaluationMetric] = field(default_factory=lambda: [EvaluationMetric.ROUGE_L])
     batch_size: int = 8
     num_samples: Optional[int] = None
     generation_max_length: int = 100
@@ -164,6 +163,7 @@ class EvaluationConfig:
 @dataclass(frozen=True)
 class DistillationConfig:
     """Response (vanilla) distillation — student learns from teacher logits."""
+
     teacher_model_name: str
     temperature: float = 2.0
     alpha: float = 0.5
@@ -172,6 +172,7 @@ class DistillationConfig:
 @dataclass(frozen=True)
 class FeatureDistillationConfig:
     """Feature distillation — student learns from teacher hidden states."""
+
     teacher_model_name: str
     teacher_layers: Optional[List[int]] = None
     student_layers: Optional[List[int]] = None
@@ -185,6 +186,7 @@ class FeatureDistillationConfig:
 @dataclass(frozen=True)
 class PruningConfig:
     """Structured (magnitude) pruning — attention-head or FFN rows."""
+
     output_dir: Union[str, Path]
     sparsity: float = 0.3
     method: str = "heads"
@@ -195,6 +197,7 @@ class PruningConfig:
 @dataclass(frozen=True)
 class WandaConfig:
     """WANDA unstructured pruning — |W_ij| x ||X_j||2."""
+
     output_dir: Union[str, Path]
     sparsity: float = 0.5
     n_calibration_samples: int = 128

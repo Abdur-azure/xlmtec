@@ -4,8 +4,7 @@ Unit tests for QLoRATrainer.
 All HuggingFace and PEFT calls are mocked — no GPU, no downloads.
 """
 
-from pathlib import Path
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
@@ -48,11 +47,13 @@ def model_config_no_4bit() -> ModelConfig:
 
 @pytest.fixture
 def small_dataset() -> DatasetDict:
-    ds = Dataset.from_dict({
-        "input_ids": [[1, 2, 3, 4]] * 8,
-        "attention_mask": [[1, 1, 1, 1]] * 8,
-        "labels": [[1, 2, 3, 4]] * 8,
-    })
+    ds = Dataset.from_dict(
+        {
+            "input_ids": [[1, 2, 3, 4]] * 8,
+            "attention_mask": [[1, 1, 1, 1]] * 8,
+            "labels": [[1, 2, 3, 4]] * 8,
+        }
+    )
     return DatasetDict({"train": ds, "validation": ds})
 
 
@@ -122,10 +123,10 @@ class TestQLoRATrainerInit:
         self, mock_model, mock_tokenizer, training_config, lora_config, model_config_no_4bit, caplog
     ):
         import logging
+
         with caplog.at_level(logging.WARNING):
             QLoRATrainer(
-                mock_model, mock_tokenizer, training_config,
-                lora_config, model_config_no_4bit
+                mock_model, mock_tokenizer, training_config, lora_config, model_config_no_4bit
             )
         assert any("4-bit" in r.message for r in caplog.records)
 
@@ -133,11 +134,9 @@ class TestQLoRATrainerInit:
         self, mock_model, mock_tokenizer, training_config, lora_config, model_config, caplog
     ):
         import logging
+
         with caplog.at_level(logging.WARNING):
-            QLoRATrainer(
-                mock_model, mock_tokenizer, training_config,
-                lora_config, model_config
-            )
+            QLoRATrainer(mock_model, mock_tokenizer, training_config, lora_config, model_config)
         warning_msgs = [r.message for r in caplog.records if r.levelno == logging.WARNING]
         assert not any("4-bit" in m for m in warning_msgs)
 
@@ -149,8 +148,15 @@ class TestQLoRASetupPeft:
     @patch("xlmtec.trainers.lora_trainer.get_peft_model")
     @patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
     def test_kbit_prep_called_before_lora(
-        self, mock_detect, mock_get_peft, mock_kbit_prep,
-        mock_model, mock_tokenizer, training_config, lora_config, model_config
+        self,
+        mock_detect,
+        mock_get_peft,
+        mock_kbit_prep,
+        mock_model,
+        mock_tokenizer,
+        training_config,
+        lora_config,
+        model_config,
     ):
         prepared_model = MagicMock()
         prepared_model.parameters.return_value = iter([])
@@ -171,8 +177,15 @@ class TestQLoRASetupPeft:
     @patch("xlmtec.trainers.lora_trainer.get_peft_model")
     @patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
     def test_gradient_checkpointing_passed_to_kbit(
-        self, mock_detect, mock_get_peft, mock_kbit_prep,
-        mock_model, mock_tokenizer, lora_config, model_config, tmp_output_dir
+        self,
+        mock_detect,
+        mock_get_peft,
+        mock_kbit_prep,
+        mock_model,
+        mock_tokenizer,
+        lora_config,
+        model_config,
+        tmp_output_dir,
     ):
         cfg = TrainingConfig(
             method=TrainingMethod.QLORA,
@@ -203,9 +216,17 @@ class TestQLoRATrainerTrain:
     @patch("xlmtec.trainers.lora_trainer.get_peft_model")
     @patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"])
     def test_train_returns_result(
-        self, mock_detect, mock_get_peft, mock_kbit_prep,
-        mock_model, mock_tokenizer, training_config, lora_config, model_config,
-        small_dataset, tmp_output_dir
+        self,
+        mock_detect,
+        mock_get_peft,
+        mock_kbit_prep,
+        mock_model,
+        mock_tokenizer,
+        training_config,
+        lora_config,
+        model_config,
+        small_dataset,
+        tmp_output_dir,
     ):
         peft_model = MagicMock()
         peft_model.parameters.return_value = iter([])

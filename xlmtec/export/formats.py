@@ -29,7 +29,7 @@ class FormatMeta:
     name: str
     extension: str
     description: str
-    pip_extra: str          # xlmtec[<extra>] to install
+    pip_extra: str  # xlmtec[<extra>] to install
     required_packages: list[str]
     quantize_options: list[str]
 

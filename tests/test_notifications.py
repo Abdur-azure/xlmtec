@@ -11,13 +11,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from xlmtec.notifications.base import NotifyEvent, NotifyPayload, Notifier
+from xlmtec.notifications.base import Notifier, NotifyEvent, NotifyPayload
 from xlmtec.notifications.dispatcher import NotificationDispatcher
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _payload(event=NotifyEvent.TRAINING_COMPLETE, run="run1", msg="Done!", details=None):
     return NotifyPayload(event=event, run_name=run, message=msg, details=details or {})
@@ -26,6 +26,7 @@ def _payload(event=NotifyEvent.TRAINING_COMPLETE, run="run1", msg="Done!", detai
 # ---------------------------------------------------------------------------
 # NotifyPayload
 # ---------------------------------------------------------------------------
+
 
 class TestNotifyPayload:
     def test_title_complete(self):
@@ -50,9 +51,11 @@ class TestNotifyPayload:
 # SlackNotifier
 # ---------------------------------------------------------------------------
 
+
 class TestSlackNotifier:
     def test_send_success(self):
         from xlmtec.notifications.slack import SlackNotifier
+
         notifier = SlackNotifier(webhook_url="https://hooks.slack.com/test")
         mock_resp = MagicMock()
         mock_resp.status = 200
@@ -64,7 +67,9 @@ class TestSlackNotifier:
 
     def test_send_network_failure_returns_false(self):
         from urllib.error import URLError
+
         from xlmtec.notifications.slack import SlackNotifier
+
         notifier = SlackNotifier(webhook_url="https://hooks.slack.com/test")
 
         with patch("urllib.request.urlopen", side_effect=URLError("timeout")):
@@ -72,19 +77,22 @@ class TestSlackNotifier:
 
     def test_missing_webhook_raises(self):
         from xlmtec.notifications.slack import SlackNotifier
+
         with patch.dict("os.environ", {}, clear=True):
             with pytest.raises(ValueError, match="webhook"):
                 SlackNotifier()
 
     def test_webhook_from_env(self):
-        from xlmtec.notifications.slack import SlackNotifier, WEBHOOK_ENV
+        from xlmtec.notifications.slack import WEBHOOK_ENV, SlackNotifier
+
         with patch.dict("os.environ", {WEBHOOK_ENV: "https://hooks.slack.com/env"}):
             n = SlackNotifier()
             assert n.webhook_url == "https://hooks.slack.com/env"
 
     def test_details_included_in_body(self):
-        from xlmtec.notifications.slack import SlackNotifier
         import json
+
+        from xlmtec.notifications.slack import SlackNotifier
 
         notifier = SlackNotifier(webhook_url="https://hooks.slack.com/test")
         captured = {}
@@ -107,9 +115,11 @@ class TestSlackNotifier:
 # EmailNotifier
 # ---------------------------------------------------------------------------
 
+
 class TestEmailNotifier:
     def test_send_success(self):
         from xlmtec.notifications.email import EmailNotifier
+
         n = EmailNotifier(to="test@example.com", host="localhost", port=25)
         mock_smtp = MagicMock()
         mock_smtp.__enter__ = lambda s: mock_smtp
@@ -120,7 +130,9 @@ class TestEmailNotifier:
 
     def test_smtp_error_returns_false(self):
         import smtplib
+
         from xlmtec.notifications.email import EmailNotifier
+
         n = EmailNotifier(to="test@example.com", host="localhost", port=25)
 
         with patch("smtplib.SMTP", side_effect=smtplib.SMTPException("conn refused")):
@@ -128,20 +140,22 @@ class TestEmailNotifier:
 
     def test_missing_to_raises(self):
         from xlmtec.notifications.email import EmailNotifier
+
         with patch.dict("os.environ", {}, clear=True):
             with pytest.raises(ValueError, match="recipient"):
                 EmailNotifier()
 
     def test_to_from_env(self):
         from xlmtec.notifications.email import EmailNotifier
+
         with patch.dict("os.environ", {"XLMTEC_EMAIL_TO": "env@example.com"}):
             n = EmailNotifier()
             assert n.to == "env@example.com"
 
     def test_starttls_called_for_port_587(self):
         from xlmtec.notifications.email import EmailNotifier
-        n = EmailNotifier(to="t@t.com", host="smtp.gmail.com", port=587,
-                          user="u", password="p")
+
+        n = EmailNotifier(to="t@t.com", host="smtp.gmail.com", port=587, user="u", password="p")
         mock_smtp = MagicMock()
         mock_smtp.__enter__ = lambda s: mock_smtp
         mock_smtp.__exit__ = MagicMock(return_value=False)
@@ -155,12 +169,18 @@ class TestEmailNotifier:
 # DesktopNotifier
 # ---------------------------------------------------------------------------
 
+
 class TestDesktopNotifier:
     def test_send_with_plyer(self):
         from xlmtec.notifications.desktop import DesktopNotifier
+
         mock_plyer = MagicMock()
-        with patch.dict("sys.modules", {"plyer": mock_plyer, "plyer.notification": mock_plyer.notification}):
-            with patch("xlmtec.notifications.desktop.DesktopNotifier.send", return_value=True) as mock_send:
+        with patch.dict(
+            "sys.modules", {"plyer": mock_plyer, "plyer.notification": mock_plyer.notification}
+        ):
+            with patch(
+                "xlmtec.notifications.desktop.DesktopNotifier.send", return_value=True
+            ) as mock_send:
                 n = DesktopNotifier()
                 result = n._safe_send(_payload())
                 # _safe_send calls send() which is mocked to True
@@ -168,6 +188,7 @@ class TestDesktopNotifier:
 
     def test_send_without_plyer_fallback(self, capsys):
         from xlmtec.notifications.desktop import DesktopNotifier
+
         n = DesktopNotifier()
         with patch("builtins.__import__", side_effect=ImportError("No module named 'plyer'")):
             # Direct test of fallback path
@@ -175,6 +196,7 @@ class TestDesktopNotifier:
         # Real test: if plyer not installed, send returns True (console fallback)
         try:
             import plyer  # noqa: F401
+
             pytest.skip("plyer is installed — skip fallback test")
         except ImportError:
             result = n.send(_payload())
@@ -185,13 +207,16 @@ class TestDesktopNotifier:
 # NotificationDispatcher
 # ---------------------------------------------------------------------------
 
+
 class TestNotificationDispatcher:
     def test_from_channels_slack(self):
-        with patch("xlmtec.notifications.slack.SlackNotifier.__init__",
-                   return_value=None) as mock_init:
+        with patch(
+            "xlmtec.notifications.slack.SlackNotifier.__init__", return_value=None
+        ) as mock_init:
             mock_init.return_value = None
-            d = NotificationDispatcher.from_channels(["slack"],
-                    slack={"webhook_url": "https://hooks.slack.com/x"})
+            d = NotificationDispatcher.from_channels(
+                ["slack"], slack={"webhook_url": "https://hooks.slack.com/x"}
+            )
             assert "slack" in d.channels
 
     def test_unknown_channel_raises(self):
@@ -222,10 +247,11 @@ class TestNotificationDispatcher:
         assert results == {}
 
     def test_safe_send_catches_exception(self):
-        from xlmtec.notifications.base import Notifier, NotifyPayload
+        from xlmtec.notifications.base import Notifier
 
         class BrokenNotifier(Notifier):
             name = "broken"
+
             def send(self, payload: NotifyPayload) -> bool:
                 raise RuntimeError("network down")
 

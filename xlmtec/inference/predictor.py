@@ -16,20 +16,22 @@ from xlmtec.inference.writer import PredictionRecord, PredictionWriter
 @dataclass
 class PredictConfig:
     """Configuration for a batch inference run."""
+
     model_dir: Path
     data_path: Path
     output_path: Path
-    output_format: str = "jsonl"        # jsonl or csv
+    output_format: str = "jsonl"  # jsonl or csv
     text_column: str | None = None
     batch_size: int = 8
     max_new_tokens: int = 128
     temperature: float = 1.0
-    device: str = "auto"                # auto, cpu, cuda
+    device: str = "auto"  # auto, cpu, cuda
 
 
 @dataclass
 class PredictResult:
     """Summary of a completed inference run."""
+
     total_records: int
     output_path: Path
     model_dir: Path
@@ -58,7 +60,7 @@ class BatchPredictor:
 
         try:
             import torch
-            from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+            from transformers import AutoModelForCausalLM, AutoTokenizer
         except ImportError as exc:
             raise ImportError(
                 "Batch inference requires torch and transformers.\n"
@@ -149,12 +151,14 @@ class BatchPredictor:
             for record, output_ids in zip(batch, outputs):
                 new_ids = output_ids[input_len:]
                 decoded = tokenizer.decode(new_ids, skip_special_tokens=True).strip()
-                predictions.append(PredictionRecord(
-                    index=record.index,
-                    input_text=record.text,
-                    prediction=decoded,
-                    source=record.source,
-                ))
+                predictions.append(
+                    PredictionRecord(
+                        index=record.index,
+                        input_text=record.text,
+                        prediction=decoded,
+                        source=record.source,
+                    )
+                )
 
         return predictions
 
@@ -163,6 +167,7 @@ class BatchPredictor:
             return device
         try:
             import torch
+
             return "cuda" if torch.cuda.is_available() else "cpu"
         except ImportError:
             return "cpu"

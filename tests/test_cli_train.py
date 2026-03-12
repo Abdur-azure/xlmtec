@@ -9,7 +9,6 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
 from xlmtec.cli.main import app
@@ -20,6 +19,7 @@ runner = CliRunner()
 # ============================================================================
 # HELPERS
 # ============================================================================
+
 
 def _make_dataset_file(tmp_path: Path) -> Path:
     """Write a minimal JSONL file so path validation passes."""
@@ -36,8 +36,9 @@ def _mock_training_stack():
     mock_result.steps_completed = 10
 
     patches = [
-        patch("xlmtec.models.loader.load_model_and_tokenizer",
-              return_value=(MagicMock(), MagicMock())),
+        patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ),
         patch("xlmtec.data.prepare_dataset", return_value=MagicMock()),
         patch("xlmtec.trainers.TrainerFactory.train", return_value=mock_result),
     ]
@@ -48,21 +49,29 @@ def _mock_training_stack():
 # TESTS
 # ============================================================================
 
-class TestTrainCommand:
 
+class TestTrainCommand:
     def test_lora_via_flags_builds_config(self, tmp_path):
         """Default method (lora) works with minimal flags."""
         ds = _make_dataset_file(tmp_path)
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
-            result = runner.invoke(app, [
-                "train",
-                "--model", "gpt2",
-                "--dataset", str(ds),
-                "--method", "lora",
-                "--epochs", "1",
-                "--output", str(tmp_path / "out"),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "train",
+                    "--model",
+                    "gpt2",
+                    "--dataset",
+                    str(ds),
+                    "--method",
+                    "lora",
+                    "--epochs",
+                    "1",
+                    "--output",
+                    str(tmp_path / "out"),
+                ],
+            )
         assert result.exit_code == 0, result.output
 
     def test_full_finetuning_requires_no_lora_flags(self, tmp_path):
@@ -70,14 +79,22 @@ class TestTrainCommand:
         ds = _make_dataset_file(tmp_path)
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
-            result = runner.invoke(app, [
-                "train",
-                "--model", "gpt2",
-                "--dataset", str(ds),
-                "--method", "full_finetuning",
-                "--epochs", "1",
-                "--output", str(tmp_path / "out"),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "train",
+                    "--model",
+                    "gpt2",
+                    "--dataset",
+                    str(ds),
+                    "--method",
+                    "full_finetuning",
+                    "--epochs",
+                    "1",
+                    "--output",
+                    str(tmp_path / "out"),
+                ],
+            )
         assert result.exit_code == 0, result.output
 
     def test_instruction_tuning_via_flags(self, tmp_path):
@@ -85,23 +102,36 @@ class TestTrainCommand:
         ds = _make_dataset_file(tmp_path)
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
-            result = runner.invoke(app, [
-                "train",
-                "--model", "gpt2",
-                "--dataset", str(ds),
-                "--method", "instruction_tuning",
-                "--epochs", "1",
-                "--output", str(tmp_path / "out"),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "train",
+                    "--model",
+                    "gpt2",
+                    "--dataset",
+                    str(ds),
+                    "--method",
+                    "instruction_tuning",
+                    "--epochs",
+                    "1",
+                    "--output",
+                    str(tmp_path / "out"),
+                ],
+            )
         assert result.exit_code == 0, result.output
 
     def test_missing_dataset_exits_with_error(self, tmp_path):
         """No --dataset and no --hf-dataset exits with code 1."""
-        result = runner.invoke(app, [
-            "train",
-            "--model", "gpt2",
-            "--method", "lora",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "train",
+                "--model",
+                "gpt2",
+                "--method",
+                "lora",
+            ],
+        )
         assert result.exit_code == 1
 
     def test_config_file_takes_precedence(self, tmp_path):
@@ -110,7 +140,8 @@ class TestTrainCommand:
         out_dir = tmp_path / "out"
         cfg = tmp_path / "config.yaml"
         # Use .as_posix() — backslashes in Windows paths break YAML parsing
-        cfg.write_text(f"""
+        cfg.write_text(
+            f"""
 model:
   name: gpt2
 dataset:
@@ -126,7 +157,9 @@ training:
 lora:
   r: 4
   lora_alpha: 8
-""", encoding="utf-8")
+""",
+            encoding="utf-8",
+        )
 
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
@@ -138,14 +171,22 @@ lora:
         ds = _make_dataset_file(tmp_path)
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
-            result = runner.invoke(app, [
-                "train",
-                "--model", "gpt2",
-                "--dataset", str(ds),
-                "--method", "full_finetuning",
-                "--epochs", "1",
-                "--output", str(tmp_path / "out"),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "train",
+                    "--model",
+                    "gpt2",
+                    "--dataset",
+                    str(ds),
+                    "--method",
+                    "full_finetuning",
+                    "--epochs",
+                    "1",
+                    "--output",
+                    str(tmp_path / "out"),
+                ],
+            )
         assert result.exit_code == 0, result.output
 
     def test_dpo_via_flags(self, tmp_path):
@@ -153,14 +194,22 @@ lora:
         ds = _make_dataset_file(tmp_path)
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
-            result = runner.invoke(app, [
-                "train",
-                "--model", "gpt2",
-                "--dataset", str(ds),
-                "--method", "dpo",
-                "--epochs", "1",
-                "--output", str(tmp_path / "out"),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "train",
+                    "--model",
+                    "gpt2",
+                    "--dataset",
+                    str(ds),
+                    "--method",
+                    "dpo",
+                    "--epochs",
+                    "1",
+                    "--output",
+                    str(tmp_path / "out"),
+                ],
+            )
         assert result.exit_code == 0, result.output
 
     def test_qlora_sets_lora_config(self, tmp_path):
@@ -168,13 +217,22 @@ lora:
         ds = _make_dataset_file(tmp_path)
         patches = _mock_training_stack()
         with patches[0], patches[1], patches[2]:
-            result = runner.invoke(app, [
-                "train",
-                "--model", "gpt2",
-                "--dataset", str(ds),
-                "--method", "qlora",
-                "--lora-r", "16",
-                "--epochs", "1",
-                "--output", str(tmp_path / "out"),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "train",
+                    "--model",
+                    "gpt2",
+                    "--dataset",
+                    str(ds),
+                    "--method",
+                    "qlora",
+                    "--lora-r",
+                    "16",
+                    "--epochs",
+                    "1",
+                    "--output",
+                    str(tmp_path / "out"),
+                ],
+            )
         assert result.exit_code == 0, result.output

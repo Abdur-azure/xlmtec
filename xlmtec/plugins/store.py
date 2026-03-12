@@ -30,7 +30,6 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 PLUGIN_DIR = Path.home() / ".xlmtec"
 PLUGIN_FILE = PLUGIN_DIR / "plugins.json"
 
@@ -38,14 +37,14 @@ PLUGIN_FILE = PLUGIN_DIR / "plugins.json"
 @dataclass
 class TemplatePlugin:
     name: str
-    source: str          # absolute path to YAML file
+    source: str  # absolute path to YAML file
     registered_at: str
 
 
 @dataclass
 class ProviderPlugin:
     name: str
-    source: str          # absolute path to .py file
+    source: str  # absolute path to .py file
     class_name: str
     registered_at: str
 
@@ -66,14 +65,8 @@ def load_store(plugin_file: Path = PLUGIN_FILE) -> PluginStore:
         return PluginStore(templates={}, providers={})
     try:
         raw = json.loads(plugin_file.read_text(encoding="utf-8"))
-        templates = {
-            k: TemplatePlugin(**v)
-            for k, v in raw.get("templates", {}).items()
-        }
-        providers = {
-            k: ProviderPlugin(**v)
-            for k, v in raw.get("providers", {}).items()
-        }
+        templates = {k: TemplatePlugin(**v) for k, v in raw.get("templates", {}).items()}
+        providers = {k: ProviderPlugin(**v) for k, v in raw.get("providers", {}).items()}
         return PluginStore(templates=templates, providers=providers)
     except (json.JSONDecodeError, TypeError, KeyError):
         return PluginStore(templates={}, providers={})
@@ -101,6 +94,7 @@ def register_template(
         ValueError: If name conflicts with a built-in template.
     """
     from xlmtec.templates.registry import _TEMPLATES
+
     if name in _TEMPLATES:
         raise ValueError(
             f"Cannot register plugin: {name!r} is already a built-in template.\n"
@@ -135,8 +129,7 @@ def register_provider(
     BUILTIN_PROVIDERS = {"claude", "gemini", "codex"}
     if name.lower() in BUILTIN_PROVIDERS:
         raise ValueError(
-            f"Cannot register plugin: {name!r} is a built-in provider.\n"
-            "Choose a different name."
+            f"Cannot register plugin: {name!r} is a built-in provider.\nChoose a different name."
         )
     if not source.exists():
         raise FileNotFoundError(f"Provider file not found: {source}")

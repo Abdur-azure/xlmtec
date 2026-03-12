@@ -20,7 +20,7 @@ Example:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .types import DatasetSource, EvaluationMetric, TrainingMethod
 
@@ -82,4 +82,5 @@ class ConfigBuilder:
         """
         # Late import to avoid circular deps at module load time
         from .config import PipelineConfig
+
         return PipelineConfig.from_dict(self._cfg)

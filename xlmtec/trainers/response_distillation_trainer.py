@@ -21,7 +21,7 @@ Reference: Hinton et al., "Distilling the Knowledge in a Neural Network" (2015).
 import time
 import warnings
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 import torch
 import torch.nn.functional as F
@@ -32,12 +32,10 @@ from transformers import (
     PreTrainedModel,
     PreTrainedTokenizer,
     Trainer,
-    TrainingArguments,
 )
 
-from ..core.exceptions import MissingConfigError, TrainingError
+from ..core.exceptions import TrainingError
 from ..core.types import DistillationConfig, TrainingConfig
-from ..utils.logging import get_logger
 from .base import BaseTrainer, TrainingResult
 
 # Parameter count above which we warn about VRAM
@@ -95,8 +93,7 @@ class ResponseDistillationTrainer(BaseTrainer):
         trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
         total = sum(p.numel() for p in model.parameters())
         self.logger.info(
-            f"Student trainable parameters: {trainable:,} / {total:,} "
-            f"(100% — full student update)"
+            f"Student trainable parameters: {trainable:,} / {total:,} (100% — full student update)"
         )
         return model
 
@@ -162,9 +159,7 @@ class ResponseDistillationTrainer(BaseTrainer):
             args=training_args,
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
-            data_collator=DataCollatorForLanguageModeling(
-                tokenizer=self.tokenizer, mlm=False
-            ),
+            data_collator=DataCollatorForLanguageModeling(tokenizer=self.tokenizer, mlm=False),
         )
 
         # Train
@@ -188,9 +183,7 @@ class ResponseDistillationTrainer(BaseTrainer):
             output_dir=output_dir,
             train_loss=train_output.training_loss,
             eval_loss=eval_loss,
-            epochs_completed=int(
-                train_output.metrics.get("epoch", cfg.num_epochs)
-            ),
+            epochs_completed=int(train_output.metrics.get("epoch", cfg.num_epochs)),
             steps_completed=train_output.global_step,
             training_time_seconds=elapsed,
             trainer_logs={str(i): entry for i, entry in enumerate(logs)},
@@ -212,7 +205,6 @@ class _DistillationTrainer(Trainer):
         self.alpha = alpha
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
-        labels = inputs.get("labels")
 
         # Student forward pass
         student_outputs = model(**inputs)
@@ -237,7 +229,7 @@ class _DistillationTrainer(Trainer):
             student_log_probs,
             teacher_probs,
             reduction="batchmean",
-        ) * (T ** 2)
+        ) * (T**2)
 
         # Blended loss
         loss = self.alpha * kl_loss + (1.0 - self.alpha) * ce_loss

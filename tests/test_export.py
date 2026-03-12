@@ -7,17 +7,16 @@ All model I/O is mocked — no real models or ML deps needed.
 
 from __future__ import annotations
 
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
-from xlmtec.export.formats import ExportFormat, FORMAT_META, get_format_meta
-
+from xlmtec.export.formats import ExportFormat, get_format_meta
 
 # ---------------------------------------------------------------------------
 # ExportFormat
 # ---------------------------------------------------------------------------
+
 
 class TestExportFormat:
     def test_from_str_valid(self):
@@ -41,6 +40,7 @@ class TestExportFormat:
 # ---------------------------------------------------------------------------
 # FORMAT_META
 # ---------------------------------------------------------------------------
+
 
 class TestFormatMeta:
     def test_all_formats_have_meta(self):
@@ -74,9 +74,11 @@ class TestFormatMeta:
 # Safetensors backend
 # ---------------------------------------------------------------------------
 
+
 class TestSafetensorsBackend:
     def test_dry_run_returns_result(self, tmp_path):
         from xlmtec.export.backends.safetensors import export_safetensors
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         result = export_safetensors(model_dir, tmp_path / "out", dry_run=True)
@@ -85,11 +87,13 @@ class TestSafetensorsBackend:
 
     def test_missing_model_dir_raises(self, tmp_path):
         from xlmtec.export.backends.safetensors import export_safetensors
+
         with pytest.raises(FileNotFoundError):
             export_safetensors(tmp_path / "missing", tmp_path / "out")
 
     def test_missing_dep_raises_import_error(self, tmp_path):
         from xlmtec.export.backends.safetensors import export_safetensors
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         with patch.dict("sys.modules", {"transformers": None, "safetensors": None}):
@@ -101,9 +105,11 @@ class TestSafetensorsBackend:
 # ONNX backend
 # ---------------------------------------------------------------------------
 
+
 class TestOnnxBackend:
     def test_dry_run_returns_result(self, tmp_path):
         from xlmtec.export.backends.onnx import export_onnx
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         result = export_onnx(model_dir, tmp_path / "out", dry_run=True)
@@ -111,6 +117,7 @@ class TestOnnxBackend:
 
     def test_dry_run_with_quantize(self, tmp_path):
         from xlmtec.export.backends.onnx import export_onnx
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         result = export_onnx(model_dir, tmp_path / "out", quantize="fp16", dry_run=True)
@@ -119,6 +126,7 @@ class TestOnnxBackend:
 
     def test_invalid_quantize_raises(self, tmp_path):
         from xlmtec.export.backends.onnx import export_onnx
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         with pytest.raises(ValueError, match="Invalid ONNX"):
@@ -126,6 +134,7 @@ class TestOnnxBackend:
 
     def test_missing_model_dir_raises(self, tmp_path):
         from xlmtec.export.backends.onnx import export_onnx
+
         with pytest.raises(FileNotFoundError):
             export_onnx(tmp_path / "missing", tmp_path / "out")
 
@@ -134,9 +143,11 @@ class TestOnnxBackend:
 # GGUF backend
 # ---------------------------------------------------------------------------
 
+
 class TestGgufBackend:
     def test_dry_run_returns_result(self, tmp_path):
         from xlmtec.export.backends.gguf import export_gguf
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         result = export_gguf(model_dir, tmp_path / "out", quantize="q4_0", dry_run=True)
@@ -145,6 +156,7 @@ class TestGgufBackend:
 
     def test_invalid_quantize_raises(self, tmp_path):
         from xlmtec.export.backends.gguf import export_gguf
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         with pytest.raises(ValueError, match="Invalid GGUF"):
@@ -152,6 +164,7 @@ class TestGgufBackend:
 
     def test_missing_model_dir_raises(self, tmp_path):
         from xlmtec.export.backends.gguf import export_gguf
+
         with pytest.raises(FileNotFoundError):
             export_gguf(tmp_path / "missing", tmp_path / "out")
 
@@ -159,6 +172,7 @@ class TestGgufBackend:
 # ---------------------------------------------------------------------------
 # ModelExporter dispatch
 # ---------------------------------------------------------------------------
+
 
 class TestModelExporter:
     def _model_dir(self, tmp_path):
@@ -168,6 +182,7 @@ class TestModelExporter:
 
     def test_dispatch_safetensors_dry_run(self, tmp_path):
         from xlmtec.export.exporter import ModelExporter
+
         result = ModelExporter().export(
             model_dir=self._model_dir(tmp_path),
             output_dir=tmp_path / "out",
@@ -179,6 +194,7 @@ class TestModelExporter:
 
     def test_dispatch_onnx_dry_run(self, tmp_path):
         from xlmtec.export.exporter import ModelExporter
+
         result = ModelExporter().export(
             model_dir=self._model_dir(tmp_path),
             output_dir=tmp_path / "out",
@@ -189,6 +205,7 @@ class TestModelExporter:
 
     def test_dispatch_gguf_dry_run(self, tmp_path):
         from xlmtec.export.exporter import ModelExporter
+
         result = ModelExporter().export(
             model_dir=self._model_dir(tmp_path),
             output_dir=tmp_path / "out",
@@ -199,8 +216,8 @@ class TestModelExporter:
 
     def test_missing_dep_raises_on_real_export(self, tmp_path):
         from xlmtec.export.exporter import ModelExporter
-        with patch.object(ModelExporter, "_check_dependencies",
-                          side_effect=ImportError("missing")):
+
+        with patch.object(ModelExporter, "_check_dependencies", side_effect=ImportError("missing")):
             with pytest.raises(ImportError, match="missing"):
                 ModelExporter().export(
                     model_dir=self._model_dir(tmp_path),
@@ -214,9 +231,11 @@ class TestModelExporter:
 # export_model CLI logic
 # ---------------------------------------------------------------------------
 
+
 class TestExportModelLogic:
     def test_dry_run_safetensors_returns_0(self, tmp_path):
         from xlmtec.cli.commands.export import export_model
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         code = export_model(model_dir, tmp_path / "out", "safetensors", None, None, dry_run=True)
@@ -224,6 +243,7 @@ class TestExportModelLogic:
 
     def test_dry_run_onnx_returns_0(self, tmp_path):
         from xlmtec.cli.commands.export import export_model
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         code = export_model(model_dir, tmp_path / "out", "onnx", None, None, dry_run=True)
@@ -231,6 +251,7 @@ class TestExportModelLogic:
 
     def test_dry_run_gguf_returns_0(self, tmp_path):
         from xlmtec.cli.commands.export import export_model
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         code = export_model(model_dir, tmp_path / "out", "gguf", "q4_0", None, dry_run=True)
@@ -238,6 +259,7 @@ class TestExportModelLogic:
 
     def test_invalid_format_returns_1(self, tmp_path):
         from xlmtec.cli.commands.export import export_model
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         code = export_model(model_dir, tmp_path / "out", "parquet", None, None, dry_run=True)
@@ -245,11 +267,15 @@ class TestExportModelLogic:
 
     def test_missing_model_dir_returns_1(self, tmp_path):
         from xlmtec.cli.commands.export import export_model
-        code = export_model(tmp_path / "missing", tmp_path / "out", "safetensors", None, None, dry_run=True)
+
+        code = export_model(
+            tmp_path / "missing", tmp_path / "out", "safetensors", None, None, dry_run=True
+        )
         assert code == 1
 
     def test_invalid_quantize_for_format_returns_1(self, tmp_path):
         from xlmtec.cli.commands.export import export_model
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         code = export_model(model_dir, tmp_path / "out", "onnx", "q4_0", None, dry_run=True)

@@ -27,8 +27,7 @@ class SlackNotifier(Notifier):
         self.webhook_url = webhook_url or os.environ.get(WEBHOOK_ENV)
         if not self.webhook_url:
             raise ValueError(
-                f"Slack webhook URL not set. "
-                f"Export {WEBHOOK_ENV} or pass webhook_url= explicitly."
+                f"Slack webhook URL not set. Export {WEBHOOK_ENV} or pass webhook_url= explicitly."
             )
 
     def send(self, payload: NotifyPayload) -> bool:

@@ -6,8 +6,7 @@ All imports are absolute per lessons.md.
 """
 
 import warnings
-from pathlib import Path
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
@@ -79,11 +78,13 @@ def training_config(tmp_output_dir) -> TrainingConfig:
 
 @pytest.fixture
 def small_dataset() -> Dataset:
-    return Dataset.from_dict({
-        "input_ids": [[1, 2, 3, 4]] * 8,
-        "attention_mask": [[1, 1, 1, 1]] * 8,
-        "labels": [[1, 2, 3, 4]] * 8,
-    })
+    return Dataset.from_dict(
+        {
+            "input_ids": [[1, 2, 3, 4]] * 8,
+            "attention_mask": [[1, 1, 1, 1]] * 8,
+            "labels": [[1, 2, 3, 4]] * 8,
+        }
+    )
 
 
 @pytest.fixture
@@ -110,9 +111,7 @@ class TestFactoryDispatch:
         )
         assert isinstance(trainer, ResponseDistillationTrainer)
 
-    def test_missing_distillation_config_raises(
-        self, mock_model, mock_tokenizer, training_config
-    ):
+    def test_missing_distillation_config_raises(self, mock_model, mock_tokenizer, training_config):
         """VANILLA_DISTILLATION without distillation_config raises MissingConfigError."""
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(
@@ -201,9 +200,7 @@ class TestSetupPeft:
         for param in returned_model.parameters():
             assert param.requires_grad is True
 
-    def test_returns_model(
-        self, mock_model, mock_tokenizer, training_config, distillation_config
-    ):
+    def test_returns_model(self, mock_model, mock_tokenizer, training_config, distillation_config):
         trainer = ResponseDistillationTrainer(
             mock_model, mock_tokenizer, training_config, distillation_config
         )
@@ -215,12 +212,8 @@ class TestSetupPeft:
 # train() — full flow mocked
 # ============================================================================
 
-_DISTILLATION_TRAINER_PATH = (
-    "xlmtec.trainers.response_distillation_trainer._DistillationTrainer"
-)
-_AUTO_MODEL_PATH = (
-    "xlmtec.trainers.response_distillation_trainer.AutoModelForCausalLM"
-)
+_DISTILLATION_TRAINER_PATH = "xlmtec.trainers.response_distillation_trainer._DistillationTrainer"
+_AUTO_MODEL_PATH = "xlmtec.trainers.response_distillation_trainer.AutoModelForCausalLM"
 
 
 class TestTrain:

@@ -13,7 +13,7 @@ from typing import Optional
 
 import typer
 
-from xlmtec.cli.ux import console, print_error, print_success, print_dry_run_table, task_progress
+from xlmtec.cli.ux import console, print_dry_run_table, print_error, print_success, task_progress
 
 try:
     from xlmtec.checkpoints.manager import CheckpointManager
@@ -52,18 +52,17 @@ def resume_training(
     if not config_file.exists():
         print_error(
             "Config not found",
-            f"Expected config at {config_file}\n"
-            "Pass --config to specify a different path."
+            f"Expected config at {config_file}\nPass --config to specify a different path.",
         )
         return 1
 
     # ── Build plan ───────────────────────────────────────────────────────
     rows = [
-        ("Checkpoint",       str(ckpt.path.name)),
+        ("Checkpoint", str(ckpt.path.name)),
         ("Resumed from step", str(ckpt.step)),
         ("Resumed from epoch", f"{ckpt.epoch:.1f}"),
-        ("Config",           str(config_file)),
-        ("Output dir",       str(output_dir)),
+        ("Config", str(config_file)),
+        ("Output dir", str(output_dir)),
     ]
     if additional_epochs:
         rows.append(("Additional epochs", str(additional_epochs)))
@@ -80,7 +79,6 @@ def resume_training(
     # ── Resume training ──────────────────────────────────────────────────
     try:
         import yaml
-        from pydantic import ValidationError
         from xlmtec.core.config import PipelineConfig
     except ImportError as exc:
         print_error("Missing dependency", str(exc))
@@ -96,12 +94,12 @@ def resume_training(
     # Patch additional epochs if requested
     if additional_epochs:
         from dataclasses import replace
+
         cfg = cfg.model_copy(
             update={"training": replace(cfg.training, num_epochs=additional_epochs)}
         )
 
     try:
-        from xlmtec.core.exceptions import FineTuneError
         from xlmtec.trainers import TrainerFactory
 
         with task_progress(f"Resuming from {ckpt.path.name}..."):
@@ -123,19 +121,25 @@ def resume(
         help="Output directory containing checkpoint folders.",
     ),
     config: Optional[Path] = typer.Option(
-        None, "--config", "-c",
+        None,
+        "--config",
+        "-c",
         help="Config YAML path (defaults to <output-dir>/config.yaml).",
     ),
     checkpoint: Optional[str] = typer.Option(
-        None, "--checkpoint",
+        None,
+        "--checkpoint",
         help="Specific checkpoint to resume from e.g. 'checkpoint-500'. Defaults to latest.",
     ),
     additional_epochs: Optional[int] = typer.Option(
-        None, "--epochs", "-e",
+        None,
+        "--epochs",
+        "-e",
         help="Override number of training epochs.",
     ),
     dry_run: bool = typer.Option(
-        False, "--dry-run",
+        False,
+        "--dry-run",
         help="Show resume plan without starting training.",
     ),
 ) -> None:

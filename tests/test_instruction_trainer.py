@@ -16,29 +16,34 @@ from xlmtec.trainers.instruction_trainer import InstructionTrainer, format_instr
 # FIXTURES
 # ============================================================================
 
+
 @pytest.fixture
 def instruction_dataset() -> Dataset:
-    return Dataset.from_dict({
-        "instruction": ["Translate to French", "Summarize this text", "Answer the question"],
-        "input": ["Hello world", "", "What is AI?"],
-        "response": ["Bonjour le monde", "Short summary.", "AI is artificial intelligence."],
-    })
+    return Dataset.from_dict(
+        {
+            "instruction": ["Translate to French", "Summarize this text", "Answer the question"],
+            "input": ["Hello world", "", "What is AI?"],
+            "response": ["Bonjour le monde", "Short summary.", "AI is artificial intelligence."],
+        }
+    )
 
 
 @pytest.fixture
 def instruction_with_no_input() -> Dataset:
-    return Dataset.from_dict({
-        "instruction": ["Write a poem about the ocean", "Explain quantum computing"],
-        "input": ["", ""],
-        "response": ["Waves crash...", "Quantum computing uses qubits..."],
-    })
+    return Dataset.from_dict(
+        {
+            "instruction": ["Write a poem about the ocean", "Explain quantum computing"],
+            "input": ["", ""],
+            "response": ["Waves crash...", "Quantum computing uses qubits..."],
+        }
+    )
 
 
 @pytest.fixture
 def pre_formatted_dataset() -> Dataset:
-    return Dataset.from_dict({
-        "text": ["### Instruction:\nDo something\n\n### Response:\nDone."] * 3
-    })
+    return Dataset.from_dict(
+        {"text": ["### Instruction:\nDo something\n\n### Response:\nDone."] * 3}
+    )
 
 
 @pytest.fixture
@@ -60,8 +65,8 @@ def lora_config() -> LoRAConfig:
 # format_instruction_dataset TESTS
 # ============================================================================
 
-class TestFormatInstructionDataset:
 
+class TestFormatInstructionDataset:
     def test_produces_text_column(self, instruction_dataset):
         result = format_instruction_dataset(instruction_dataset)
         assert "text" in result.column_names
@@ -105,47 +110,56 @@ class TestFormatInstructionDataset:
 # InstructionTrainer TESTS
 # ============================================================================
 
-class TestInstructionTrainer:
 
+class TestInstructionTrainer:
     def test_formats_dataset_before_training(
-        self, mock_model, mock_tokenizer,
-        instruction_training_config, lora_config, instruction_dataset
+        self,
+        mock_model,
+        mock_tokenizer,
+        instruction_training_config,
+        lora_config,
+        instruction_dataset,
     ):
         trainer = InstructionTrainer(
-            mock_model, mock_tokenizer,
-            instruction_training_config, lora_config
+            mock_model, mock_tokenizer, instruction_training_config, lora_config
         )
         formatted = trainer._maybe_format(instruction_dataset)
         assert "text" in formatted.column_names
         assert "instruction" not in formatted.column_names
 
     def test_skips_formatting_when_text_present(
-        self, mock_model, mock_tokenizer,
-        instruction_training_config, lora_config, pre_formatted_dataset
+        self,
+        mock_model,
+        mock_tokenizer,
+        instruction_training_config,
+        lora_config,
+        pre_formatted_dataset,
     ):
         trainer = InstructionTrainer(
-            mock_model, mock_tokenizer,
-            instruction_training_config, lora_config
+            mock_model, mock_tokenizer, instruction_training_config, lora_config
         )
         result = trainer._maybe_format(pre_formatted_dataset)
         assert result is pre_formatted_dataset
 
     def test_formats_dataset_dict(
-        self, mock_model, mock_tokenizer,
-        instruction_training_config, lora_config, instruction_dataset
+        self,
+        mock_model,
+        mock_tokenizer,
+        instruction_training_config,
+        lora_config,
+        instruction_dataset,
     ):
         trainer = InstructionTrainer(
-            mock_model, mock_tokenizer,
-            instruction_training_config, lora_config
+            mock_model, mock_tokenizer, instruction_training_config, lora_config
         )
         ds_dict = DatasetDict({"train": instruction_dataset, "validation": instruction_dataset})
         import unittest.mock as mock
+
         with mock.patch.object(type(trainer).__bases__[0], "train", return_value=None):
             trainer.train(ds_dict)
 
     def test_factory_creates_instruction_trainer(
-        self, mock_model, mock_tokenizer,
-        instruction_training_config, lora_config
+        self, mock_model, mock_tokenizer, instruction_training_config, lora_config
     ):
         trainer = TrainerFactory.create(
             model=mock_model,

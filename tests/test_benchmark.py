@@ -5,10 +5,8 @@ All model loading, dataset loading, and comparison are mocked.
 No GPU, no network, no real model files required.
 """
 
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
 from xlmtec.cli.main import app
@@ -19,6 +17,7 @@ runner = CliRunner()
 # ============================================================================
 # HELPERS
 # ============================================================================
+
 
 def _mock_report():
     report = MagicMock()
@@ -33,8 +32,9 @@ def _mock_report():
 def _mock_benchmark_stack():
     """Patch at source module — benchmark uses lazy imports inside the function."""
     return [
-        patch("xlmtec.models.loader.load_model_and_tokenizer",
-              return_value=(MagicMock(), MagicMock())),
+        patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ),
         patch("xlmtec.data.quick_load", return_value=MagicMock()),
         patch("xlmtec.evaluation.BenchmarkRunner"),
     ]
@@ -44,15 +44,18 @@ def _mock_benchmark_stack():
 # TESTS
 # ============================================================================
 
-class TestBenchmarkCommand:
 
+class TestBenchmarkCommand:
     def test_requires_dataset_or_hf_dataset(self, tmp_path):
         """benchmark exits 1 when neither --dataset nor --hf-dataset is given."""
-        result = runner.invoke(app, [
-            "benchmark",
-            "gpt2",
-            str(tmp_path / "finetuned"),
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "benchmark",
+                "gpt2",
+                str(tmp_path / "finetuned"),
+            ],
+        )
         assert result.exit_code == 1
 
     def test_local_dataset_exits_zero(self, tmp_path):
@@ -67,12 +70,16 @@ class TestBenchmarkCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.run_comparison.return_value = mock_report
-            result = runner.invoke(app, [
-                "benchmark",
-                "gpt2",
-                str(ft_dir),
-                "--dataset", str(ds),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "benchmark",
+                    "gpt2",
+                    str(ft_dir),
+                    "--dataset",
+                    str(ds),
+                ],
+            )
 
         assert result.exit_code == 0, result.output
 
@@ -86,12 +93,16 @@ class TestBenchmarkCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.run_comparison.return_value = mock_report
-            result = runner.invoke(app, [
-                "benchmark",
-                "gpt2",
-                str(ft_dir),
-                "--hf-dataset", "wikitext",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "benchmark",
+                    "gpt2",
+                    str(ft_dir),
+                    "--hf-dataset",
+                    "wikitext",
+                ],
+            )
 
         assert result.exit_code == 0, result.output
 
@@ -107,12 +118,16 @@ class TestBenchmarkCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.run_comparison.return_value = mock_report
-            result = runner.invoke(app, [
-                "benchmark",
-                "gpt2",
-                str(ft_dir),
-                "--dataset", str(ds),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "benchmark",
+                    "gpt2",
+                    str(ft_dir),
+                    "--dataset",
+                    str(ds),
+                ],
+            )
 
         assert "rougeL" in result.output
         assert "0.4231" in result.output
@@ -129,12 +144,16 @@ class TestBenchmarkCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.run_comparison.return_value = mock_report
-            result = runner.invoke(app, [
-                "benchmark",
-                "gpt2",
-                str(ft_dir),
-                "--dataset", str(ds),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "benchmark",
+                    "gpt2",
+                    str(ft_dir),
+                    "--dataset",
+                    str(ds),
+                ],
+            )
 
         mock_runner_cls.return_value.run_comparison.assert_called_once()
         assert result.exit_code == 0, result.output
@@ -151,12 +170,17 @@ class TestBenchmarkCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.run_comparison.return_value = mock_report
-            result = runner.invoke(app, [
-                "benchmark",
-                "gpt2",
-                str(ft_dir),
-                "--dataset", str(ds),
-                "--num-samples", "50",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "benchmark",
+                    "gpt2",
+                    str(ft_dir),
+                    "--dataset",
+                    str(ds),
+                    "--num-samples",
+                    "50",
+                ],
+            )
 
         assert result.exit_code == 0, result.output

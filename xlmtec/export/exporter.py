@@ -61,7 +61,9 @@ class ModelExporter:
         elif fmt == ExportFormat.ONNX:
             return self._export_onnx(model_dir, output_dir, quantize, dry_run)
         elif fmt == ExportFormat.GGUF:
-            return self._export_gguf(model_dir, output_dir, quantize or "q4_0", llama_cpp_dir, dry_run)
+            return self._export_gguf(
+                model_dir, output_dir, quantize or "q4_0", llama_cpp_dir, dry_run
+            )
         else:
             raise ValueError(f"Unsupported format: {fmt}")
 
@@ -71,6 +73,7 @@ class ModelExporter:
 
     def _export_safetensors(self, model_dir, output_dir, dry_run):
         from xlmtec.export.backends.safetensors import export_safetensors
+
         result = export_safetensors(model_dir, output_dir, dry_run=dry_run)
         return ExportResult(
             format=ExportFormat.SAFETENSORS,
@@ -82,6 +85,7 @@ class ModelExporter:
 
     def _export_onnx(self, model_dir, output_dir, quantize, dry_run):
         from xlmtec.export.backends.onnx import export_onnx
+
         result = export_onnx(model_dir, output_dir, quantize=quantize, dry_run=dry_run)
         return ExportResult(
             format=ExportFormat.ONNX,
@@ -93,8 +97,10 @@ class ModelExporter:
 
     def _export_gguf(self, model_dir, output_dir, quantize, llama_cpp_dir, dry_run):
         from xlmtec.export.backends.gguf import export_gguf
+
         result = export_gguf(
-            model_dir, output_dir,
+            model_dir,
+            output_dir,
             quantize=quantize,
             llama_cpp_dir=llama_cpp_dir,
             dry_run=dry_run,

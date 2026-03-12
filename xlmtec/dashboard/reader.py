@@ -19,6 +19,7 @@ from pathlib import Path
 @dataclass
 class RunMetrics:
     """Metrics recorded at a single training step."""
+
     step: int
     epoch: float
     train_loss: float | None = None
@@ -33,7 +34,8 @@ class RunMetrics:
 @dataclass
 class RunInfo:
     """Full metadata for a single training run."""
-    name: str                          # Directory name e.g. "run1"
+
+    name: str  # Directory name e.g. "run1"
     path: Path
     total_steps: int = 0
     total_epochs: float = 0.0
@@ -58,10 +60,7 @@ class RunInfo:
 
     @property
     def has_eval_metrics(self) -> bool:
-        return any(
-            h.eval_rouge1 is not None or h.eval_bleu is not None
-            for h in self.history
-        )
+        return any(h.eval_rouge1 is not None or h.eval_bleu is not None for h in self.history)
 
 
 class RunReader:
@@ -114,17 +113,19 @@ class RunReader:
     def _parse_history(self, log_history: list[dict]) -> list[RunMetrics]:
         metrics = []
         for entry in log_history:
-            metrics.append(RunMetrics(
-                step=entry.get("step", 0),
-                epoch=float(entry.get("epoch", 0)),
-                train_loss=entry.get("loss"),
-                eval_loss=entry.get("eval_loss"),
-                eval_rouge1=entry.get("eval_rouge1"),
-                eval_rouge2=entry.get("eval_rouge2"),
-                eval_rougeL=entry.get("eval_rougeL"),
-                eval_bleu=entry.get("eval_bleu"),
-                learning_rate=entry.get("learning_rate"),
-            ))
+            metrics.append(
+                RunMetrics(
+                    step=entry.get("step", 0),
+                    epoch=float(entry.get("epoch", 0)),
+                    train_loss=entry.get("loss"),
+                    eval_loss=entry.get("eval_loss"),
+                    eval_rouge1=entry.get("eval_rouge1"),
+                    eval_rouge2=entry.get("eval_rouge2"),
+                    eval_rougeL=entry.get("eval_rougeL"),
+                    eval_bleu=entry.get("eval_bleu"),
+                    learning_rate=entry.get("learning_rate"),
+                )
+            )
         return metrics
 
     def _read_config(self) -> dict:
@@ -134,6 +135,7 @@ class RunReader:
                 try:
                     if name.endswith(".yaml"):
                         import yaml
+
                         return yaml.safe_load(f.read_text(encoding="utf-8")) or {}
                     return json.loads(f.read_text(encoding="utf-8"))
                 except Exception:

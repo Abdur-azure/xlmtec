@@ -23,7 +23,7 @@ Usage
 
 import time
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -34,6 +34,7 @@ from xlmtec.utils.logging import get_logger
 # ---------------------------------------------------------------------------
 # Result type
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class PruningResult:
@@ -63,6 +64,7 @@ class PruningResult:
 # Internal helpers
 # ---------------------------------------------------------------------------
 
+
 def _count_params(model: Any) -> int:
     """Return total parameter count via numel() — works on real and mock models."""
     total = 0
@@ -83,7 +85,6 @@ def _head_importance_scores(weight: Any, num_heads: int) -> List[float]:
         List of float scores, one per head (ascending = less important).
     """
     # Avoid real torch import at module level — import lazily
-    import torch
 
     rows_per_head = weight.shape[0] // num_heads
     scores = []
@@ -116,6 +117,7 @@ def _zero_head_rows(weight: Any, head_indices: List[int], num_heads: int) -> int
 # ---------------------------------------------------------------------------
 # Pruner class
 # ---------------------------------------------------------------------------
+
 
 class StructuredPruner:
     """
@@ -221,8 +223,7 @@ class StructuredPruner:
         layers = self._find_transformer_layers()
         if not layers:
             self.logger.warning(
-                "No transformer layers found — model structure not recognised. "
-                "Pruning skipped."
+                "No transformer layers found — model structure not recognised. Pruning skipped."
             )
             return 0, {}
 
@@ -261,8 +262,7 @@ class StructuredPruner:
             heads_per_layer[layer_name] = n_prune
 
             self.logger.debug(
-                f"  {layer_name}: pruned {n_prune}/{num_heads} heads "
-                f"({zeroed:,} params zeroed)"
+                f"  {layer_name}: pruned {n_prune}/{num_heads} heads ({zeroed:,} params zeroed)"
             )
 
         return total_zeroed, heads_per_layer
@@ -288,7 +288,7 @@ class StructuredPruner:
                 neurons_per_layer[layer_name] = 0
                 continue
 
-            import torch
+
             scores = ffn_proj.weight.abs().mean(dim=1).tolist()
             sorted_neurons = sorted(range(num_neurons), key=lambda i: scores[i])
             prune_indices = sorted_neurons[:n_prune]
@@ -309,11 +309,11 @@ class StructuredPruner:
         Searches model.model.layers, model.transformer.h, model.model.decoder.layers, etc.
         """
         candidates = [
-            ("model.layers",          lambda m: m.model.layers),
-            ("transformer.h",         lambda m: m.transformer.h),
-            ("model.decoder.layers",  lambda m: m.model.decoder.layers),
-            ("encoder.layers",        lambda m: m.encoder.layers),
-            ("bert.encoder.layer",    lambda m: m.bert.encoder.layer),
+            ("model.layers", lambda m: m.model.layers),
+            ("transformer.h", lambda m: m.transformer.h),
+            ("model.decoder.layers", lambda m: m.model.decoder.layers),
+            ("encoder.layers", lambda m: m.encoder.layers),
+            ("bert.encoder.layer", lambda m: m.bert.encoder.layer),
         ]
         for path, accessor in candidates:
             try:

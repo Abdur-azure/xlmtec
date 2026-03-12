@@ -4,10 +4,8 @@ Unit tests for the `recommend` CLI subcommand.
 Mocks AutoConfig and torch.cuda so tests run without network or GPU.
 """
 
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 import yaml
 from typer.testing import CliRunner
 
@@ -29,8 +27,8 @@ def _mock_autoconfig(hidden=768, layers=12):
 # TESTS
 # ============================================================================
 
-class TestRecommendCommand:
 
+class TestRecommendCommand:
     @patch("torch.cuda.is_available", return_value=False)
     @patch("transformers.AutoConfig.from_pretrained")
     def test_outputs_valid_yaml(self, mock_cfg, mock_cuda):
@@ -52,7 +50,7 @@ class TestRecommendCommand:
     @patch("transformers.AutoConfig.from_pretrained")
     def test_large_model_with_low_vram_recommends_qlora(self, mock_cfg, mock_props, mock_cuda):
         mock_cfg.return_value = _mock_autoconfig(hidden=4096, layers=32)  # ~7B
-        mock_props.return_value = MagicMock(total_memory=8 * 1024 ** 3)  # 8GB VRAM
+        mock_props.return_value = MagicMock(total_memory=8 * 1024**3)  # 8GB VRAM
         result = runner.invoke(app, ["recommend", "llama"])
         assert result.exit_code == 0
         assert "qlora" in result.output
@@ -87,6 +85,7 @@ class TestRecommendCommand:
         runner.invoke(app, ["recommend", "gpt2", "--output", str(out_file)])
 
         from xlmtec.core.config import PipelineConfig
+
         with patch("pathlib.Path.exists", return_value=True):
             cfg = PipelineConfig.from_yaml(out_file)
         assert cfg.training is not None

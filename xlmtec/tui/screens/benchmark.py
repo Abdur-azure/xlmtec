@@ -2,16 +2,16 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, ScrollableContainer, Vertical
+from textual.containers import Horizontal, ScrollableContainer
 from textual.screen import Screen
 from textual.validation import Length
 from textual.widgets import Button, Checkbox, Footer, Header, Input, Label
 
 _METRIC_OPTIONS = [
-    ("rouge1",     "ROUGE-1"),
-    ("rouge2",     "ROUGE-2"),
-    ("rougeL",     "ROUGE-L"),
-    ("bleu",       "BLEU"),
+    ("rouge1", "ROUGE-1"),
+    ("rouge2", "ROUGE-2"),
+    ("rougeL", "ROUGE-L"),
+    ("bleu", "BLEU"),
     ("perplexity", "Perplexity"),
 ]
 
@@ -187,10 +187,15 @@ class BenchmarkScreen(Screen):
             return
 
         command = [
-            "xlmtec", "evaluate", "benchmark",
-            "--base", base,
-            "--finetuned", finetuned,
-            "--dataset", dataset,
+            "xlmtec",
+            "evaluate",
+            "benchmark",
+            "--base",
+            base,
+            "--finetuned",
+            finetuned,
+            "--dataset",
+            dataset,
         ]
         for m in selected_metrics:
             command += ["--metric", m]
@@ -200,6 +205,7 @@ class BenchmarkScreen(Screen):
             command += ["--report", report]
 
         from xlmtec.tui.screens.running import RunningScreen
+
         self.app.switch_screen(
             RunningScreen(
                 command=command,

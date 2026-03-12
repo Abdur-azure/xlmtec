@@ -45,8 +45,8 @@ _MAX_CRASH_FILES = 20
 @dataclass
 class CrashFile:
     path: Path
-    timestamp: str       # YYYYMMDD_HHMMSS from filename
-    cmd: str             # command that crashed
+    timestamp: str  # YYYYMMDD_HHMMSS from filename
+    cmd: str  # command that crashed
 
 
 class CrashReporter:
@@ -58,7 +58,7 @@ class CrashReporter:
 
     @staticmethod
     def write(
-        session: Optional[object],   # utils.telemetry.Session (typed loosely to avoid circular)
+        session: Optional[object],  # utils.telemetry.Session (typed loosely to avoid circular)
         exc: BaseException,
         log_dir: Path = _LOG_DIR,
     ) -> Path:
@@ -99,7 +99,7 @@ class CrashReporter:
         files = sorted(log_dir.glob("crash_*.txt"), reverse=True)[:n]
         result = []
         for p in files:
-            parts = p.stem.split("_", 1)           # ["crash", "20260311_142201"]
+            parts = p.stem.split("_", 1)  # ["crash", "20260311_142201"]
             ts = parts[1] if len(parts) == 2 else "unknown"
             # Try to extract cmd from matching session file
             cmd = CrashReporter._cmd_from_session(p.parent, ts)
@@ -112,7 +112,7 @@ class CrashReporter:
 
     @staticmethod
     def _format(session: Optional[object], exc: BaseException) -> str:
-        from xlmtec.utils.telemetry import _xlmtec_version, _gpu_info
+        from xlmtec.utils.telemetry import _gpu_info, _xlmtec_version
 
         tb_lines = traceback.format_exception(type(exc), exc, exc.__traceback__)
         tb_str = "".join(tb_lines).strip()
@@ -123,13 +123,12 @@ class CrashReporter:
             try:
                 events = list(getattr(session, "events", []))[-10:]
                 if events:
-                    import json
+
                     lines = []
                     for ev in events:
-                        ts = ev.get("ts", "")[-12:]   # just time portion
+                        ts = ev.get("ts", "")[-12:]  # just time portion
                         name = ev.get("event", "?")
-                        extra = {k: v for k, v in ev.items()
-                                 if k not in ("ts", "session", "event")}
+                        extra = {k: v for k, v in ev.items() if k not in ("ts", "session", "event")}
                         line = f"  [{ts}]  {name}"
                         if extra:
                             line += "  " + "  ".join(f"{k}={v}" for k, v in extra.items())
@@ -191,6 +190,7 @@ class CrashReporter:
             if matches:
                 # Parse first event to find cmd
                 import json
+
                 first_line = matches[-1].read_text(encoding="utf-8").splitlines()[0]
                 ev = json.loads(first_line)
                 return str(ev.get("cmd", "unknown"))

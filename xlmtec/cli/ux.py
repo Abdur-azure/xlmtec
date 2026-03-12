@@ -9,22 +9,21 @@ Import from here — never instantiate Console() or Progress() in command files.
 
 from __future__ import annotations
 
-from importlib.metadata import version, PackageNotFoundError
-from typing import Generator
 from contextlib import contextmanager
+from importlib.metadata import PackageNotFoundError, version
+from typing import Generator
 
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import (
+    BarColumn,
     Progress,
     SpinnerColumn,
-    BarColumn,
     TextColumn,
     TimeElapsedColumn,
-    TaskID,
 )
 from rich.table import Table
-from rich import box
 
 console = Console()
 err_console = Console(stderr=True)
@@ -33,6 +32,7 @@ err_console = Console(stderr=True)
 # ---------------------------------------------------------------------------
 # Version
 # ---------------------------------------------------------------------------
+
 
 def get_version() -> str:
     """Return the installed xlmtec version string."""
@@ -46,24 +46,29 @@ def get_version() -> str:
 # Panels
 # ---------------------------------------------------------------------------
 
+
 def print_error(title: str, message: str) -> None:
     """Print a formatted error panel to stderr."""
-    err_console.print(Panel(
-        f"[bold]{message}[/bold]",
-        title=f"[red]✗ {title}[/red]",
-        border_style="red",
-        padding=(0, 1),
-    ))
+    err_console.print(
+        Panel(
+            f"[bold]{message}[/bold]",
+            title=f"[red]✗ {title}[/red]",
+            border_style="red",
+            padding=(0, 1),
+        )
+    )
 
 
 def print_success(title: str, message: str) -> None:
     """Print a formatted success panel."""
-    console.print(Panel(
-        f"[bold]{message}[/bold]",
-        title=f"[green]✓ {title}[/green]",
-        border_style="green",
-        padding=(0, 1),
-    ))
+    console.print(
+        Panel(
+            f"[bold]{message}[/bold]",
+            title=f"[green]✓ {title}[/green]",
+            border_style="green",
+            padding=(0, 1),
+        )
+    )
 
 
 def print_warning(message: str) -> None:
@@ -71,7 +76,9 @@ def print_warning(message: str) -> None:
     console.print(f"[yellow]⚠[/yellow]  {message}")
 
 
-def print_dry_run_table(rows: list[tuple[str, str]], title: str = "Dry Run — Training Plan") -> None:
+def print_dry_run_table(
+    rows: list[tuple[str, str]], title: str = "Dry Run — Training Plan"
+) -> None:
     """Print a table summarising what a dry run would do."""
     table = Table(
         title=title,
@@ -92,6 +99,7 @@ def print_dry_run_table(rows: list[tuple[str, str]], title: str = "Dry Run — T
 # ---------------------------------------------------------------------------
 # Progress
 # ---------------------------------------------------------------------------
+
 
 @contextmanager
 def task_progress(description: str) -> Generator[None, None, None]:

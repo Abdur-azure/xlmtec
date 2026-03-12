@@ -33,9 +33,7 @@ def get_provider(name: str, api_key: str | None = None) -> "AIIntegration":
     """
     name = name.lower().strip()
     if name not in PROVIDERS:
-        raise ValueError(
-            f"Unknown provider {name!r}. Choose from: {', '.join(PROVIDERS)}"
-        )
+        raise ValueError(f"Unknown provider {name!r}. Choose from: {', '.join(PROVIDERS)}")
     return PROVIDERS[name](api_key=api_key)
 
 

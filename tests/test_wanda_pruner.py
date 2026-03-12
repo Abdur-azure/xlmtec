@@ -7,10 +7,15 @@ Model loading and save_pretrained are mocked.
 
 import warnings
 from pathlib import Path
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock
 
 import pytest
-import torch
+
+# Guard: skip entire module if torch is not installed.
+# These tests use real CPU tensors for math correctness, so torch is required.
+# pytest.importorskip raises Skipped at collection time (not an ImportError),
+# which is the correct behaviour for optional-dep test files.
+torch = pytest.importorskip("torch", reason="torch not installed — skipping wanda tests")
 
 from xlmtec.core.exceptions import FineTuneError
 from xlmtec.core.types import WandaConfig
@@ -24,6 +29,7 @@ from xlmtec.trainers.wanda_pruner import (
 # ============================================================================
 # Helpers
 # ============================================================================
+
 
 def _make_wanda_config(tmp_path: Path, sparsity: float = 0.5) -> WandaConfig:
     return WandaConfig(
@@ -57,8 +63,8 @@ def _make_model_mock(n_layers: int = 2) -> MagicMock:
 # WandaConfig validation
 # ============================================================================
 
-class TestWandaConfig:
 
+class TestWandaConfig:
     def test_valid_config_constructs(self, tmp_path):
         cfg = WandaConfig(output_dir=tmp_path, sparsity=0.5)
         assert cfg.sparsity == 0.5
@@ -71,21 +77,21 @@ class TestWandaConfig:
 
     def test_invalid_sparsity_raises(self, tmp_path):
         with pytest.raises(FineTuneError):
-            WandaPruner(MagicMock(), MagicMock(),
-                        WandaConfig(output_dir=tmp_path, sparsity=1.0))
+            WandaPruner(MagicMock(), MagicMock(), WandaConfig(output_dir=tmp_path, sparsity=1.0))
 
     def test_invalid_n_calibration_raises(self, tmp_path):
         with pytest.raises(FineTuneError):
-            WandaPruner(MagicMock(), MagicMock(),
-                        WandaConfig(output_dir=tmp_path, n_calibration_samples=0))
+            WandaPruner(
+                MagicMock(), MagicMock(), WandaConfig(output_dir=tmp_path, n_calibration_samples=0)
+            )
 
 
 # ============================================================================
 # Internal helper unit tests
 # ============================================================================
 
-class TestWandaHelpers:
 
+class TestWandaHelpers:
     def test_wanda_score_shape_matches_weight(self):
         weight = torch.ones(4, 8)
         act_norm = torch.ones(8) * 2.0
@@ -133,8 +139,8 @@ class TestWandaHelpers:
 # WandaPruner.prune() — no calibration data (magnitude-only fallback)
 # ============================================================================
 
-class TestWandaPrunerNoCalibraton:
 
+class TestWandaPrunerNoCalibraton:
     def test_prune_returns_wanda_result(self, tmp_path):
         model, _ = _make_model_mock()
         cfg = _make_wanda_config(tmp_path)
@@ -179,8 +185,7 @@ class TestWandaPrunerNoCalibraton:
 
     def test_result_has_timing(self, tmp_path):
         model, _ = _make_model_mock()
-        result = WandaPruner(model, MagicMock(),
-                             _make_wanda_config(tmp_path)).prune()
+        result = WandaPruner(model, MagicMock(), _make_wanda_config(tmp_path)).prune()
         assert result.pruning_time_seconds >= 0.0
 
 
@@ -188,8 +193,8 @@ class TestWandaPrunerNoCalibraton:
 # WandaPruner.prune() — with calibration data
 # ============================================================================
 
-class TestWandaPrunerWithCalibration:
 
+class TestWandaPrunerWithCalibration:
     def test_prune_with_calibration_returns_result(self, tmp_path):
         """Calibration path runs end-to-end without error."""
         # Build a real tiny model-like object with a real Linear

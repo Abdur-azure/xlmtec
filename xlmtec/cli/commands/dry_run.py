@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from xlmtec.cli.ux import console, print_error, print_success, print_dry_run_table
+from xlmtec.cli.ux import console, print_dry_run_table, print_error, print_success
 
 try:
     from xlmtec.core.config import PipelineConfig
@@ -50,23 +50,23 @@ def execute_dry_run(config_path: Path) -> int:
 
     # ── Print plan ────────────────────────────────────────────────────────
     training = raw.get("training", {}) or {}
-    model    = raw.get("model", {}) or {}
-    dataset  = raw.get("dataset", {}) or {}
-    lora     = raw.get("lora", {}) or {}
+    model = raw.get("model", {}) or {}
+    dataset = raw.get("dataset", {}) or {}
+    lora = raw.get("lora", {}) or {}
 
     rows = [
-        ("Model",          model.get("name", "—")),
-        ("Method",         raw.get("method", "lora")),
+        ("Model", model.get("name", "—")),
+        ("Method", raw.get("method", "lora")),
         ("Dataset source", dataset.get("source", "—")),
-        ("Dataset path",   dataset.get("path", "—")),
-        ("Epochs",         str(training.get("num_epochs", 3))),
-        ("Batch size",     str(training.get("batch_size", 4))),
-        ("Learning rate",  str(training.get("learning_rate", 2e-4))),
-        ("Output dir",     training.get("output_dir", "output/")),
+        ("Dataset path", dataset.get("path", "—")),
+        ("Epochs", str(training.get("num_epochs", 3))),
+        ("Batch size", str(training.get("batch_size", 4))),
+        ("Learning rate", str(training.get("learning_rate", 2e-4))),
+        ("Output dir", training.get("output_dir", "output/")),
     ]
     if lora:
         rows += [
-            ("LoRA r",     str(lora.get("r", "—"))),
+            ("LoRA r", str(lora.get("r", "—"))),
             ("LoRA alpha", str(lora.get("alpha", "—"))),
         ]
 

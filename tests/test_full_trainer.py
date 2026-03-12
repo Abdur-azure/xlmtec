@@ -6,7 +6,6 @@ No real torch tensors — all params are MagicMock per lessons.md rule.
 """
 
 import warnings
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -21,6 +20,7 @@ from xlmtec.trainers.full_trainer import _VRAM_WARNING_THRESHOLD, FullFineTuner
 # HELPERS
 # ============================================================================
 
+
 def _make_param(numel: int, requires_grad: bool = True) -> MagicMock:
     """Pure MagicMock parameter — no real tensors, no torch import required."""
     param = MagicMock()
@@ -32,6 +32,7 @@ def _make_param(numel: int, requires_grad: bool = True) -> MagicMock:
 # ============================================================================
 # FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def full_training_config(tmp_path) -> TrainingConfig:
@@ -45,19 +46,21 @@ def full_training_config(tmp_path) -> TrainingConfig:
 
 @pytest.fixture
 def small_dataset() -> Dataset:
-    return Dataset.from_dict({
-        "input_ids": [[1, 2, 3, 4]] * 8,
-        "attention_mask": [[1, 1, 1, 1]] * 8,
-        "labels": [[1, 2, 3, 4]] * 8,
-    })
+    return Dataset.from_dict(
+        {
+            "input_ids": [[1, 2, 3, 4]] * 8,
+            "attention_mask": [[1, 1, 1, 1]] * 8,
+            "labels": [[1, 2, 3, 4]] * 8,
+        }
+    )
 
 
 # ============================================================================
 # TESTS
 # ============================================================================
 
-class TestFullFineTuner:
 
+class TestFullFineTuner:
     def test_all_params_trainable_after_setup(
         self, mock_model, mock_tokenizer, full_training_config
     ):
@@ -95,8 +98,13 @@ class TestFullFineTuner:
     @patch("xlmtec.trainers.base.BaseTrainer._build_hf_trainer")
     @patch("xlmtec.trainers.base.BaseTrainer._build_training_args")
     def test_train_returns_result(
-        self, mock_args, mock_hf_trainer, mock_model, mock_tokenizer,
-        full_training_config, small_dataset
+        self,
+        mock_args,
+        mock_hf_trainer,
+        mock_model,
+        mock_tokenizer,
+        full_training_config,
+        small_dataset,
     ):
         # Pure MagicMock param — no torch required
         mock_model.parameters.side_effect = lambda: iter([_make_param(16)])
@@ -117,9 +125,7 @@ class TestFullFineTuner:
         assert isinstance(result, TrainingResult)
         assert result.output_dir == full_training_config.output_dir
 
-    def test_factory_creates_full_finetuner(
-        self, mock_model, mock_tokenizer, full_training_config
-    ):
+    def test_factory_creates_full_finetuner(self, mock_model, mock_tokenizer, full_training_config):
         # Pure MagicMock param — no torch required
         mock_model.parameters.side_effect = lambda: iter([_make_param(16)])
 

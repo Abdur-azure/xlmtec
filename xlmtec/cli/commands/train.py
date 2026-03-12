@@ -5,12 +5,11 @@ Provides commands for training models with different methods.
 """
 
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from ...core.config import ConfigBuilder
@@ -33,40 +32,42 @@ console = Console()
 def run(
     # Model configuration
     model_name: str = typer.Option(..., "--model", "-m", help="Model name or path"),
-
     # Dataset configuration
     dataset_path: str = typer.Option(..., "--dataset", "-d", help="Dataset path or HF identifier"),
-    dataset_source: str = typer.Option("local", "--source", help="Dataset source: local or huggingface"),
-    max_samples: Optional[int] = typer.Option(None, "--max-samples", help="Limit number of samples"),
-
+    dataset_source: str = typer.Option(
+        "local", "--source", help="Dataset source: local or huggingface"
+    ),
+    max_samples: Optional[int] = typer.Option(
+        None, "--max-samples", help="Limit number of samples"
+    ),
     # Training method
-    method: str = typer.Option("lora", "--method", help="Training method: lora, qlora, full_finetuning"),
-
+    method: str = typer.Option(
+        "lora", "--method", help="Training method: lora, qlora, full_finetuning"
+    ),
     # Output
     output_dir: Path = typer.Option("./outputs", "--output", "-o", help="Output directory"),
-
     # Training parameters
     epochs: int = typer.Option(3, "--epochs", "-e", help="Number of training epochs"),
     batch_size: int = typer.Option(4, "--batch-size", "-b", help="Batch size"),
     learning_rate: float = typer.Option(2e-4, "--lr", help="Learning rate"),
-
     # LoRA parameters (if applicable)
     lora_r: int = typer.Option(8, "--lora-r", help="LoRA rank"),
     lora_alpha: int = typer.Option(32, "--lora-alpha", help="LoRA alpha"),
     lora_dropout: float = typer.Option(0.1, "--lora-dropout", help="LoRA dropout"),
-
     # Quantization (for QLoRA)
     load_in_4bit: bool = typer.Option(False, "--4bit", help="Load model in 4-bit"),
     load_in_8bit: bool = typer.Option(False, "--8bit", help="Load model in 8-bit"),
-
     # Additional options
     validation_split: float = typer.Option(0.1, "--val-split", help="Validation split ratio"),
     max_length: int = typer.Option(512, "--max-length", help="Maximum sequence length"),
-    gradient_checkpointing: bool = typer.Option(False, "--grad-checkpoint", help="Enable gradient checkpointing"),
-
+    gradient_checkpointing: bool = typer.Option(
+        False, "--grad-checkpoint", help="Enable gradient checkpointing"
+    ),
     # Logging
     log_level: str = typer.Option("INFO", "--log-level", help="Logging level"),
-    save_config: bool = typer.Option(True, "--save-config/--no-save-config", help="Save configuration"),
+    save_config: bool = typer.Option(
+        True, "--save-config/--no-save-config", help="Save configuration"
+    ),
 ):
     """
     Train a model with specified configuration.
@@ -79,17 +80,19 @@ def run(
     logger = setup_logger("train", level=LogLevel[log_level.upper()])
 
     # Display training info
-    console.print(Panel.fit(
-        f"[bold cyan]Training Configuration[/bold cyan]\n\n"
-        f"[yellow]Model:[/yellow] {model_name}\n"
-        f"[yellow]Dataset:[/yellow] {dataset_path}\n"
-        f"[yellow]Method:[/yellow] {method}\n"
-        f"[yellow]Epochs:[/yellow] {epochs}\n"
-        f"[yellow]Batch Size:[/yellow] {batch_size}\n"
-        f"[yellow]Output:[/yellow] {output_dir}",
-        title="🚀 Training",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Training Configuration[/bold cyan]\n\n"
+            f"[yellow]Model:[/yellow] {model_name}\n"
+            f"[yellow]Dataset:[/yellow] {dataset_path}\n"
+            f"[yellow]Method:[/yellow] {method}\n"
+            f"[yellow]Epochs:[/yellow] {epochs}\n"
+            f"[yellow]Batch Size:[/yellow] {batch_size}\n"
+            f"[yellow]Output:[/yellow] {output_dir}",
+            title="🚀 Training",
+            border_style="cyan",
+        )
+    )
 
     try:
         # Validate method
@@ -109,16 +112,16 @@ def run(
                 model_name,
                 device=DeviceType.AUTO,
                 load_in_4bit=load_in_4bit,
-                load_in_8bit=load_in_8bit
+                load_in_8bit=load_in_8bit,
             )
 
             # Dataset config
-            source = DatasetSource.LOCAL_FILE if dataset_source == "local" else DatasetSource.HUGGINGFACE_HUB
-            config_builder.with_dataset(
-                dataset_path,
-                source=source,
-                max_samples=max_samples
+            source = (
+                DatasetSource.LOCAL_FILE
+                if dataset_source == "local"
+                else DatasetSource.HUGGINGFACE_HUB
             )
+            config_builder.with_dataset(dataset_path, source=source, max_samples=max_samples)
 
             # Tokenization config
             config_builder.with_tokenization(max_length=max_length)
@@ -130,16 +133,12 @@ def run(
                 num_epochs=epochs,
                 batch_size=batch_size,
                 learning_rate=learning_rate,
-                gradient_checkpointing=gradient_checkpointing
+                gradient_checkpointing=gradient_checkpointing,
             )
 
             # LoRA config (if needed)
-            if method in ['lora', 'qlora']:
-                config_builder.with_lora(
-                    r=lora_r,
-                    lora_alpha=lora_alpha,
-                    lora_dropout=lora_dropout
-                )
+            if method in ["lora", "qlora"]:
+                config_builder.with_lora(r=lora_r, lora_alpha=lora_alpha, lora_dropout=lora_dropout)
 
             config = config_builder.build()
 
@@ -162,9 +161,11 @@ def run(
                 config.tokenization.to_config(),
                 tokenizer,
                 split_for_validation=True,
-                validation_ratio=validation_split
+                validation_ratio=validation_split,
             )
-            console.print(f"[green]✓[/green] Dataset prepared: {len(splits['train'])} train, {len(splits['validation'])} val")
+            console.print(
+                f"[green]✓[/green] Dataset prepared: {len(splits['train'])} train, {len(splits['validation'])} val"
+            )
 
         # Train
         console.print("\n[bold yellow]Starting training...[/bold yellow]\n")
@@ -172,11 +173,11 @@ def run(
         result = train_model(
             model=model,
             tokenizer=tokenizer,
-            train_dataset=splits['train'],
-            eval_dataset=splits['validation'],
+            train_dataset=splits["train"],
+            eval_dataset=splits["validation"],
             training_config=config.training.to_config(),
-            lora_config=config.lora.to_config() if method in ['lora', 'qlora'] else None,
-            model_config=config.model.to_config() if method == 'qlora' else None
+            lora_config=config.lora.to_config() if method in ["lora", "qlora"] else None,
+            model_config=config.model.to_config() if method == "qlora" else None,
         )
 
         # Display results
@@ -231,7 +232,7 @@ def quick(
         output_dir=output,
         method="lora",
         epochs=3,
-        batch_size=4
+        batch_size=4,
     )
 
 
@@ -252,13 +253,15 @@ def resume(
         xlmtec train resume ./outputs/checkpoint-100 --epochs 2
     """
 
-    console.print(Panel.fit(
-        f"[bold cyan]Resuming Training[/bold cyan]\n\n"
-        f"[yellow]Checkpoint:[/yellow] {checkpoint}\n"
-        f"[yellow]Additional Epochs:[/yellow] {additional_epochs}",
-        title="🔄 Resume",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Resuming Training[/bold cyan]\n\n"
+            f"[yellow]Checkpoint:[/yellow] {checkpoint}\n"
+            f"[yellow]Additional Epochs:[/yellow] {additional_epochs}",
+            title="🔄 Resume",
+            border_style="cyan",
+        )
+    )
 
     try:
         # Load config from checkpoint
@@ -268,10 +271,12 @@ def resume(
             raise typer.Exit(1)
 
         from ...core.config import PipelineConfig
+
         config = PipelineConfig.from_json(config_file)
 
         # Update epochs
         from dataclasses import replace
+
         config.training = replace(config.training, num_epochs=additional_epochs)
 
         console.print("[green]✓[/green] Configuration loaded")

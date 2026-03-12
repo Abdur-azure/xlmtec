@@ -25,11 +25,12 @@ def _register() -> None:
     """Lazily populate the registry the first time it's needed."""
     if _NOTIFIERS:
         return
-    from xlmtec.notifications.slack   import SlackNotifier
-    from xlmtec.notifications.email   import EmailNotifier
     from xlmtec.notifications.desktop import DesktopNotifier
-    _NOTIFIERS["slack"]   = SlackNotifier
-    _NOTIFIERS["email"]   = EmailNotifier
+    from xlmtec.notifications.email import EmailNotifier
+    from xlmtec.notifications.slack import SlackNotifier
+
+    _NOTIFIERS["slack"] = SlackNotifier
+    _NOTIFIERS["email"] = EmailNotifier
     _NOTIFIERS["desktop"] = DesktopNotifier
 
 

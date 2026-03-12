@@ -2,7 +2,7 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, ScrollableContainer, Vertical
+from textual.containers import Horizontal, ScrollableContainer
 from textual.screen import Screen
 from textual.validation import Length, Number
 from textual.widgets import Button, Footer, Header, Input, Label, Select
@@ -187,16 +187,24 @@ class TrainScreen(Screen):
             return
 
         command = [
-            "xlmtec", "train",
-            "--model", model,
-            "--dataset", dataset,
-            "--method", str(method),
-            "--epochs", epochs,
-            "--lr", lr,
-            "--output", output,
+            "xlmtec",
+            "train",
+            "--model",
+            model,
+            "--dataset",
+            dataset,
+            "--method",
+            str(method),
+            "--epochs",
+            epochs,
+            "--lr",
+            lr,
+            "--output",
+            output,
         ]
 
         from xlmtec.tui.screens.running import RunningScreen
+
         self.app.switch_screen(
             RunningScreen(
                 command=command,

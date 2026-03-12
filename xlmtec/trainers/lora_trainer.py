@@ -5,9 +5,8 @@ Applies PEFT LoRA adapters to the model, training only adapter
 weights while the base model remains frozen.
 """
 
-from typing import Optional
 
-from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
+from peft import LoraConfig, TaskType, get_peft_model
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from ..core.types import LoRAConfig as LoRAConfigType
@@ -66,8 +65,7 @@ class LoRATrainer(BaseTrainer):
         # Log trainable parameter count
         trainable, total = self._count_parameters(peft_model)
         self.logger.info(
-            f"Trainable parameters: {trainable:,} / {total:,} "
-            f"({100 * trainable / total:.2f}%)"
+            f"Trainable parameters: {trainable:,} / {total:,} ({100 * trainable / total:.2f}%)"
         )
 
         return peft_model

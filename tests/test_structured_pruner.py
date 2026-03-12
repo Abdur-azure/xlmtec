@@ -6,7 +6,7 @@ All torch and model interactions are mocked — no GPU, no HF downloads.
 
 import warnings
 from pathlib import Path
-from unittest.mock import MagicMock, PropertyMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -23,6 +23,7 @@ from xlmtec.trainers.structured_pruner import (
 # ============================================================================
 # Helpers
 # ============================================================================
+
 
 def _make_param(numel: int, requires_grad: bool = True) -> MagicMock:
     """Return a MagicMock that looks like an nn.Parameter to _count_params."""
@@ -75,8 +76,8 @@ def _make_model_mock(num_heads: int = 4) -> MagicMock:
 # PruningConfig validation
 # ============================================================================
 
-class TestPruningConfig:
 
+class TestPruningConfig:
     def test_valid_config_constructs(self, tmp_path):
         cfg = PruningConfig(output_dir=tmp_path, sparsity=0.3)
         assert cfg.sparsity == 0.3
@@ -90,15 +91,13 @@ class TestPruningConfig:
     def test_invalid_sparsity_raises(self, tmp_path):
         with pytest.raises(FineTuneError):
             pruner = StructuredPruner(
-                MagicMock(), MagicMock(),
-                PruningConfig(output_dir=tmp_path, sparsity=1.5)
+                MagicMock(), MagicMock(), PruningConfig(output_dir=tmp_path, sparsity=1.5)
             )
 
     def test_invalid_method_raises(self, tmp_path):
         with pytest.raises(FineTuneError):
             StructuredPruner(
-                MagicMock(), MagicMock(),
-                PruningConfig(output_dir=tmp_path, method="invalid")
+                MagicMock(), MagicMock(), PruningConfig(output_dir=tmp_path, method="invalid")
             )
 
 
@@ -106,26 +105,29 @@ class TestPruningConfig:
 # Internal helper unit tests
 # ============================================================================
 
-class TestHelpers:
 
+class TestHelpers:
     def test_head_importance_scores_returns_one_per_head(self):
         import torch
-        weight = torch.ones(8, 8)   # 2 heads of size 4
+
+        weight = torch.ones(8, 8)  # 2 heads of size 4
         scores = _head_importance_scores(weight, num_heads=2)
         assert len(scores) == 2
 
     def test_head_importance_scores_differentiates_magnitudes(self):
         import torch
+
         # Head 0: small weights; Head 1: large weights
         weight = torch.zeros(8, 8)
-        weight[:4] = 0.1   # head 0
-        weight[4:] = 1.0   # head 1
+        weight[:4] = 0.1  # head 0
+        weight[4:] = 1.0  # head 1
         scores = _head_importance_scores(weight, num_heads=2)
         assert scores[0] < scores[1]
 
     def test_zero_head_rows_zeroes_correct_rows(self):
         import torch
-        weight = torch.ones(8, 8)   # 2 heads of 4 rows each
+
+        weight = torch.ones(8, 8)  # 2 heads of 4 rows each
         zeroed = _zero_head_rows(weight, head_indices=[0], num_heads=2)
         assert (weight[:4] == 0).all()
         assert (weight[4:] == 1).all()
@@ -141,10 +143,10 @@ class TestHelpers:
 # StructuredPruner.prune() — attention head pruning
 # ============================================================================
 
-class TestStructuredPrunerHeads:
 
+class TestStructuredPrunerHeads:
     def test_prune_returns_pruning_result(self, tmp_path):
-        import torch
+
         model = _make_model_mock(num_heads=4)
         tokenizer = MagicMock()
         cfg = _make_pruning_config(tmp_path, sparsity=0.5)
@@ -199,12 +201,11 @@ class TestStructuredPrunerHeads:
         )
         result = StructuredPruner(model, tokenizer, cfg).prune()
         for n_pruned in result.heads_pruned_per_layer.values():
-            assert n_pruned <= 3   # 4 - min_heads_per_layer(1)
+            assert n_pruned <= 3  # 4 - min_heads_per_layer(1)
 
     def test_prune_result_has_timing(self, tmp_path):
         model = _make_model_mock(num_heads=4)
-        result = StructuredPruner(model, MagicMock(),
-                                  _make_pruning_config(tmp_path)).prune()
+        result = StructuredPruner(model, MagicMock(), _make_pruning_config(tmp_path)).prune()
         assert result.pruning_time_seconds >= 0.0
 
     def test_unknown_model_structure_skips_gracefully(self, tmp_path):
@@ -224,8 +225,8 @@ class TestStructuredPrunerHeads:
 # FFN pruning method
 # ============================================================================
 
-class TestStructuredPrunerFFN:
 
+class TestStructuredPrunerFFN:
     def test_ffn_prune_returns_result(self, tmp_path):
         import torch
 

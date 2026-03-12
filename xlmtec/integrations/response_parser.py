@@ -33,15 +33,15 @@ def parse_response(raw: str, provider: str = "") -> SuggestResult:
     text = raw.strip()
 
     # Strip markdown fences if present
-    text = re.sub(r'^```(?:json)?\s*', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\s*```$', '', text, flags=re.MULTILINE)
+    text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.MULTILINE)
+    text = re.sub(r"\s*```$", "", text, flags=re.MULTILINE)
     text = text.strip()
 
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
         # Try extracting the first JSON object via regex
-        match = re.search(r'\{.*\}', text, re.DOTALL)
+        match = re.search(r"\{.*\}", text, re.DOTALL)
         if not match:
             raise ValueError(
                 f"Could not parse JSON from {provider or 'provider'} response.\n"
@@ -51,8 +51,7 @@ def parse_response(raw: str, provider: str = "") -> SuggestResult:
             data = json.loads(match.group())
         except json.JSONDecodeError as exc:
             raise ValueError(
-                f"Malformed JSON from {provider or 'provider'}: {exc}\n"
-                f"Raw response:\n{raw[:500]}"
+                f"Malformed JSON from {provider or 'provider'}: {exc}\nRaw response:\n{raw[:500]}"
             ) from exc
 
     method = data.get("method", "lora").strip()
@@ -73,6 +72,6 @@ def parse_response(raw: str, provider: str = "") -> SuggestResult:
 def _build_command(method: str, yaml_config: str) -> str:
     """Derive a ready-to-run CLI command from the parsed result."""
     # Try to extract output_dir from yaml for a nicer command
-    match = re.search(r'output_dir:\s*(\S+)', yaml_config)
+    match = re.search(r"output_dir:\s*(\S+)", yaml_config)
     output_hint = f" --output-dir {match.group(1)}" if match else ""
     return f"xlmtec train --method {method} --config config.yaml{output_hint}"

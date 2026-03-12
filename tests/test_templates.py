@@ -7,17 +7,15 @@ No ML dependencies — pure data and YAML validation.
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 import yaml
 
 from xlmtec.templates.registry import Template, get_template, list_templates
 
-
 # ---------------------------------------------------------------------------
 # list_templates
 # ---------------------------------------------------------------------------
+
 
 class TestListTemplates:
     def test_returns_all_templates(self):
@@ -43,6 +41,7 @@ class TestListTemplates:
 # ---------------------------------------------------------------------------
 # get_template
 # ---------------------------------------------------------------------------
+
 
 class TestGetTemplate:
     def test_returns_correct_template(self):
@@ -72,6 +71,7 @@ class TestGetTemplate:
 # ---------------------------------------------------------------------------
 # Template.as_dict
 # ---------------------------------------------------------------------------
+
 
 class TestAsDict:
     def test_returns_deep_copy(self):
@@ -109,6 +109,7 @@ class TestAsDict:
 # Template.to_yaml
 # ---------------------------------------------------------------------------
 
+
 class TestToYaml:
     def test_produces_valid_yaml(self):
         for t in list_templates():
@@ -130,6 +131,7 @@ class TestToYaml:
 # ---------------------------------------------------------------------------
 # Template configs — spot checks per template
 # ---------------------------------------------------------------------------
+
 
 class TestTemplateConfigs:
     def test_sentiment_uses_lora(self):
@@ -160,6 +162,7 @@ class TestTemplateConfigs:
 # ---------------------------------------------------------------------------
 # template use (direct logic — no CLI runner)
 # ---------------------------------------------------------------------------
+
 
 class TestTemplateUse:
     def test_saves_yaml_file(self, tmp_path):

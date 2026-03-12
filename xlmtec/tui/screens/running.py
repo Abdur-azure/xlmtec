@@ -12,7 +12,7 @@ from typing import List
 from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Label
 from textual.worker import Worker, WorkerState
@@ -185,6 +185,7 @@ class RunningScreen(Screen):
     def _on_command_finished(self) -> None:
         self._set_status("Done — pushing result screen…")
         from xlmtec.tui.screens.result import ResultScreen
+
         self.app.switch_screen(
             ResultScreen(
                 success=self._success,

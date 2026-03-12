@@ -11,18 +11,18 @@ from pathlib import Path
 from typing import Optional
 
 import typer
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
 
 from xlmtec.cli.ux import print_error, print_success
 
 try:
-    from xlmtec.dashboard.reader import RunReader
     from xlmtec.dashboard.comparator import RunComparator
+    from xlmtec.dashboard.reader import RunReader
 except ImportError:
-    RunReader = None    # type: ignore[assignment,misc]
+    RunReader = None  # type: ignore[assignment,misc]
     RunComparator = None  # type: ignore[assignment,misc]
 
 console = Console()
@@ -31,11 +31,11 @@ app = typer.Typer(help="Compare and inspect training runs.")
 
 @app.command("compare")
 def compare(
-    run_dirs: list[Path] = typer.Argument(
-        ..., help="Two or more run directories to compare."
-    ),
+    run_dirs: list[Path] = typer.Argument(..., help="Two or more run directories to compare."),
     export: Optional[Path] = typer.Option(
-        None, "--export", "-e",
+        None,
+        "--export",
+        "-e",
         help="Export comparison results to a JSON file.",
     ),
 ) -> None:
@@ -72,25 +72,36 @@ def compare(
     def _row(label: str, values: list) -> None:
         table.add_row(label, *[_fmt(v) for v in values])
 
-    _row("Total steps",          [r.total_steps for r in result.runs])
-    _row("Total epochs",         [f"{r.total_epochs:.1f}" for r in result.runs])
-    _row("Best metric",          [r.best_metric for r in result.runs])
-    _row("Best eval loss",       [r.best_eval_loss for r in result.runs])
-    _row("Final train loss",     [r.final_train_loss for r in result.runs])
-    _row("Runtime (s)",          [f"{r.train_runtime_seconds:.0f}" if r.train_runtime_seconds else "—" for r in result.runs])
-    _row("Samples/sec",          [f"{r.train_samples_per_second:.1f}" if r.train_samples_per_second else "—" for r in result.runs])
+    _row("Total steps", [r.total_steps for r in result.runs])
+    _row("Total epochs", [f"{r.total_epochs:.1f}" for r in result.runs])
+    _row("Best metric", [r.best_metric for r in result.runs])
+    _row("Best eval loss", [r.best_eval_loss for r in result.runs])
+    _row("Final train loss", [r.final_train_loss for r in result.runs])
+    _row(
+        "Runtime (s)",
+        [f"{r.train_runtime_seconds:.0f}" if r.train_runtime_seconds else "—" for r in result.runs],
+    )
+    _row(
+        "Samples/sec",
+        [
+            f"{r.train_samples_per_second:.1f}" if r.train_samples_per_second else "—"
+            for r in result.runs
+        ],
+    )
 
     console.print()
     console.print(table)
 
     # ── Winner ────────────────────────────────────────────────────────────
     if result.winner:
-        console.print(Panel(
-            f"[bold green]{result.winner.name}[/bold green] — {result.winner_reason}",
-            title="[bold]Winner[/bold]",
-            border_style="green",
-            padding=(0, 2),
-        ))
+        console.print(
+            Panel(
+                f"[bold green]{result.winner.name}[/bold green] — {result.winner_reason}",
+                title="[bold]Winner[/bold]",
+                border_style="green",
+                padding=(0, 2),
+            )
+        )
 
     # ── Config diff (2 runs only) ─────────────────────────────────────────
     if len(result.runs) == 2:
@@ -154,19 +165,25 @@ def show(
         f"[bold]Best metric:[/bold]    {_fmt(run.best_metric)} ({run.best_metric_name or '—'})",
         f"[bold]Best eval loss:[/bold] {_fmt(run.best_eval_loss)}",
         f"[bold]Final train loss:[/bold] {_fmt(run.final_train_loss)}",
-        f"[bold]Runtime:[/bold]        {run.train_runtime_seconds:.0f}s" if run.train_runtime_seconds else "[bold]Runtime:[/bold]        —",
-        f"[bold]Samples/sec:[/bold]    {run.train_samples_per_second:.1f}" if run.train_samples_per_second else "[bold]Samples/sec:[/bold]    —",
+        f"[bold]Runtime:[/bold]        {run.train_runtime_seconds:.0f}s"
+        if run.train_runtime_seconds
+        else "[bold]Runtime:[/bold]        —",
+        f"[bold]Samples/sec:[/bold]    {run.train_samples_per_second:.1f}"
+        if run.train_samples_per_second
+        else "[bold]Samples/sec:[/bold]    —",
     ]
     if run.best_model_checkpoint:
         lines.append(f"[bold]Best checkpoint:[/bold] {Path(run.best_model_checkpoint).name}")
 
     console.print()
-    console.print(Panel(
-        "\n".join(lines),
-        title=f"[bold cyan]{run.name}[/bold cyan]",
-        border_style="cyan",
-        padding=(1, 2),
-    ))
+    console.print(
+        Panel(
+            "\n".join(lines),
+            title=f"[bold cyan]{run.name}[/bold cyan]",
+            border_style="cyan",
+            padding=(1, 2),
+        )
+    )
 
     # ── Training history table ─────────────────────────────────────────────
     if run.history:
@@ -182,7 +199,11 @@ def show(
         hist_table.add_column("LR", justify="right")
 
         # Show max 20 rows
-        shown = run.history if len(run.history) <= 20 else run.history[::max(1, len(run.history) // 20)]
+        shown = (
+            run.history
+            if len(run.history) <= 20
+            else run.history[:: max(1, len(run.history) // 20)]
+        )
         for h in shown:
             hist_table.add_row(
                 str(h.step),
@@ -200,6 +221,7 @@ def show(
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _fmt(value) -> str:
     if value is None:

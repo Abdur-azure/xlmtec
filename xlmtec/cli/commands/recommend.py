@@ -22,10 +22,14 @@ console = Console()
 
 @app.command()
 def method(
-    model_size: float = typer.Option(..., "--model-size", help="Model size in billions (e.g., 0.124, 7, 13)"),
+    model_size: float = typer.Option(
+        ..., "--model-size", help="Model size in billions (e.g., 0.124, 7, 13)"
+    ),
     vram: float = typer.Option(..., "--vram", help="Available VRAM in GB"),
     task: str = typer.Option("medium", "--task", help="Task complexity: simple, medium, complex"),
-    multiple_adapters: bool = typer.Option(False, "--multiple-adapters", help="Need multiple task adapters"),
+    multiple_adapters: bool = typer.Option(
+        False, "--multiple-adapters", help="Need multiple task adapters"
+    ),
 ):
     """
     Get training method recommendation based on constraints.
@@ -38,43 +42,47 @@ def method(
     # Convert to parameters
     model_size_params = model_size * 1e9
 
-    console.print(Panel.fit(
-        f"[bold cyan]Recommendation Parameters[/bold cyan]\n\n"
-        f"[yellow]Model Size:[/yellow] {model_size}B parameters\n"
-        f"[yellow]Available VRAM:[/yellow] {vram} GB\n"
-        f"[yellow]Task Complexity:[/yellow] {task}\n"
-        f"[yellow]Multiple Adapters:[/yellow] {multiple_adapters}",
-        title="💡 Method Recommendation",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Recommendation Parameters[/bold cyan]\n\n"
+            f"[yellow]Model Size:[/yellow] {model_size}B parameters\n"
+            f"[yellow]Available VRAM:[/yellow] {vram} GB\n"
+            f"[yellow]Task Complexity:[/yellow] {task}\n"
+            f"[yellow]Multiple Adapters:[/yellow] {multiple_adapters}",
+            title="💡 Method Recommendation",
+            border_style="cyan",
+        )
+    )
 
     # Get recommendation
     recommendation = MethodRecommender.recommend(
         model_size_params=model_size_params,
         available_vram_gb=vram,
         task_complexity=task,
-        needs_multiple_adapters=multiple_adapters
+        needs_multiple_adapters=multiple_adapters,
     )
 
     # Display results
-    if recommendation['recommendation']:
-        console.print(f"\n[bold green]✓ Recommended Method:[/bold green] {recommendation['recommendation'].value}")
+    if recommendation["recommendation"]:
+        console.print(
+            f"\n[bold green]✓ Recommended Method:[/bold green] {recommendation['recommendation'].value}"
+        )
         console.print(f"[yellow]Reason:[/yellow] {recommendation['reason']}\n")
 
         # Memory estimates
         console.print("[bold]Memory Estimates:[/bold]")
-        for method, mem in recommendation['memory_estimates'].items():
+        for method, mem in recommendation["memory_estimates"].items():
             console.print(f"  {method}: {mem}")
 
         # Alternatives
-        if recommendation['alternatives']:
+        if recommendation["alternatives"]:
             console.print("\n[bold]Alternative Methods:[/bold]")
-            for alt in recommendation['alternatives']:
+            for alt in recommendation["alternatives"]:
                 console.print(f"  • {alt['method'].value}: {alt['reason']}")
     else:
         console.print(f"\n[bold red]✗ {recommendation['reason']}[/bold red]")
         console.print("\n[bold]Suggestions:[/bold]")
-        for suggestion in recommendation['suggestions']:
+        for suggestion in recommendation["suggestions"]:
             console.print(f"  • {suggestion}")
 
 
@@ -184,7 +192,7 @@ def hardware(
         xlmtec recommend hardware 7 --method qlora
     """
 
-    console.print(f"\n[bold cyan]Hardware Requirements[/bold cyan]")
+    console.print("\n[bold cyan]Hardware Requirements[/bold cyan]")
     console.print(f"Model: {model_size}B parameters, Method: {method}\n")
 
     # Estimate requirements
@@ -194,18 +202,18 @@ def hardware(
         "lora": {
             "vram": param_memory * 2,
             "system_ram": 16,
-            "notes": "~50% memory savings vs full fine-tuning"
+            "notes": "~50% memory savings vs full fine-tuning",
         },
         "qlora": {
             "vram": param_memory * 0.5,
             "system_ram": 16,
-            "notes": "~75% memory savings, enables large models on consumer GPUs"
+            "notes": "~75% memory savings, enables large models on consumer GPUs",
         },
         "full_finetuning": {
             "vram": param_memory * 4,
             "system_ram": 32,
-            "notes": "Requires significant memory, best for small models"
-        }
+            "notes": "Requires significant memory, best for small models",
+        },
     }
 
     req = requirements.get(method, requirements["lora"])
@@ -225,15 +233,15 @@ def hardware(
     # GPU recommendations
     console.print("\n[bold]Recommended GPUs:[/bold]")
 
-    if req['vram'] <= 8:
+    if req["vram"] <= 8:
         console.print("  ✓ RTX 3060 (12GB)")
         console.print("  ✓ RTX 4060 Ti (16GB)")
 
-    if req['vram'] <= 12:
+    if req["vram"] <= 12:
         console.print("  ✓ RTX 3090 (24GB)")
         console.print("  ✓ RTX 4090 (24GB)")
 
-    if req['vram'] <= 24:
+    if req["vram"] <= 24:
         console.print("  ✓ A100 (40GB/80GB)")
         console.print("  ✓ H100 (80GB)")
     else:

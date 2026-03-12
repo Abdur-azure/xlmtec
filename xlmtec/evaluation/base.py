@@ -12,7 +12,6 @@ from typing import Any, Dict, List, Optional
 from datasets import Dataset
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.exceptions import EvaluationError
 from ..core.types import EvaluationConfig, EvaluationMetric, EvaluationResult
 from ..utils.logging import get_logger
 
@@ -36,10 +35,10 @@ class MetricResult:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
         return {
-            'metric': self.metric_name,
-            'score': self.score,
-            'samples': self.samples_evaluated,
-            'metadata': self.metadata
+            "metric": self.metric_name,
+            "score": self.score,
+            "samples": self.samples_evaluated,
+            "metadata": self.metadata,
         }
 
 
@@ -55,10 +54,10 @@ class ComparisonResult:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
         return {
-            'base_model': self.base_metrics,
-            'finetuned_model': self.finetuned_metrics,
-            'improvements': self.improvements,
-            'timestamp': self.timestamp.isoformat()
+            "base_model": self.base_metrics,
+            "finetuned_model": self.finetuned_metrics,
+            "improvements": self.improvements,
+            "timestamp": self.timestamp.isoformat(),
         }
 
     def get_average_improvement(self) -> float:
@@ -85,12 +84,7 @@ class Metric(ABC):
         self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
 
     @abstractmethod
-    def compute(
-        self,
-        predictions: List[str],
-        references: List[str],
-        **kwargs
-    ) -> float:
+    def compute(self, predictions: List[str], references: List[str], **kwargs) -> float:
         """
         Compute metric score.
 
@@ -141,10 +135,7 @@ class Evaluator(ABC):
     """
 
     def __init__(
-        self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizer,
-        config: EvaluationConfig
+        self, model: PreTrainedModel, tokenizer: PreTrainedTokenizer, config: EvaluationConfig
     ):
         """
         Initialize evaluator.
@@ -164,9 +155,7 @@ class Evaluator(ABC):
 
     @abstractmethod
     def evaluate(
-        self,
-        dataset: Dataset,
-        metrics: Optional[List[EvaluationMetric]] = None
+        self, dataset: Dataset, metrics: Optional[List[EvaluationMetric]] = None
     ) -> EvaluationResult:
         """
         Evaluate model on dataset.
@@ -182,9 +171,7 @@ class Evaluator(ABC):
 
     @abstractmethod
     def generate_predictions(
-        self,
-        inputs: List[str],
-        batch_size: Optional[int] = None
+        self, inputs: List[str], batch_size: Optional[int] = None
     ) -> List[str]:
         """
         Generate predictions for inputs.
@@ -212,7 +199,7 @@ class Evaluator(ABC):
         self,
         predictions: List[str],
         references: List[str],
-        metric_names: Optional[List[str]] = None
+        metric_names: Optional[List[str]] = None,
     ) -> Dict[str, float]:
         """
         Compute multiple metrics.
@@ -264,7 +251,7 @@ class Benchmarker(ABC):
         finetuned_model: PreTrainedModel,
         tokenizer: PreTrainedTokenizer,
         dataset: Dataset,
-        config: EvaluationConfig
+        config: EvaluationConfig,
     ) -> ComparisonResult:
         """
         Benchmark base vs fine-tuned model.

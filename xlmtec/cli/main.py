@@ -19,24 +19,23 @@ from typing import Optional
 
 import typer
 from rich.console import Console
-from xlmtec.cli.ux import get_version, print_error, task_progress
-from xlmtec.cli.commands.dry_run import execute_dry_run
-from xlmtec.cli.commands.config_validate import app as config_app
-from xlmtec.cli.commands.ai_suggest import app as ai_suggest_app
-from xlmtec.cli.commands.hub import app as hub_app
-from xlmtec.cli.commands.resume import resume
-from xlmtec.cli.commands.template import app as template_app
-from xlmtec.cli.commands.dashboard import app as dashboard_app
-from xlmtec.cli.commands.export import export
-from xlmtec.cli.commands.predict import predict
-from xlmtec.cli.commands.plugin import app as plugin_app
-from xlmtec.plugins.loader import PluginLoader
-from xlmtec.cli.commands.sweep import sweep
-from xlmtec.cli.commands.report import report
-from xlmtec.utils.telemetry import AppLogger
-from xlmtec.utils.crash_report import CrashReporter
-
 from rich.panel import Panel
+
+from xlmtec.cli.commands.ai_suggest import app as ai_suggest_app
+from xlmtec.cli.commands.config_validate import app as config_app
+from xlmtec.cli.commands.dashboard import app as dashboard_app
+from xlmtec.cli.commands.dry_run import execute_dry_run
+from xlmtec.cli.commands.export import export
+from xlmtec.cli.commands.hub import app as hub_app
+from xlmtec.cli.commands.plugin import app as plugin_app
+from xlmtec.cli.commands.predict import predict
+from xlmtec.cli.commands.report import report
+from xlmtec.cli.commands.resume import resume
+from xlmtec.cli.commands.sweep import sweep
+from xlmtec.cli.commands.template import app as template_app
+from xlmtec.cli.ux import get_version, print_error
+from xlmtec.plugins.loader import PluginLoader
+from xlmtec.utils.telemetry import AppLogger
 
 from ..core.config import ConfigBuilder
 from ..core.exceptions import FineTuneError
@@ -67,13 +66,22 @@ def _version_callback(value: bool) -> None:
         console.print(f"xlmtec version [bold cyan]{get_version()}[/bold cyan]")
         raise typer.Exit()
 
+
 @app.callback()
 def main(
     ctx: typer.Context,
-    version: bool = typer.Option(None, "--version", "-V", callback=_version_callback, is_eager=True, help="Show version and exit."),
+    version: bool = typer.Option(
+        None,
+        "--version",
+        "-V",
+        callback=_version_callback,
+        is_eager=True,
+        help="Show version and exit.",
+    ),
 ):
     PluginLoader().load()
-    AppLogger.start(cmd=ctx.invoked_subcommand or "unknown")  
+    AppLogger.start(cmd=ctx.invoked_subcommand or "unknown")
+
 
 console = Console()
 
@@ -85,7 +93,6 @@ console = Console()
 
 @app.command()
 def train(
-    
     # Config file (takes precedence over individual flags)
     config: Optional[Path] = typer.Option(None, "--config", "-c", help="YAML/JSON config file"),
     # Quick flags (used when no config file provided)
@@ -108,11 +115,15 @@ def train(
     quantize_4bit: bool = typer.Option(False, "--4bit", help="Load model in 4-bit (QLoRA)"),
     fp16: bool = typer.Option(False, "--fp16", help="Mixed precision FP16"),
     log_level: str = typer.Option("info", "--log-level", help="Logging verbosity"),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Validate config and print plan without training."),
-    notify: str = typer.Option("", "--notify", "-n", help="Notification channels, comma-separated: slack,email,desktop"),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Validate config and print plan without training."
+    ),
+    notify: str = typer.Option(
+        "", "--notify", "-n", help="Notification channels, comma-separated: slack,email,desktop"
+    ),
 ):
     """Fine-tune a model using LoRA or QLoRA."""
-    logger = setup_logger("cli.train", level=LogLevel(log_level))
+    _logger = setup_logger("cli.train", level=LogLevel(log_level))
 
     try:
         if dry_run:
@@ -120,6 +131,7 @@ def train(
         # --- Build config ---
         if config is not None:
             from ..core.config import PipelineConfig
+
             pipeline_config = (
                 PipelineConfig.from_yaml(config)
                 if config.suffix in (".yml", ".yaml")
@@ -164,10 +176,12 @@ def train(
 
         # --- Load model ---
         from ..models.loader import load_model_and_tokenizer
+
         model_obj, tokenizer = load_model_and_tokenizer(pipeline_config.model.to_config())
 
         # --- Prepare data ---
         from ..data import prepare_dataset
+
         dataset_obj = prepare_dataset(
             dataset_config=pipeline_config.dataset.to_config(),
             tokenization_config=pipeline_config.tokenization.to_config(),
@@ -177,6 +191,7 @@ def train(
 
         # --- Train ---
         from ..trainers import TrainerFactory
+
         result = TrainerFactory.train(
             model=model_obj,
             tokenizer=tokenizer,
@@ -186,16 +201,19 @@ def train(
             model_config=pipeline_config.model.to_config(),
         )
 
-        console.print(Panel(
-            f"[bold green]✓ Training complete[/bold green]\n"
-            f"Model saved to: {result.output_dir}\n"
-            f"Train loss: {result.train_loss:.4f}\n"
-            f"Steps: {result.steps_completed}"
-        ))
+        console.print(
+            Panel(
+                f"[bold green]✓ Training complete[/bold green]\n"
+                f"Model saved to: {result.output_dir}\n"
+                f"Train loss: {result.train_loss:.4f}\n"
+                f"Steps: {result.steps_completed}"
+            )
+        )
 
         if notify:
-            from xlmtec.notifications.dispatcher import NotificationDispatcher
             from xlmtec.notifications.base import NotifyEvent
+            from xlmtec.notifications.dispatcher import NotificationDispatcher
+
             d = NotificationDispatcher.from_channels(
                 [c.strip() for c in notify.split(",") if c.strip()]
             )
@@ -224,7 +242,9 @@ def evaluate(
     model_path: Path = typer.Argument(..., help="Path to fine-tuned model/adapter"),
     dataset: Optional[Path] = typer.Option(None, "--dataset", "-d"),
     hf_dataset: Optional[str] = typer.Option(None, "--hf-dataset"),
-    base_model: str = typer.Option("gpt2", "--base-model", help="Base model id for adapter merging"),
+    base_model: str = typer.Option(
+        "gpt2", "--base-model", help="Base model id for adapter merging"
+    ),
     metrics: str = typer.Option("rougeL,bleu", "--metrics", help="Comma-separated metric names"),
     batch_size: int = typer.Option(4, "--batch-size"),
     num_samples: int = typer.Option(100, "--num-samples"),
@@ -260,6 +280,7 @@ def evaluate(
 
     # Load evaluation dataset
     from ..data import quick_load
+
     ds_path = str(dataset) if dataset else str(hf_dataset)
     ds_source = "local" if dataset else "huggingface"
     eval_dataset = quick_load(ds_path, tokenizer, source=ds_source, max_samples=num_samples)
@@ -298,7 +319,7 @@ def benchmark(
 ):
     """Compare base model vs fine-tuned model on key metrics."""
     from ..core.types import DeviceType, EvaluationConfig, ModelConfig
-    from ..evaluation import BenchmarkReport, BenchmarkRunner
+    from ..evaluation import BenchmarkRunner
     from ..models.loader import load_model_and_tokenizer
 
     if dataset is None and hf_dataset is None:
@@ -307,11 +328,7 @@ def benchmark(
 
     metric_enums = [EvaluationMetric(m.strip()) for m in metrics.split(",")]
 
-    console.print(Panel(
-        f"[bold cyan]Benchmark[/bold cyan]\n"
-        f"Base: {base}\n"
-        f"Fine-tuned: {finetuned}"
-    ))
+    console.print(Panel(f"[bold cyan]Benchmark[/bold cyan]\nBase: {base}\nFine-tuned: {finetuned}"))
 
     # Load both models
     base_cfg = ModelConfig(name=base, device=DeviceType.AUTO)
@@ -322,6 +339,7 @@ def benchmark(
 
     # Load dataset
     from ..data import quick_load
+
     ds_path = str(dataset) if dataset else str(hf_dataset)
     ds_source = "local" if dataset else "huggingface"
     eval_dataset = quick_load(ds_path, tokenizer, source=ds_source, max_samples=num_samples)
@@ -349,11 +367,17 @@ def benchmark(
 def upload(
     model_path: Path = typer.Argument(..., help="Path to fine-tuned model/adapter to upload"),
     repo_id: str = typer.Argument(..., help="HuggingFace repo id, e.g. 'username/my-model'"),
-    token: Optional[str] = typer.Option(None, "--token", "-t", help="HF API token (or set HF_TOKEN env var)"),
+    token: Optional[str] = typer.Option(
+        None, "--token", "-t", help="HF API token (or set HF_TOKEN env var)"
+    ),
     private: bool = typer.Option(False, "--private", help="Make repository private"),
     commit_message: str = typer.Option("Upload fine-tuned model", "--message", "-m"),
-    merge_adapter: bool = typer.Option(False, "--merge-adapter", help="Merge LoRA adapter into base model before uploading"),
-    base_model: Optional[str] = typer.Option(None, "--base-model", help="Base model id (required when --merge-adapter is set)"),
+    merge_adapter: bool = typer.Option(
+        False, "--merge-adapter", help="Merge LoRA adapter into base model before uploading"
+    ),
+    base_model: Optional[str] = typer.Option(
+        None, "--base-model", help="Base model id (required when --merge-adapter is set)"
+    ),
 ):
     """Upload a fine-tuned model or LoRA adapter to HuggingFace Hub."""
     import os
@@ -361,7 +385,9 @@ def upload(
     try:
         from huggingface_hub import HfApi, create_repo
     except ImportError:
-        console.print("[red]Error:[/red] huggingface_hub not installed. Run: pip install huggingface-hub")
+        console.print(
+            "[red]Error:[/red] huggingface_hub not installed. Run: pip install huggingface-hub"
+        )
         raise typer.Exit(code=1)
 
     if not model_path.exists():
@@ -371,7 +397,9 @@ def upload(
     # Resolve token
     resolved_token = token or os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
     if not resolved_token:
-        console.print("[red]Error:[/red] No HF token provided. Use --token or set HF_TOKEN env var.")
+        console.print(
+            "[red]Error:[/red] No HF token provided. Use --token or set HF_TOKEN env var."
+        )
         raise typer.Exit(code=1)
 
     console.print(Panel(f"[bold cyan]Uploading[/bold cyan] → {repo_id}"))
@@ -419,10 +447,12 @@ def upload(
             repo_id=repo_id,
             commit_message=commit_message,
         )
-        console.print(Panel(
-            f"[bold green]✓ Upload complete[/bold green]\n"
-            f"Model live at: https://huggingface.co/{repo_id}"
-        ))
+        console.print(
+            Panel(
+                f"[bold green]✓ Upload complete[/bold green]\n"
+                f"Model live at: https://huggingface.co/{repo_id}"
+            )
+        )
     except Exception as exc:
         console.print(f"[red]Upload failed:[/red] {exc}")
         raise typer.Exit(code=1)
@@ -438,7 +468,9 @@ def merge(
     adapter_dir: Path = typer.Argument(..., help="Path to saved LoRA adapter directory"),
     output_dir: Path = typer.Argument(..., help="Directory to save the merged standalone model"),
     base_model: str = typer.Option(..., "--base-model", "-b", help="Base HuggingFace model id"),
-    dtype: str = typer.Option("float32", "--dtype", help="Torch dtype: float32 | float16 | bfloat16"),
+    dtype: str = typer.Option(
+        "float32", "--dtype", help="Torch dtype: float32 | float16 | bfloat16"
+    ),
 ):
     """Merge a LoRA adapter into its base model and save a standalone model.
 
@@ -475,7 +507,9 @@ def merge(
             "bfloat16": torch.bfloat16,
         }
         if dtype not in _DTYPE_MAP:
-            console.print(f"[red]Error:[/red] Unknown dtype '{dtype}'. Choose: float32 | float16 | bfloat16")
+            console.print(
+                f"[red]Error:[/red] Unknown dtype '{dtype}'. Choose: float32 | float16 | bfloat16"
+            )
             raise typer.Exit(code=1)
 
         torch_dtype = _DTYPE_MAP[dtype]
@@ -525,6 +559,7 @@ def merge(
         console.print(f"[red]Merge failed:[/red] {exc}")
         raise typer.Exit(code=1)
 
+
 # ============================================================================
 # PRUNE
 # ============================================================================
@@ -533,10 +568,16 @@ def merge(
 @app.command()
 def prune(
     model_path: Path = typer.Argument(..., help="Path to saved model or adapter directory"),
-    output_dir: Path = typer.Option(..., "--output", "-o", help="Directory to save the pruned model"),
-    sparsity: float = typer.Option(0.3, "--sparsity", "-s", help="Fraction of attention heads to prune per layer (0.0–1.0)"),
+    output_dir: Path = typer.Option(
+        ..., "--output", "-o", help="Directory to save the pruned model"
+    ),
+    sparsity: float = typer.Option(
+        0.3, "--sparsity", "-s", help="Fraction of attention heads to prune per layer (0.0–1.0)"
+    ),
     method: str = typer.Option("heads", "--method", help="Pruning target: 'heads' or 'ffn'"),
-    min_heads: int = typer.Option(1, "--min-heads", help="Minimum heads to keep per layer (prevents full layer collapse)"),
+    min_heads: int = typer.Option(
+        1, "--min-heads", help="Minimum heads to keep per layer (prevents full layer collapse)"
+    ),
 ):
     """Prune low-importance attention heads from a transformer model.
 
@@ -578,6 +619,7 @@ def prune(
     try:
         with console.status("[bold green]Loading model..."):
             from xlmtec.models.loader import load_model_and_tokenizer
+
             model_config = ModelConfig(name=str(model_path))
             model, tokenizer = load_model_and_tokenizer(model_config)
         console.print("[green]✓[/green] Model loaded")
@@ -610,6 +652,7 @@ def prune(
         console.print(f"\n[bold red]Unexpected error:[/bold red] {exc}")
         raise typer.Exit(code=1)
 
+
 # ============================================================================
 # WANDA
 # ============================================================================
@@ -618,12 +661,23 @@ def prune(
 @app.command()
 def wanda(
     model_path: Path = typer.Argument(..., help="Path to saved model or adapter directory"),
-    output_dir: Path = typer.Option(..., "--output", "-o", help="Directory to save the pruned model"),
-    sparsity: float = typer.Option(0.5, "--sparsity", "-s", help="Fraction of weights to zero per layer (0.0–1.0)"),
+    output_dir: Path = typer.Option(
+        ..., "--output", "-o", help="Directory to save the pruned model"
+    ),
+    sparsity: float = typer.Option(
+        0.5, "--sparsity", "-s", help="Fraction of weights to zero per layer (0.0–1.0)"
+    ),
     n_samples: int = typer.Option(128, "--n-samples", help="Number of calibration forward passes"),
     seq_len: int = typer.Option(128, "--seq-len", help="Sequence length for calibration inputs"),
-    dataset: Optional[Path] = typer.Option(None, "--dataset", "-d", help="Calibration dataset (.jsonl/.txt). If omitted, falls back to magnitude-only scoring."),
-    row_wise: bool = typer.Option(True, "--row-wise/--global", help="Apply sparsity per output row (True) or globally (False)"),
+    dataset: Optional[Path] = typer.Option(
+        None,
+        "--dataset",
+        "-d",
+        help="Calibration dataset (.jsonl/.txt). If omitted, falls back to magnitude-only scoring.",
+    ),
+    row_wise: bool = typer.Option(
+        True, "--row-wise/--global", help="Apply sparsity per output row (True) or globally (False)"
+    ),
 ):
     """Prune a model using WANDA (Weight AND Activation) scoring.
 
@@ -657,13 +711,15 @@ def wanda(
         "[yellow]Output:[/yellow] " + str(output_dir) + "\n"
         f"[yellow]Sparsity:[/yellow] {sparsity:.0%}\n"
         f"[yellow]Calibration samples:[/yellow] {n_samples}\n"
-        "[yellow]Calibration dataset:[/yellow] " + (str(dataset) if dataset else "none (magnitude-only fallback)")
+        "[yellow]Calibration dataset:[/yellow] "
+        + (str(dataset) if dataset else "none (magnitude-only fallback)")
     )
     console.print(Panel.fit(panel_text, title="⚡  WANDA Pruning", border_style="cyan"))
 
     try:
         with console.status("[bold green]Loading model..."):
             from xlmtec.models.loader import load_model_and_tokenizer
+
             model_config = ModelConfig(name=str(model_path))
             model, tokenizer = load_model_and_tokenizer(model_config)
         console.print("[green]✓[/green] Model loaded")
@@ -682,7 +738,8 @@ def wanda(
                     DatasetSource,
                     TokenizationConfig,
                 )
-                from xlmtec.data import prepare_dataset, quick_load
+                from xlmtec.data import prepare_dataset
+
                 ds_cfg = DatasetConfig(
                     source=DatasetSource.LOCAL_FILE,
                     path=str(dataset),
@@ -692,10 +749,9 @@ def wanda(
                 ds = prepare_dataset(ds_cfg, tok_cfg, tokenizer)
                 if hasattr(ds, "with_format"):
                     ds = ds.with_format("torch")
-                input_ids = torch.stack([
-                    row["input_ids"] for row in ds
-                    if "input_ids" in row
-                ][:n_samples])
+                input_ids = torch.stack(
+                    [row["input_ids"] for row in ds if "input_ids" in row][:n_samples]
+                )
                 calib_ids = input_ids
             console.print(f"[green]✓[/green] Calibration data: {calib_ids.shape[0]} samples")
 
@@ -728,6 +784,7 @@ def wanda(
         console.print(f"\n[bold red]Unexpected error:[/bold red] {exc}")
         raise typer.Exit(code=1)
 
+
 # ============================================================================
 # TUI  (Sprint 25)
 # ============================================================================
@@ -740,6 +797,7 @@ def tui() -> None:
         import textual  # noqa: F401 — check textual is present first
     except ImportError:
         from rich.console import Console
+
         Console().print(
             "[red]Error:[/red] Textual is not installed.\n"
             "Install it with: [bold]pip install textual>=0.52.0[/bold]"
@@ -748,7 +806,9 @@ def tui() -> None:
 
     # Textual is present — import the app (real errors surface here)
     from xlmtec.tui.app import xlmtecApp
+
     xlmtecApp().run()
+
 
 # ============================================================================
 # ENTRY POINT
@@ -773,7 +833,9 @@ def recommend(
     model: str = typer.Argument(..., help="HuggingFace model id (e.g. gpt2)"),
     dataset: Optional[Path] = typer.Option(None, "--dataset", "-d", help="Local dataset path"),
     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Save YAML config to file"),
-    vram_gb: Optional[float] = typer.Option(None, "--vram", help="Available VRAM in GB (auto-detect if omitted)"),
+    vram_gb: Optional[float] = typer.Option(
+        None, "--vram", help="Available VRAM in GB (auto-detect if omitted)"
+    ),
 ):
     """Suggest an optimal training config based on model size and available VRAM."""
     import torch
@@ -785,7 +847,7 @@ def recommend(
     if vram_gb is None:
         if torch.cuda.is_available():
             vram_bytes = torch.cuda.get_device_properties(0).total_memory
-            vram_gb = vram_bytes / (1024 ** 3)
+            vram_gb = vram_bytes / (1024**3)
             console.print(f"[green]Detected VRAM:[/green] {vram_gb:.1f} GB")
         else:
             vram_gb = 0.0
@@ -794,6 +856,7 @@ def recommend(
     # Estimate param count from HF config
     try:
         from transformers import AutoConfig
+
         cfg = AutoConfig.from_pretrained(model)
         hidden = getattr(cfg, "hidden_size", getattr(cfg, "n_embd", 768))
         layers = getattr(cfg, "num_hidden_layers", getattr(cfg, "n_layer", 12))
@@ -860,17 +923,19 @@ def recommend(
             "target_modules": None,
         }
 
-    console.print(Panel(
-        f"[bold]Recommended method:[/bold] [cyan]{method}[/cyan]\n"
-        f"[bold]LoRA rank:[/bold]          {lora_r if lora_r else 'N/A'}\n"
-        f"[bold]Batch size:[/bold]         {batch}\n"
-        f"[bold]Grad accum:[/bold]         {grad_accum}  (effective batch: {batch * grad_accum})\n"
-        f"[bold]FP16:[/bold]               {fp16}\n"
-        f"[bold]4-bit quant:[/bold]        {load_4bit}\n"
-        f"[bold]Grad checkpointing:[/bold] {grad_ckpt}",
-        title="Recommendation",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel(
+            f"[bold]Recommended method:[/bold] [cyan]{method}[/cyan]\n"
+            f"[bold]LoRA rank:[/bold]          {lora_r if lora_r else 'N/A'}\n"
+            f"[bold]Batch size:[/bold]         {batch}\n"
+            f"[bold]Grad accum:[/bold]         {grad_accum}  (effective batch: {batch * grad_accum})\n"
+            f"[bold]FP16:[/bold]               {fp16}\n"
+            f"[bold]4-bit quant:[/bold]        {load_4bit}\n"
+            f"[bold]Grad checkpointing:[/bold] {grad_ckpt}",
+            title="Recommendation",
+            border_style="cyan",
+        )
+    )
 
     yaml_str = yaml.dump(config_dict, default_flow_style=False, sort_keys=False)
 

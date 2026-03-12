@@ -22,9 +22,7 @@ _PATTERNS = [
 def detect_target_modules(model: PreTrainedModel) -> List[str]:
     """Auto-detect LoRA target modules from model architecture."""
     leaf_names = {
-        name.split(".")[-1]
-        for name, module in model.named_modules()
-        if not list(module.children())
+        name.split(".")[-1] for name, module in model.named_modules() if not list(module.children())
     }
     for pattern in _PATTERNS:
         matched = [n for n in pattern if n in leaf_names]

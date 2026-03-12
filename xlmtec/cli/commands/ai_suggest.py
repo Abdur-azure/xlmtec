@@ -53,7 +53,9 @@ def ai_suggest(
         console.print(f"[red]Import error:[/red] {exc}")
         raise typer.Exit(1)
 
-    console.print(f"\n[bold cyan]xlmtec ai-suggest[/bold cyan] — provider: [yellow]{provider}[/yellow]\n")
+    console.print(
+        f"\n[bold cyan]xlmtec ai-suggest[/bold cyan] — provider: [yellow]{provider}[/yellow]\n"
+    )
 
     try:
         integration = get_provider(provider, api_key=api_key)
@@ -69,23 +71,28 @@ def ai_suggest(
             raise typer.Exit(1)
 
     # ── Display results ────────────────────────────────────────────────────
-    console.print(Panel(
-        f"[bold green]Method:[/bold green] {result.method}\n\n"
-        f"[bold]Why:[/bold] {result.explanation}",
-        title="Recommendation",
-        border_style="green",
-    ))
+    console.print(
+        Panel(
+            f"[bold green]Method:[/bold green] {result.method}\n\n"
+            f"[bold]Why:[/bold] {result.explanation}",
+            title="Recommendation",
+            border_style="green",
+        )
+    )
 
     console.print("\n[bold]Generated config:[/bold]")
     console.print(Syntax(result.yaml_config, "yaml", theme="monokai", line_numbers=False))
 
-    console.print(Panel(
-        f"[bold cyan]{result.command}[/bold cyan]",
-        title="Run this",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel(
+            f"[bold cyan]{result.command}[/bold cyan]",
+            title="Run this",
+            border_style="cyan",
+        )
+    )
 
     if save:
         from pathlib import Path
+
         Path(save).write_text(result.yaml_config, encoding="utf-8")
         console.print(f"\n[green]✓[/green] Config saved to [bold]{save}[/bold]")

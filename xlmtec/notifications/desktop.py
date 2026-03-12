@@ -14,7 +14,7 @@ from __future__ import annotations
 from xlmtec.notifications.base import Notifier, NotifyPayload
 
 APP_NAME = "xlmtec"
-TIMEOUT  = 10  # seconds
+TIMEOUT = 10  # seconds
 
 
 class DesktopNotifier(Notifier):
@@ -23,6 +23,7 @@ class DesktopNotifier(Notifier):
     def send(self, payload: NotifyPayload) -> bool:
         try:
             from plyer import notification  # type: ignore[import]
+
             notification.notify(
                 title=payload.title,
                 message=payload.message,

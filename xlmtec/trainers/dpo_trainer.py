@@ -85,10 +85,10 @@ class DPOTrainer(LoRATrainer):
         # Unpack splits
         if isinstance(dataset, DatasetDict):
             train_dataset = dataset["train"]
-            eval_dataset  = dataset.get("validation")
+            eval_dataset = dataset.get("validation")
         else:
             train_dataset = dataset
-            eval_dataset  = None
+            eval_dataset = None
 
         # Validate columns
         validate_dpo_dataset(train_dataset)

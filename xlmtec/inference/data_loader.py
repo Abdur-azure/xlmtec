@@ -12,17 +12,24 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-
 # Column names tried in order when auto-detecting
 _TEXT_COLUMN_CANDIDATES = [
-    "text", "input", "prompt", "sentence", "content",
-    "question", "context", "document", "instruction",
+    "text",
+    "input",
+    "prompt",
+    "sentence",
+    "content",
+    "question",
+    "context",
+    "document",
+    "instruction",
 ]
 
 
 @dataclass
 class InferenceRecord:
     """A single input record for inference."""
+
     index: int
     text: str
     source: dict  # original row, preserved in output
@@ -54,9 +61,7 @@ class DataLoader:
         elif suffix == ".csv":
             rows = self._load_csv()
         else:
-            raise ValueError(
-                f"Unsupported file format {suffix!r}. Use .jsonl or .csv"
-            )
+            raise ValueError(f"Unsupported file format {suffix!r}. Use .jsonl or .csv")
 
         if not rows:
             raise ValueError(f"Input file is empty: {self.path}")

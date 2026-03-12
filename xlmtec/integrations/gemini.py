@@ -16,10 +16,12 @@ from xlmtec.integrations.response_parser import parse_response
 # google.generativeai is deprecated — use google.genai instead
 try:
     import google.genai as genai
+
     _GENAI_NEW = True
 except ImportError:
     try:
         import google.generativeai as genai  # type: ignore[no-redef]
+
         _GENAI_NEW = False
     except ImportError:
         genai = None  # type: ignore[assignment]

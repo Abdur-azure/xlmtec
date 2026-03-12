@@ -7,7 +7,6 @@ Issues a VRAM warning for models with >1B parameters.
 """
 
 import warnings
-from typing import Optional
 
 from transformers import PreTrainedModel, PreTrainedTokenizer
 

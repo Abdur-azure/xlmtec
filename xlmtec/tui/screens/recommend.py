@@ -72,7 +72,9 @@ class RecommendScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
         with Vertical(classes="form-container"):
-            yield Label("💡  Recommend — get the optimal config for your hardware", classes="form-title")
+            yield Label(
+                "💡  Recommend — get the optimal config for your hardware", classes="form-title"
+            )
 
             yield Label("Model name or path *", classes="field-label")
             yield Label("e.g. gpt2, meta-llama/Llama-3.2-1B", classes="field-hint")
@@ -113,9 +115,7 @@ class RecommendScreen(Screen):
         output = self.query_one("#input-output", Input).value.strip()
 
         if not model:
-            self.query_one("#validation-msg", Label).update(
-                "[red]Model name is required.[/red]"
-            )
+            self.query_one("#validation-msg", Label).update("[red]Model name is required.[/red]")
             return
 
         command = ["xlmtec", "recommend", model]
@@ -123,6 +123,7 @@ class RecommendScreen(Screen):
             command += ["--output", output]
 
         from xlmtec.tui.screens.running import RunningScreen
+
         self.app.switch_screen(
             RunningScreen(
                 command=command,

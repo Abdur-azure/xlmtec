@@ -10,13 +10,12 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from xlmtec.hub.client import ModelDetail, ModelSummary
-
 
 # ---------------------------------------------------------------------------
 # Shared fixtures
 # ---------------------------------------------------------------------------
+
 
 def _make_hf_model(
     model_id="bert-base-uncased",
@@ -76,9 +75,11 @@ def sample_detail():
 # HubClient.search
 # ---------------------------------------------------------------------------
 
+
 class TestHubClientSearch:
     def test_returns_model_summaries(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = [_make_hf_model()]
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             client = HubClient()
@@ -89,6 +90,7 @@ class TestHubClientSearch:
 
     def test_passes_task_filter(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = []
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             client = HubClient()
@@ -98,6 +100,7 @@ class TestHubClientSearch:
 
     def test_limit_clamped_to_100(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = []
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             client = HubClient()
@@ -106,6 +109,7 @@ class TestHubClientSearch:
 
     def test_limit_clamped_to_1(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = []
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             client = HubClient()
@@ -114,6 +118,7 @@ class TestHubClientSearch:
 
     def test_empty_results(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = []
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             client = HubClient()
@@ -124,9 +129,11 @@ class TestHubClientSearch:
 # HubClient.trending
 # ---------------------------------------------------------------------------
 
+
 class TestHubClientTrending:
     def test_returns_summaries(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = [_make_hf_model(), _make_hf_model("gpt2")]
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             results = HubClient().trending(limit=2)
@@ -135,6 +142,7 @@ class TestHubClientTrending:
 
     def test_sorts_by_downloads(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.list_models.return_value = []
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             HubClient().trending()
@@ -145,9 +153,11 @@ class TestHubClientTrending:
 # HubClient.info
 # ---------------------------------------------------------------------------
 
+
 class TestHubClientInfo:
     def test_returns_model_detail(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.model_info.return_value = _make_hf_model("google/bert-base-uncased")
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             detail = HubClient().info("google/bert-base-uncased")
@@ -156,6 +166,7 @@ class TestHubClientInfo:
 
     def test_not_found_raises_value_error(self, mock_api):
         from xlmtec.hub.client import HubClient, RepositoryNotFoundError
+
         mock_api.model_info.side_effect = RepositoryNotFoundError("not found")
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             with pytest.raises(ValueError, match="Model not found"):
@@ -163,6 +174,7 @@ class TestHubClientInfo:
 
     def test_api_error_raises_runtime_error(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         mock_api.model_info.side_effect = Exception("timeout")
         with patch("xlmtec.hub.client.HfApi", return_value=mock_api):
             with pytest.raises(RuntimeError, match="HuggingFace API error"):
@@ -170,6 +182,7 @@ class TestHubClientInfo:
 
     def test_size_calculated_from_siblings(self, mock_api):
         from xlmtec.hub.client import HubClient
+
         m = _make_hf_model()
         sibling = MagicMock()
         sibling.size = 1024 * 1024 * 100  # 100 MB
@@ -183,6 +196,7 @@ class TestHubClientInfo:
 # ---------------------------------------------------------------------------
 # ModelSummary / ModelDetail dataclasses
 # ---------------------------------------------------------------------------
+
 
 class TestDataclasses:
     def test_summary_defaults(self):
@@ -200,33 +214,41 @@ class TestDataclasses:
 # Formatter
 # ---------------------------------------------------------------------------
 
+
 class TestFormatter:
     def test_print_search_results_no_crash(self, sample_summary):
         from xlmtec.hub.formatter import print_search_results
+
         print_search_results([sample_summary], "bert")
 
     def test_print_search_empty_no_crash(self):
         from xlmtec.hub.formatter import print_search_results
+
         print_search_results([], "bert")
 
     def test_print_trending_no_crash(self, sample_summary):
         from xlmtec.hub.formatter import print_trending
+
         print_trending([sample_summary])
 
     def test_print_model_info_no_crash(self, sample_detail):
         from xlmtec.hub.formatter import print_model_info
+
         print_model_info(sample_detail)
 
     def test_fmt_number_millions(self):
         from xlmtec.hub.formatter import _fmt_number
+
         assert _fmt_number(1_500_000) == "1.5M"
 
     def test_fmt_number_thousands(self):
         from xlmtec.hub.formatter import _fmt_number
+
         assert _fmt_number(2_500) == "2.5K"
 
     def test_fmt_number_small(self):
         from xlmtec.hub.formatter import _fmt_number
+
         assert _fmt_number(42) == "42"
 
 
@@ -234,9 +256,11 @@ class TestFormatter:
 # HubClient missing SDK
 # ---------------------------------------------------------------------------
 
+
 class TestHubClientMissingSDK:
     def test_raises_import_error_when_hfapi_none(self):
         from xlmtec.hub.client import HubClient
+
         with patch("xlmtec.hub.client.HfApi", None):
             with pytest.raises(ImportError, match="huggingface-hub"):
                 HubClient()

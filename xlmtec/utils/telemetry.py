@@ -59,7 +59,7 @@ F = TypeVar("F", bound=Callable[..., Any])
 # ---------------------------------------------------------------------------
 
 _LOG_DIR = Path.home() / ".xlmtec" / "logs"
-_MAX_LOG_FILES = 50          # rotate oldest when exceeded
+_MAX_LOG_FILES = 50  # rotate oldest when exceeded
 _SENSITIVE_KEY_FRAGMENTS = {"key", "token", "secret", "password", "api", "auth"}
 
 
@@ -100,6 +100,7 @@ def _sanitize_args(args: Dict[str, Any]) -> Dict[str, Any]:
 def _xlmtec_version() -> str:
     try:
         from importlib.metadata import version
+
         return version("xlmtec")
     except Exception:
         return "unknown"
@@ -108,9 +109,10 @@ def _xlmtec_version() -> str:
 def _gpu_info() -> str:
     try:
         import torch
+
         if torch.cuda.is_available():
             name = torch.cuda.get_device_name(0)
-            vram = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
+            vram = torch.cuda.get_device_properties(0).total_memory / (1024**3)
             return f"{name} ({vram:.1f} GB VRAM)"
         return "CPU only"
     except Exception:
@@ -132,7 +134,7 @@ class Session:
         self.start_wall: str = _now_iso()
         self._log_dir = log_dir
         self._file: Optional[Any] = None
-        self._events: List[Dict[str, Any]] = []   # in-memory buffer for tests
+        self._events: List[Dict[str, Any]] = []  # in-memory buffer for tests
         self._path: Optional[Path] = None
 
     # ------------------------------------------------------------------
@@ -210,15 +212,17 @@ class _AppLogger:
     def start(self, cmd: str = "unknown", log_dir: Path = _LOG_DIR) -> Session:
         """Create and open a new session. Call from cli/main.py @app.callback()."""
         self._session = Session(cmd=cmd, log_dir=log_dir).open()
-        self._session.write({
-            "event": "session.start",
-            "cmd": cmd,
-            "xlmtec_version": _xlmtec_version(),
-            "python": sys.version.split()[0],
-            "platform": sys.platform,
-            "os": platform.platform(terse=True),
-            "gpu": _gpu_info(),
-        })
+        self._session.write(
+            {
+                "event": "session.start",
+                "cmd": cmd,
+                "xlmtec_version": _xlmtec_version(),
+                "python": sys.version.split()[0],
+                "platform": sys.platform,
+                "os": platform.platform(terse=True),
+                "gpu": _gpu_info(),
+            }
+        )
         return self._session
 
     def finalize(self, exit_code: int = 0) -> None:
@@ -226,11 +230,13 @@ class _AppLogger:
         if not self._session:
             return
         elapsed = round(time.monotonic() - self._session.start_time, 3)
-        self._session.write({
-            "event": "session.end",
-            "exit_code": exit_code,
-            "elapsed_s": elapsed,
-        })
+        self._session.write(
+            {
+                "event": "session.end",
+                "exit_code": exit_code,
+                "elapsed_s": elapsed,
+            }
+        )
         self._session.close()
 
     # ------------------------------------------------------------------
@@ -252,12 +258,14 @@ class _AppLogger:
         if not self._session:
             return
         tb = traceback.format_exc()
-        self._session.write({
-            "event": "error",
-            "error_type": type(exc).__name__,
-            "message": str(exc),
-            "traceback": tb,
-        })
+        self._session.write(
+            {
+                "event": "error",
+                "error_type": type(exc).__name__,
+                "message": str(exc),
+                "traceback": tb,
+            }
+        )
 
     def log_stage(self, stage: str, **kwargs: Any) -> None:
         """Convenience: log a named pipeline stage event."""
@@ -298,6 +306,7 @@ def track(event: str) -> Callable[[F], F]:
         — or on exception —
         {"event": "trainer.train.failed", "error": "...", "elapsed_s": 0.3}
     """
+
     def decorator(fn: F) -> F:
         @functools.wraps(fn)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -318,5 +327,7 @@ def track(event: str) -> Callable[[F], F]:
                     elapsed_s=round(time.monotonic() - t0, 3),
                 )
                 raise
+
         return wrapper  # type: ignore[return-value]
+
     return decorator

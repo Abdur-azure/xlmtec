@@ -2,7 +2,7 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, ScrollableContainer, Vertical
+from textual.containers import Horizontal, ScrollableContainer
 from textual.screen import Screen
 from textual.validation import Length
 from textual.widgets import Button, Footer, Header, Input, Label, Switch
@@ -110,7 +110,10 @@ class UploadScreen(Screen):
             )
 
             yield Label("HuggingFace token *", classes="field-label")
-            yield Label("Stored locally only — never logged. Set HF_TOKEN env var to skip.", classes="field-hint")
+            yield Label(
+                "Stored locally only — never logged. Set HF_TOKEN env var to skip.",
+                classes="field-hint",
+            )
             yield Input(
                 placeholder="hf_...",
                 id="input-token",
@@ -194,11 +197,14 @@ class UploadScreen(Screen):
             return
 
         command = [
-            "xlmtec", "upload",
+            "xlmtec",
+            "upload",
             model_path,
             repo_id,
-            "--token", token,
-            "--message", message or "Upload fine-tuned model",
+            "--token",
+            token,
+            "--message",
+            message or "Upload fine-tuned model",
         ]
         if private:
             command.append("--private")
@@ -206,11 +212,12 @@ class UploadScreen(Screen):
             command += ["--merge-adapter", "--base-model", base]
 
         from xlmtec.tui.screens.running import RunningScreen
+
         self.app.switch_screen(
             RunningScreen(
                 command=command,
                 title=f"Upload  →  {repo_id}",
                 subtitle=f"{'private' if private else 'public'}"
-                         + (f"  merge={base}" if merge else ""),
+                + (f"  merge={base}" if merge else ""),
             )
         )

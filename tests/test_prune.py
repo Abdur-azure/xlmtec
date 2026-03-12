@@ -44,39 +44,53 @@ def _make_pruner_mock(output_dir: Path) -> MagicMock:
 # Tests
 # ============================================================================
 
-class TestPruneCommand:
 
+class TestPruneCommand:
     def test_missing_model_path_exits_one(self, tmp_path):
         """prune exits 1 when model_path does not exist."""
-        result = runner.invoke(app, [
-            "prune",
-            str(tmp_path / "nonexistent"),
-            "--output", str(tmp_path / "out"),
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "prune",
+                str(tmp_path / "nonexistent"),
+                "--output",
+                str(tmp_path / "out"),
+            ],
+        )
         assert result.exit_code == 1
 
     def test_invalid_sparsity_exits_one(self, tmp_path):
         """prune exits 1 when --sparsity >= 1.0."""
         model_dir = tmp_path / "model"
         model_dir.mkdir()
-        result = runner.invoke(app, [
-            "prune",
-            str(model_dir),
-            "--output", str(tmp_path / "out"),
-            "--sparsity", "1.5",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "prune",
+                str(model_dir),
+                "--output",
+                str(tmp_path / "out"),
+                "--sparsity",
+                "1.5",
+            ],
+        )
         assert result.exit_code == 1
 
     def test_invalid_method_exits_one(self, tmp_path):
         """prune exits 1 when --method is not 'heads' or 'ffn'."""
         model_dir = tmp_path / "model"
         model_dir.mkdir()
-        result = runner.invoke(app, [
-            "prune",
-            str(model_dir),
-            "--output", str(tmp_path / "out"),
-            "--method", "badmethod",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "prune",
+                str(model_dir),
+                "--output",
+                str(tmp_path / "out"),
+                "--method",
+                "badmethod",
+            ],
+        )
         assert result.exit_code == 1
 
     def test_happy_path_exits_zero(self, tmp_path):
@@ -89,16 +103,19 @@ class TestPruneCommand:
         mock_tokenizer = MagicMock()
         mock_pruner = _make_pruner_mock(output_dir)
 
-        with patch(_LOADER_PATH,
-                   return_value=(mock_model, mock_tokenizer)):
-            with patch(_PRUNER_PATH,
-                       return_value=mock_pruner):
-                result = runner.invoke(app, [
-                    "prune",
-                    str(model_dir),
-                    "--output", str(output_dir),
-                    "--sparsity", "0.3",
-                ])
+        with patch(_LOADER_PATH, return_value=(mock_model, mock_tokenizer)):
+            with patch(_PRUNER_PATH, return_value=mock_pruner):
+                result = runner.invoke(
+                    app,
+                    [
+                        "prune",
+                        str(model_dir),
+                        "--output",
+                        str(output_dir),
+                        "--sparsity",
+                        "0.3",
+                    ],
+                )
 
         assert result.exit_code == 0, result.output
 
@@ -117,16 +134,19 @@ class TestPruneCommand:
             captured_config["config"] = config
             return mock_pruner
 
-        with patch(_LOADER_PATH,
-                   return_value=(mock_model, mock_tokenizer)):
-            with patch(_PRUNER_PATH,
-                       side_effect=capture_pruner):
-                runner.invoke(app, [
-                    "prune",
-                    str(model_dir),
-                    "--output", str(output_dir),
-                    "--sparsity", "0.25",
-                ])
+        with patch(_LOADER_PATH, return_value=(mock_model, mock_tokenizer)):
+            with patch(_PRUNER_PATH, side_effect=capture_pruner):
+                runner.invoke(
+                    app,
+                    [
+                        "prune",
+                        str(model_dir),
+                        "--output",
+                        str(output_dir),
+                        "--sparsity",
+                        "0.25",
+                    ],
+                )
 
         assert captured_config["config"].sparsity == pytest.approx(0.25)
 
@@ -140,16 +160,19 @@ class TestPruneCommand:
         mock_tokenizer = MagicMock()
         mock_pruner = _make_pruner_mock(output_dir)
 
-        with patch(_LOADER_PATH,
-                   return_value=(mock_model, mock_tokenizer)):
-            with patch(_PRUNER_PATH,
-                       return_value=mock_pruner):
-                result = runner.invoke(app, [
-                    "prune",
-                    str(model_dir),
-                    "--output", str(output_dir),
-                    "--method", "ffn",
-                ])
+        with patch(_LOADER_PATH, return_value=(mock_model, mock_tokenizer)):
+            with patch(_PRUNER_PATH, return_value=mock_pruner):
+                result = runner.invoke(
+                    app,
+                    [
+                        "prune",
+                        str(model_dir),
+                        "--output",
+                        str(output_dir),
+                        "--method",
+                        "ffn",
+                    ],
+                )
 
         assert result.exit_code == 0, result.output
 
@@ -163,14 +186,16 @@ class TestPruneCommand:
         mock_tokenizer = MagicMock()
         mock_pruner = _make_pruner_mock(output_dir)
 
-        with patch(_LOADER_PATH,
-                   return_value=(mock_model, mock_tokenizer)):
-            with patch(_PRUNER_PATH,
-                       return_value=mock_pruner):
-                result = runner.invoke(app, [
-                    "prune",
-                    str(model_dir),
-                    "--output", str(output_dir),
-                ])
+        with patch(_LOADER_PATH, return_value=(mock_model, mock_tokenizer)):
+            with patch(_PRUNER_PATH, return_value=mock_pruner):
+                result = runner.invoke(
+                    app,
+                    [
+                        "prune",
+                        str(model_dir),
+                        "--output",
+                        str(output_dir),
+                    ],
+                )
 
         assert "10.0%" in result.output or "Sparsity" in result.output

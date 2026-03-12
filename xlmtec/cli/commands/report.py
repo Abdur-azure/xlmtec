@@ -43,9 +43,9 @@ def run_report(
     log_dir: Path = _DEFAULT_LOG_DIR,
 ) -> int:
     """Print crash/session report. Returns exit code 0/1."""
+    from rich import box
     from rich.panel import Panel
     from rich.table import Table
-    from rich import box
 
     if not log_dir.exists():
         console.print(
@@ -59,7 +59,7 @@ def run_report(
     # --sessions mode: list session files
     # ------------------------------------------------------------------
     if sessions:
-        files = sorted(log_dir.glob("session_*.jsonl"), reverse=True)[:last or 10]
+        files = sorted(log_dir.glob("session_*.jsonl"), reverse=True)[: last or 10]
         if not files:
             console.print("[yellow]No session logs found.[/yellow]")
             return 0
@@ -78,8 +78,14 @@ def run_report(
                 lines, size = 0, "?"
             table.add_row(str(i), f.name, size, str(lines))
 
-        console.print(Panel(table, title="[bold cyan]Session Logs[/bold cyan]",
-                            border_style="cyan", padding=(0, 1)))
+        console.print(
+            Panel(
+                table,
+                title="[bold cyan]Session Logs[/bold cyan]",
+                border_style="cyan",
+                padding=(0, 1),
+            )
+        )
         console.print(f"\n[dim]Log directory:[/dim] {log_dir}")
         return 0
 
@@ -91,8 +97,10 @@ def run_report(
     crashes = CrashReporter.list_recent(n=last, log_dir=log_dir)
 
     if not crashes:
-        console.print("[green]✓ No crash reports found.[/green] "
-                      "The application has not encountered any unhandled errors.")
+        console.print(
+            "[green]✓ No crash reports found.[/green] "
+            "The application has not encountered any unhandled errors."
+        )
         console.print(f"\n[dim]Log directory:[/dim] {log_dir}")
         return 0
 
@@ -107,8 +115,14 @@ def run_report(
         for i, cf in enumerate(crashes, 1):
             table.add_row(str(i), cf.timestamp, cf.cmd, cf.path.name)
 
-        console.print(Panel(table, title="[bold red]Crash Reports[/bold red]",
-                            border_style="red", padding=(0, 1)))
+        console.print(
+            Panel(
+                table,
+                title="[bold red]Crash Reports[/bold red]",
+                border_style="red",
+                padding=(0, 1),
+            )
+        )
 
     # Print latest crash content inline
     latest = crashes[0]
@@ -121,19 +135,23 @@ def run_report(
             if len(lines) > 60:
                 preview += f"\n\n... ({len(lines) - 60} more lines)"
             console.print()
-            console.print(Panel(
-                preview,
-                title=f"[bold red]Latest crash — {latest.path.name}[/bold red]",
-                border_style="red",
-                padding=(1, 2),
-            ))
+            console.print(
+                Panel(
+                    preview,
+                    title=f"[bold red]Latest crash — {latest.path.name}[/bold red]",
+                    border_style="red",
+                    padding=(1, 2),
+                )
+            )
         except Exception as exc:
             print_error("Could not read crash file", str(exc))
             return 1
 
     console.print(f"\n[dim]Full file:[/dim] {latest.path}")
-    console.print("[dim]Tip:[/dim] Attach the crash file to a GitHub issue → "
-                  "https://github.com/Abdur-azure/xlmtec/issues")
+    console.print(
+        "[dim]Tip:[/dim] Attach the crash file to a GitHub issue → "
+        "https://github.com/Abdur-azure/xlmtec/issues"
+    )
 
     # --open: open in editor
     if open_file:
@@ -164,20 +182,25 @@ def _open_in_editor(path: Path) -> None:
 
 def report(
     last: int = typer.Option(
-        1, "--last", "-n",
+        1,
+        "--last",
+        "-n",
         help="Number of crash reports to show (default: 1 = latest only).",
     ),
     sessions: bool = typer.Option(
-        False, "--sessions",
+        False,
+        "--sessions",
         help="List session log files instead of crash reports.",
     ),
     open_file: bool = typer.Option(
-        False, "--open",
+        False,
+        "--open",
         help="Open the latest crash report in your default editor.",
     ),
     log_dir: Optional[Path] = typer.Option(
-        None, "--log-dir",
-        help=f"Log directory (default: ~/.xlmtec/logs).",
+        None,
+        "--log-dir",
+        help="Log directory (default: ~/.xlmtec/logs).",
     ),
 ) -> None:
     """Show recent session logs and crash reports.
@@ -191,9 +214,11 @@ def report(
         xlmtec report --open           Open latest crash in your editor
     """
     resolved_dir = log_dir or _DEFAULT_LOG_DIR
-    raise typer.Exit(run_report(
-        last=last,
-        sessions=sessions,
-        open_file=open_file,
-        log_dir=resolved_dir,
-    ))
+    raise typer.Exit(
+        run_report(
+            last=last,
+            sessions=sessions,
+            open_file=open_file,
+            log_dir=resolved_dir,
+        )
+    )

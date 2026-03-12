@@ -7,7 +7,6 @@ All filesystem operations use tmp_path — no ~/.xlmtec written.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
@@ -24,10 +23,10 @@ from xlmtec.plugins.store import (
     save_store,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _plugin_file(tmp_path: Path) -> Path:
     return tmp_path / "plugins.json"
@@ -35,30 +34,39 @@ def _plugin_file(tmp_path: Path) -> Path:
 
 def _make_yaml_template(tmp_path: Path, name: str = "my_task") -> Path:
     f = tmp_path / f"{name}.yaml"
-    f.write_text(yaml.dump({
-        "method": "lora",
-        "description": f"Custom {name} template",
-        "task": "text-classification",
-        "base_model": "gpt2",
-        "model": {"name": "gpt2"},
-        "training": {"output_dir": f"output/{name}", "num_epochs": 3},
-    }), encoding="utf-8")
+    f.write_text(
+        yaml.dump(
+            {
+                "method": "lora",
+                "description": f"Custom {name} template",
+                "task": "text-classification",
+                "base_model": "gpt2",
+                "model": {"name": "gpt2"},
+                "training": {"output_dir": f"output/{name}", "num_epochs": 3},
+            }
+        ),
+        encoding="utf-8",
+    )
     return f
 
 
 def _make_provider_py(tmp_path: Path, class_name: str = "MyProvider") -> Path:
     f = tmp_path / "my_provider.py"
-    f.write_text(f"""
+    f.write_text(
+        f"""
 class {class_name}:
     name = "my_provider"
     def suggest(self, task): return None
-""", encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
     return f
 
 
 # ---------------------------------------------------------------------------
 # load_store / save_store
 # ---------------------------------------------------------------------------
+
 
 class TestStoreIO:
     def test_load_missing_returns_empty(self, tmp_path):
@@ -94,6 +102,7 @@ class TestStoreIO:
 # ---------------------------------------------------------------------------
 # register_template
 # ---------------------------------------------------------------------------
+
 
 class TestRegisterTemplate:
     def test_registers_new_template(self, tmp_path):
@@ -140,6 +149,7 @@ class TestRegisterTemplate:
 # register_provider
 # ---------------------------------------------------------------------------
 
+
 class TestRegisterProvider:
     def test_registers_new_provider(self, tmp_path):
         pf = _plugin_file(tmp_path)
@@ -174,6 +184,7 @@ class TestRegisterProvider:
 # remove_plugin
 # ---------------------------------------------------------------------------
 
+
 class TestRemovePlugin:
     def test_removes_template(self, tmp_path):
         pf = _plugin_file(tmp_path)
@@ -198,6 +209,7 @@ class TestRemovePlugin:
 # PluginLoader — template loading
 # ---------------------------------------------------------------------------
 
+
 class TestPluginLoader:
     def test_loads_template_into_registry(self, tmp_path):
         from xlmtec.plugins.loader import PluginLoader
@@ -220,7 +232,9 @@ class TestPluginLoader:
 
         pf = _plugin_file(tmp_path)
         store = PluginStore(
-            templates={"ghost": TemplatePlugin("ghost", "/nonexistent/path.yaml", "2026-01-01T00:00:00")},
+            templates={
+                "ghost": TemplatePlugin("ghost", "/nonexistent/path.yaml", "2026-01-01T00:00:00")
+            },
             providers={},
         )
         save_store(store, pf)
@@ -231,6 +245,7 @@ class TestPluginLoader:
 
     def test_empty_store_loads_cleanly(self, tmp_path):
         from xlmtec.plugins.loader import PluginLoader
+
         result = PluginLoader(_plugin_file(tmp_path)).load()
         assert result.templates_loaded == []
         assert result.providers_loaded == []

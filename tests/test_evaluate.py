@@ -5,10 +5,8 @@ All model loading, dataset loading, and evaluation are mocked.
 No GPU, no network, no real model files required.
 """
 
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
 from xlmtec.cli.main import app
@@ -20,6 +18,7 @@ runner = CliRunner()
 # HELPERS
 # ============================================================================
 
+
 def _mock_eval_result(scores=None):
     result = MagicMock()
     result.scores = scores or {"rougeL": 0.42, "bleu": 0.18}
@@ -29,8 +28,9 @@ def _mock_eval_result(scores=None):
 def _mock_evaluation_stack():
     """Patch at source module — evaluate uses lazy imports inside the function."""
     return [
-        patch("xlmtec.models.loader.load_model_and_tokenizer",
-              return_value=(MagicMock(), MagicMock())),
+        patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ),
         patch("xlmtec.data.quick_load", return_value=MagicMock()),
         patch("xlmtec.evaluation.BenchmarkRunner"),
     ]
@@ -40,14 +40,17 @@ def _mock_evaluation_stack():
 # TESTS
 # ============================================================================
 
-class TestEvaluateCommand:
 
+class TestEvaluateCommand:
     def test_requires_dataset_or_hf_dataset(self, tmp_path):
         """evaluate exits 1 when neither --dataset nor --hf-dataset is given."""
-        result = runner.invoke(app, [
-            "evaluate",
-            str(tmp_path / "model"),
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "evaluate",
+                str(tmp_path / "model"),
+            ],
+        )
         assert result.exit_code == 1
 
     def test_local_dataset_exits_zero(self, tmp_path):
@@ -62,11 +65,15 @@ class TestEvaluateCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.evaluate.return_value = mock_result
-            result = runner.invoke(app, [
-                "evaluate",
-                str(model_dir),
-                "--dataset", str(ds),
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "evaluate",
+                    str(model_dir),
+                    "--dataset",
+                    str(ds),
+                ],
+            )
 
         assert result.exit_code == 0, result.output
 
@@ -80,11 +87,15 @@ class TestEvaluateCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.evaluate.return_value = mock_result
-            result = runner.invoke(app, [
-                "evaluate",
-                str(model_dir),
-                "--hf-dataset", "wikitext",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "evaluate",
+                    str(model_dir),
+                    "--hf-dataset",
+                    "wikitext",
+                ],
+            )
 
         assert result.exit_code == 0, result.output
 
@@ -100,12 +111,17 @@ class TestEvaluateCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.evaluate.return_value = mock_result
-            result = runner.invoke(app, [
-                "evaluate",
-                str(model_dir),
-                "--dataset", str(ds),
-                "--metrics", "rougeL,bleu",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "evaluate",
+                    str(model_dir),
+                    "--dataset",
+                    str(ds),
+                    "--metrics",
+                    "rougeL,bleu",
+                ],
+            )
 
         assert "0.4231" in result.output
         assert "0.1876" in result.output
@@ -117,12 +133,17 @@ class TestEvaluateCommand:
         ds = tmp_path / "eval.jsonl"
         ds.write_text('{"text": "hello"}\n')
 
-        result = runner.invoke(app, [
-            "evaluate",
-            str(model_dir),
-            "--dataset", str(ds),
-            "--metrics", "not_a_real_metric",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "evaluate",
+                str(model_dir),
+                "--dataset",
+                str(ds),
+                "--metrics",
+                "not_a_real_metric",
+            ],
+        )
 
         assert result.exit_code == 1
 
@@ -138,11 +159,16 @@ class TestEvaluateCommand:
 
         with patches[0], patches[1], patches[2] as mock_runner_cls:
             mock_runner_cls.return_value.evaluate.return_value = mock_result
-            result = runner.invoke(app, [
-                "evaluate",
-                str(model_dir),
-                "--dataset", str(ds),
-                "--num-samples", "50",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "evaluate",
+                    str(model_dir),
+                    "--dataset",
+                    str(ds),
+                    "--num-samples",
+                    "50",
+                ],
+            )
 
         assert result.exit_code == 0, result.output

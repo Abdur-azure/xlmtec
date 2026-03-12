@@ -37,11 +37,12 @@ class AIIntegration(ABC):
     """
 
     PROVIDER_NAME: str = ""
-    ENV_KEY: str = ""          # Environment variable name for the API key
-    DEFAULT_MODEL: str = ""    # Model used by this provider
+    ENV_KEY: str = ""  # Environment variable name for the API key
+    DEFAULT_MODEL: str = ""  # Model used by this provider
 
     def __init__(self, api_key: str | None = None) -> None:
         import os
+
         self.api_key = api_key or os.environ.get(self.ENV_KEY, "")
 
     @abstractmethod

@@ -12,7 +12,6 @@ Skipped automatically when any of those are missing.
 """
 
 import json
-import os
 from pathlib import Path
 
 import pytest
@@ -53,6 +52,7 @@ def gpt2_model_and_tokenizer():
     """Load real GPT-2 once per module — shared across all integration tests."""
     from xlmtec.core.types import ModelConfig
     from xlmtec.models.loader import load_model_and_tokenizer
+
     model, tokenizer = load_model_and_tokenizer(ModelConfig(name="gpt2"))
     return model, tokenizer
 
@@ -61,20 +61,27 @@ def gpt2_model_and_tokenizer():
 def tiny_token_dataset(gpt2_model_and_tokenizer):
     """Pre-tokenised 10-sample Dataset. Avoids full data-pipeline dep in each test."""
     from datasets import Dataset
+
     _, tokenizer = gpt2_model_and_tokenizer
     enc = tokenizer(
         ["Sample training sentence number 0."] * 10,
-        max_length=64, truncation=True, padding="max_length", return_tensors="pt",
+        max_length=64,
+        truncation=True,
+        padding="max_length",
+        return_tensors="pt",
     )
-    return Dataset.from_dict({
-        "input_ids": enc["input_ids"].tolist(),
-        "attention_mask": enc["attention_mask"].tolist(),
-    })
+    return Dataset.from_dict(
+        {
+            "input_ids": enc["input_ids"].tolist(),
+            "attention_mask": enc["attention_mask"].tolist(),
+        }
+    )
 
 
 def _base_training_config(output_dir: Path):
     """Return a minimal TrainingConfig for 1-step runs."""
     from xlmtec.core.types import TrainingConfig, TrainingMethod
+
     return TrainingConfig(
         method=TrainingMethod.LORA,
         output_dir=output_dir,
@@ -89,6 +96,7 @@ def _base_training_config(output_dir: Path):
 
 def _lora_config():
     from xlmtec.core.types import LoRAConfig
+
     return LoRAConfig(r=4, lora_alpha=8, target_modules=["c_attn"])
 
 
@@ -113,8 +121,10 @@ class TestEndToEnd:
             .with_training(
                 method=TrainingMethod.LORA,
                 output_dir=str(output_dir / "cfg_check"),
-                num_epochs=1, batch_size=2,
-                gradient_accumulation_steps=1, logging_steps=1,
+                num_epochs=1,
+                batch_size=2,
+                gradient_accumulation_steps=1,
+                logging_steps=1,
             )
             .with_lora(r=4, lora_alpha=8, target_modules=["c_attn"])
             .build()
@@ -122,12 +132,12 @@ class TestEndToEnd:
         assert config.model.name == "gpt2"
         assert config.lora.r == 4
 
-    def test_full_lora_train_saves_model(self, gpt2_model_and_tokenizer,
-                                          tiny_token_dataset, output_dir):
+    def test_full_lora_train_saves_model(
+        self, gpt2_model_and_tokenizer, tiny_token_dataset, output_dir
+    ):
         """Load GPT-2 + LoRA, train 1 step, assert adapter saved."""
         import copy
 
-        from xlmtec.core.types import TrainingMethod
         from xlmtec.trainers import TrainerFactory
 
         save_dir = output_dir / "lora_gpt2"
@@ -138,15 +148,17 @@ class TestEndToEnd:
 
         tc = _base_training_config(save_dir)
         result = TrainerFactory.train(
-            model=model, tokenizer=tokenizer,
+            model=model,
+            tokenizer=tokenizer,
             dataset=tiny_token_dataset,
             training_config=tc,
             lora_config=_lora_config(),
         )
         assert result.steps_completed >= 1
         assert result.train_loss >= 0.0
-        assert (save_dir / "adapter_config.json").exists(), \
+        assert (save_dir / "adapter_config.json").exists(), (
             f"adapter_config.json missing. Dir: {list(save_dir.iterdir())}"
+        )
 
     def test_rouge_metric_runs_on_strings(self):
         """ROUGE metric computes without needing a live model."""
@@ -172,8 +184,7 @@ class TestEndToEnd:
         assert isinstance(summary, str)
         assert len(summary) > 0
 
-    def test_instruction_tuning_saves_adapter(self, gpt2_model_and_tokenizer,
-                                               output_dir):
+    def test_instruction_tuning_saves_adapter(self, gpt2_model_and_tokenizer, output_dir):
         """InstructionTrainer trains 1 step on real GPT-2."""
         import copy
 
@@ -189,29 +200,43 @@ class TestEndToEnd:
         model = copy.deepcopy(model)
 
         enc = tokenizer(
-            [f"### Instruction:\nExplain concept {i}.\n\n### Response:\nConcept {i} is important."
-             for i in range(10)],
-            max_length=64, truncation=True, padding="max_length", return_tensors="pt",
+            [
+                f"### Instruction:\nExplain concept {i}.\n\n### Response:\nConcept {i} is important."
+                for i in range(10)
+            ],
+            max_length=64,
+            truncation=True,
+            padding="max_length",
+            return_tensors="pt",
         )
-        dataset = Dataset.from_dict({
-            "input_ids": enc["input_ids"].tolist(),
-            "attention_mask": enc["attention_mask"].tolist(),
-        })
+        dataset = Dataset.from_dict(
+            {
+                "input_ids": enc["input_ids"].tolist(),
+                "attention_mask": enc["attention_mask"].tolist(),
+            }
+        )
 
         tc = TrainingConfig(
             method=TrainingMethod.INSTRUCTION_TUNING,
-            output_dir=save_dir, num_epochs=1, batch_size=2,
-            gradient_accumulation_steps=1, logging_steps=1, save_strategy="no",
+            output_dir=save_dir,
+            num_epochs=1,
+            batch_size=2,
+            gradient_accumulation_steps=1,
+            logging_steps=1,
+            save_strategy="no",
         )
         trainer = TrainerFactory.create(
-            model=model, tokenizer=tokenizer,
-            training_config=tc, lora_config=_lora_config(),
+            model=model,
+            tokenizer=tokenizer,
+            training_config=tc,
+            lora_config=_lora_config(),
         )
         assert isinstance(trainer, InstructionTrainer)
         result = trainer.train(dataset)
         assert result.steps_completed >= 1
-        assert (save_dir / "adapter_config.json").exists(), \
+        assert (save_dir / "adapter_config.json").exists(), (
             f"adapter_config.json missing. Dir: {list(save_dir.iterdir())}"
+        )
 
     def test_recommend_produces_runnable_config(self, tmp_path_factory):
         """recommend command writes a YAML that loads cleanly as PipelineConfig."""
@@ -237,8 +262,9 @@ class TestEndToEnd:
 class TestResponseDistillationIntegration:
     """gpt2 (student) learns from gpt2 (teacher) — same arch, 1 step."""
 
-    def test_response_distillation_saves_student(self, gpt2_model_and_tokenizer,
-                                                   tiny_token_dataset, output_dir):
+    def test_response_distillation_saves_student(
+        self, gpt2_model_and_tokenizer, tiny_token_dataset, output_dir
+    ):
         import copy
 
         from xlmtec.core.types import (
@@ -256,8 +282,12 @@ class TestResponseDistillationIntegration:
 
         tc = TrainingConfig(
             method=TrainingMethod.VANILLA_DISTILLATION,
-            output_dir=save_dir, num_epochs=1, batch_size=2,
-            gradient_accumulation_steps=1, logging_steps=1, save_strategy="no",
+            output_dir=save_dir,
+            num_epochs=1,
+            batch_size=2,
+            gradient_accumulation_steps=1,
+            logging_steps=1,
+            save_strategy="no",
         )
         dc = DistillationConfig(
             teacher_model_name="gpt2",  # same arch — avoids second download
@@ -274,8 +304,9 @@ class TestResponseDistillationIntegration:
         saved_files = list(save_dir.iterdir())
         assert len(saved_files) > 0, f"Nothing saved to {save_dir}"
 
-    def test_response_distillation_result_fields(self, gpt2_model_and_tokenizer,
-                                                   tiny_token_dataset, output_dir):
+    def test_response_distillation_result_fields(
+        self, gpt2_model_and_tokenizer, tiny_token_dataset, output_dir
+    ):
         """TrainingResult from distillation has correct types."""
         import copy
 
@@ -295,8 +326,12 @@ class TestResponseDistillationIntegration:
 
         tc = TrainingConfig(
             method=TrainingMethod.VANILLA_DISTILLATION,
-            output_dir=save_dir, num_epochs=1, batch_size=2,
-            gradient_accumulation_steps=1, logging_steps=1, save_strategy="no",
+            output_dir=save_dir,
+            num_epochs=1,
+            batch_size=2,
+            gradient_accumulation_steps=1,
+            logging_steps=1,
+            save_strategy="no",
         )
         dc = DistillationConfig(teacher_model_name="gpt2", temperature=2.0, alpha=0.5)
         result = ResponseDistillationTrainer(model, tokenizer, tc, dc).train(tiny_token_dataset)
@@ -315,8 +350,9 @@ class TestResponseDistillationIntegration:
 class TestFeatureDistillationIntegration:
     """gpt2 (student) with MSE hidden-state loss against gpt2 (teacher), 1 step."""
 
-    def test_feature_distillation_saves_student(self, gpt2_model_and_tokenizer,
-                                                  tiny_token_dataset, output_dir):
+    def test_feature_distillation_saves_student(
+        self, gpt2_model_and_tokenizer, tiny_token_dataset, output_dir
+    ):
         import copy
 
         from xlmtec.core.types import (
@@ -334,8 +370,12 @@ class TestFeatureDistillationIntegration:
 
         tc = TrainingConfig(
             method=TrainingMethod.FEATURE_DISTILLATION,
-            output_dir=save_dir, num_epochs=1, batch_size=2,
-            gradient_accumulation_steps=1, logging_steps=1, save_strategy="no",
+            output_dir=save_dir,
+            num_epochs=1,
+            batch_size=2,
+            gradient_accumulation_steps=1,
+            logging_steps=1,
+            save_strategy="no",
         )
         fd = FeatureDistillationConfig(
             teacher_model_name="gpt2",
@@ -352,8 +392,9 @@ class TestFeatureDistillationIntegration:
         saved_files = list(save_dir.iterdir())
         assert len(saved_files) > 0, f"Nothing saved to {save_dir}"
 
-    def test_feature_distillation_explicit_layers(self, gpt2_model_and_tokenizer,
-                                                    tiny_token_dataset, output_dir):
+    def test_feature_distillation_explicit_layers(
+        self, gpt2_model_and_tokenizer, tiny_token_dataset, output_dir
+    ):
         """Explicit feature_layers list runs without error."""
         import copy
 
@@ -372,12 +413,18 @@ class TestFeatureDistillationIntegration:
 
         tc = TrainingConfig(
             method=TrainingMethod.FEATURE_DISTILLATION,
-            output_dir=save_dir, num_epochs=1, batch_size=2,
-            gradient_accumulation_steps=1, logging_steps=1, save_strategy="no",
+            output_dir=save_dir,
+            num_epochs=1,
+            batch_size=2,
+            gradient_accumulation_steps=1,
+            logging_steps=1,
+            save_strategy="no",
         )
         fd = FeatureDistillationConfig(
             teacher_model_name="gpt2",
-            temperature=2.0, alpha=0.5, beta=0.2,
+            temperature=2.0,
+            alpha=0.5,
+            beta=0.2,
             feature_layers=[0, 5, 11],  # GPT-2 has 12 layers (0-11)
         )
         result = FeatureDistillationTrainer(model, tokenizer, tc, fd).train(tiny_token_dataset)
@@ -521,8 +568,7 @@ class TestWandaPrunerIntegration:
         # sparsity_achieved should be close to requested 0.5
         assert 0.4 <= result.sparsity_achieved <= 0.6
 
-    def test_wanda_prune_with_calibration_data(self, gpt2_model_and_tokenizer,
-                                                 output_dir):
+    def test_wanda_prune_with_calibration_data(self, gpt2_model_and_tokenizer, output_dir):
         """WandaPruner with real calibration input_ids uses activation norms."""
         import copy
 
@@ -596,21 +642,33 @@ class TestCLISmoke:
         save_dir.mkdir(exist_ok=True)
 
         mock_result = TrainingResult(
-            output_dir=save_dir, train_loss=0.5, eval_loss=None,
-            epochs_completed=1, steps_completed=5, training_time_seconds=1.0,
+            output_dir=save_dir,
+            train_loss=0.5,
+            eval_loss=None,
+            epochs_completed=1,
+            steps_completed=5,
+            training_time_seconds=1.0,
         )
-        with patch("xlmtec.models.loader.load_model_and_tokenizer",
-                   return_value=(MagicMock(), MagicMock())):
-            with patch("xlmtec.trainers.factory.TrainerFactory.train",
-                       return_value=mock_result):
-                result = runner.invoke(app, [
-                    "train",
-                    "--model", "gpt2",
-                    "--dataset", str(tiny_jsonl),
-                    "--method", "lora",
-                    "--output", str(save_dir),
-                    "--epochs", "1",
-                ])
+        with patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ):
+            with patch("xlmtec.trainers.factory.TrainerFactory.train", return_value=mock_result):
+                result = runner.invoke(
+                    app,
+                    [
+                        "train",
+                        "--model",
+                        "gpt2",
+                        "--dataset",
+                        str(tiny_jsonl),
+                        "--method",
+                        "lora",
+                        "--output",
+                        str(save_dir),
+                        "--epochs",
+                        "1",
+                    ],
+                )
         assert result.exit_code == 0, result.output
 
     def test_prune_cli_exits_zero(self, output_dir):
@@ -628,23 +686,33 @@ class TestCLISmoke:
         save_dir = output_dir / "prune_out"
 
         mock_result = PruningResult(
-            output_dir=save_dir, original_param_count=1_000_000,
-            zeroed_param_count=300_000, sparsity_achieved=0.3,
+            output_dir=save_dir,
+            original_param_count=1_000_000,
+            zeroed_param_count=300_000,
+            sparsity_achieved=0.3,
             heads_pruned_per_layer={"layer.0": 3},
             pruning_time_seconds=0.5,
         )
         mock_pruner = MagicMock()
         mock_pruner.prune.return_value = mock_result
 
-        with patch("xlmtec.models.loader.load_model_and_tokenizer",
-                   return_value=(MagicMock(), MagicMock())):
-            with patch("xlmtec.trainers.structured_pruner.StructuredPruner",
-                       return_value=mock_pruner):
-                result = runner.invoke(app, [
-                    "prune", str(model_dir),
-                    "--output", str(save_dir),
-                    "--sparsity", "0.3",
-                ])
+        with patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ):
+            with patch(
+                "xlmtec.trainers.structured_pruner.StructuredPruner", return_value=mock_pruner
+            ):
+                result = runner.invoke(
+                    app,
+                    [
+                        "prune",
+                        str(model_dir),
+                        "--output",
+                        str(save_dir),
+                        "--sparsity",
+                        "0.3",
+                    ],
+                )
         assert result.exit_code == 0, result.output
 
     def test_wanda_cli_exits_zero(self, output_dir):
@@ -662,22 +730,31 @@ class TestCLISmoke:
         save_dir = output_dir / "wanda_out"
 
         mock_result = WandaResult(
-            output_dir=save_dir, original_param_count=1_000_000,
-            zeroed_param_count=500_000, sparsity_achieved=0.5,
-            layers_pruned=12, pruning_time_seconds=0.8,
+            output_dir=save_dir,
+            original_param_count=1_000_000,
+            zeroed_param_count=500_000,
+            sparsity_achieved=0.5,
+            layers_pruned=12,
+            pruning_time_seconds=0.8,
         )
         mock_pruner = MagicMock()
         mock_pruner.prune.return_value = mock_result
 
-        with patch("xlmtec.models.loader.load_model_and_tokenizer",
-                   return_value=(MagicMock(), MagicMock())):
-            with patch("xlmtec.trainers.wanda_pruner.WandaPruner",
-                       return_value=mock_pruner):
-                result = runner.invoke(app, [
-                    "wanda", str(model_dir),
-                    "--output", str(save_dir),
-                    "--sparsity", "0.5",
-                ])
+        with patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ):
+            with patch("xlmtec.trainers.wanda_pruner.WandaPruner", return_value=mock_pruner):
+                result = runner.invoke(
+                    app,
+                    [
+                        "wanda",
+                        str(model_dir),
+                        "--output",
+                        str(save_dir),
+                        "--sparsity",
+                        "0.5",
+                    ],
+                )
         assert result.exit_code == 0, result.output
 
     def test_train_distillation_cli_exits_zero(self, tiny_jsonl, output_dir):
@@ -694,22 +771,35 @@ class TestCLISmoke:
         save_dir.mkdir(exist_ok=True)
 
         mock_result = TrainingResult(
-            output_dir=save_dir, train_loss=0.4, eval_loss=None,
-            epochs_completed=1, steps_completed=5, training_time_seconds=1.0,
+            output_dir=save_dir,
+            train_loss=0.4,
+            eval_loss=None,
+            epochs_completed=1,
+            steps_completed=5,
+            training_time_seconds=1.0,
         )
-        with patch("xlmtec.models.loader.load_model_and_tokenizer",
-                   return_value=(MagicMock(), MagicMock())):
-            with patch("xlmtec.trainers.factory.TrainerFactory.train",
-                       return_value=mock_result):
-                result = runner.invoke(app, [
-                    "train",
-                    "--model", "gpt2",
-                    "--dataset", str(tiny_jsonl),
-                    "--method", "vanilla_distillation",
-                    "--output", str(save_dir),
-                    "--epochs", "1",
-                    "--teacher", "gpt2-medium",
-                ])
+        with patch(
+            "xlmtec.models.loader.load_model_and_tokenizer", return_value=(MagicMock(), MagicMock())
+        ):
+            with patch("xlmtec.trainers.factory.TrainerFactory.train", return_value=mock_result):
+                result = runner.invoke(
+                    app,
+                    [
+                        "train",
+                        "--model",
+                        "gpt2",
+                        "--dataset",
+                        str(tiny_jsonl),
+                        "--method",
+                        "vanilla_distillation",
+                        "--output",
+                        str(save_dir),
+                        "--epochs",
+                        "1",
+                        "--teacher",
+                        "gpt2-medium",
+                    ],
+                )
         # exit 0 or 1 depending on whether --teacher flag exists on train
         # We verify it at least parses and doesn't crash unexpectedly
         assert result.exit_code in (0, 1)

@@ -6,7 +6,6 @@ Converts {"instruction": ..., "input": ..., "response": ...} rows
 into a single formatted prompt string before tokenization.
 """
 
-from typing import Optional
 
 from datasets import Dataset, DatasetDict
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -17,15 +16,10 @@ from .lora_trainer import LoRATrainer
 
 # Default prompt template — matches the Stanford Alpaca format
 _PROMPT_WITH_INPUT = (
-    "### Instruction:\n{instruction}\n\n"
-    "### Input:\n{input}\n\n"
-    "### Response:\n{response}"
+    "### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n{response}"
 )
 
-_PROMPT_WITHOUT_INPUT = (
-    "### Instruction:\n{instruction}\n\n"
-    "### Response:\n{response}"
-)
+_PROMPT_WITHOUT_INPUT = "### Instruction:\n{instruction}\n\n### Response:\n{response}"
 
 
 def format_instruction_dataset(
@@ -121,10 +115,9 @@ class InstructionTrainer(LoRATrainer):
     def train(self, dataset):
         """Reformat dataset then delegate to LoRATrainer.train."""
         if isinstance(dataset, DatasetDict):
-            formatted = DatasetDict({
-                split: self._maybe_format(ds)
-                for split, ds in dataset.items()
-            })
+            formatted = DatasetDict(
+                {split: self._maybe_format(ds) for split, ds in dataset.items()}
+            )
         else:
             formatted = self._maybe_format(dataset)
 

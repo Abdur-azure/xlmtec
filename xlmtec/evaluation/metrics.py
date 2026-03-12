@@ -9,7 +9,7 @@ Each metric follows a consistent interface::
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -76,9 +76,7 @@ class RougeMetric(Metric):
         try:
             from rouge_score import rouge_scorer
         except ImportError:
-            raise EvaluationError(
-                "rouge_score not installed. Run: pip install rouge-score"
-            )
+            raise EvaluationError("rouge_score not installed. Run: pip install rouge-score")
 
         scorer = rouge_scorer.RougeScorer([self._rouge_key], use_stemmer=True)
         scores = [
@@ -105,9 +103,7 @@ class BleuMetric(Metric):
             from nltk.tokenize import word_tokenize
             from nltk.translate.bleu_score import SmoothingFunction, corpus_bleu
         except ImportError:
-            raise EvaluationError(
-                "nltk not installed. Run: pip install nltk"
-            )
+            raise EvaluationError("nltk not installed. Run: pip install nltk")
 
         smoothing = SmoothingFunction().method1
         hypothesis_list = [word_tokenize(p.lower()) for p in predictions]

@@ -1,16 +1,10 @@
 """Tests for core configuration — ConfigBuilder and Pydantic validation."""
 
-from pathlib import Path
 
 import pytest
 
 from xlmtec.core.config import ConfigBuilder, PipelineConfig
-from xlmtec.core.exceptions import (
-    IncompatibleConfigError,
-    InvalidConfigError,
-    MissingConfigError,
-)
-from xlmtec.core.types import DatasetSource, EvaluationMetric, TrainingMethod
+from xlmtec.core.types import DatasetSource, TrainingMethod
 
 
 class TestConfigBuilder:
@@ -54,53 +48,44 @@ class TestConfigBuilder:
         f = tmp_path / "data.jsonl"
         f.write_text('{"text": "hello"}\n')
         with pytest.raises(Exception):
-            ConfigBuilder() \
-                .with_model("gpt2") \
-                .with_dataset(str(f), source=DatasetSource.LOCAL_FILE) \
-                .with_tokenization() \
-                .with_training(TrainingMethod.LORA, str(tmp_path / "out")) \
-                .build()  # No .with_lora() → should raise MissingConfigError
+            ConfigBuilder().with_model("gpt2").with_dataset(
+                str(f), source=DatasetSource.LOCAL_FILE
+            ).with_tokenization().with_training(
+                TrainingMethod.LORA, str(tmp_path / "out")
+            ).build()  # No .with_lora() → should raise MissingConfigError
 
     def test_invalid_dtype_raises(self, tmp_path):
         f = tmp_path / "data.jsonl"
         f.write_text('{"text": "hello"}\n')
         with pytest.raises(Exception):
-            ConfigBuilder() \
-                .with_model("gpt2", torch_dtype="float99") \
-                .with_dataset(str(f), source=DatasetSource.LOCAL_FILE) \
-                .with_tokenization() \
-                .with_training(TrainingMethod.LORA, str(tmp_path / "out")) \
-                .with_lora() \
-                .build()
+            ConfigBuilder().with_model("gpt2", torch_dtype="float99").with_dataset(
+                str(f), source=DatasetSource.LOCAL_FILE
+            ).with_tokenization().with_training(
+                TrainingMethod.LORA, str(tmp_path / "out")
+            ).with_lora().build()
 
     def test_incompatible_quantization_raises(self, tmp_path):
         f = tmp_path / "data.jsonl"
         f.write_text('{"text": "hello"}\n')
         with pytest.raises(Exception):
-            ConfigBuilder() \
-                .with_model("gpt2", load_in_4bit=True, load_in_8bit=True) \
-                .with_dataset(str(f), source=DatasetSource.LOCAL_FILE) \
-                .with_tokenization() \
-                .with_training(TrainingMethod.LORA, str(tmp_path / "out")) \
-                .with_lora() \
-                .build()
+            ConfigBuilder().with_model("gpt2", load_in_4bit=True, load_in_8bit=True).with_dataset(
+                str(f), source=DatasetSource.LOCAL_FILE
+            ).with_tokenization().with_training(
+                TrainingMethod.LORA, str(tmp_path / "out")
+            ).with_lora().build()
 
     def test_fp16_bf16_exclusive(self, tmp_path):
         f = tmp_path / "data.jsonl"
         f.write_text('{"text": "hello"}\n')
         with pytest.raises(Exception):
-            ConfigBuilder() \
-                .with_model("gpt2") \
-                .with_dataset(str(f), source=DatasetSource.LOCAL_FILE) \
-                .with_tokenization() \
-                .with_training(
-                    TrainingMethod.LORA,
-                    str(tmp_path / "out"),
-                    fp16=True,
-                    bf16=True,
-                ) \
-                .with_lora() \
-                .build()
+            ConfigBuilder().with_model("gpt2").with_dataset(
+                str(f), source=DatasetSource.LOCAL_FILE
+            ).with_tokenization().with_training(
+                TrainingMethod.LORA,
+                str(tmp_path / "out"),
+                fp16=True,
+                bf16=True,
+            ).with_lora().build()
 
 
 class TestPipelineConfigSerialization:

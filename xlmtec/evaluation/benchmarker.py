@@ -4,16 +4,15 @@ and produces a structured comparison report.
 """
 
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Dict, List
 
 from datasets import Dataset
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
-from ..core.types import EvaluationConfig, EvaluationMetric
+from ..core.types import EvaluationConfig
 from ..utils.logging import get_logger
-from .metrics import Metric, MetricRegistry
+from .metrics import MetricRegistry
 
 logger = get_logger(__name__)
 
@@ -73,9 +72,7 @@ class BenchmarkReport:
             ft_v = self.finetuned.scores.get(metric, float("nan"))
             delta = ft_v - base_v
             arrow = "▲" if delta > 0 else ("▼" if delta < 0 else "–")
-            lines.append(
-                f"{metric:<18} {base_v:>10.4f} {ft_v:>12.4f} {arrow}{abs(delta):>6.4f}"
-            )
+            lines.append(f"{metric:<18} {base_v:>10.4f} {ft_v:>12.4f} {arrow}{abs(delta):>6.4f}")
         lines.append("=" * 60)
         return "\n".join(lines)
 
@@ -177,7 +174,9 @@ class BenchmarkRunner:
         Evaluate both models and return a comparison report.
         """
         baseline = self.evaluate(base_model, dataset, label="base", text_column=text_column)
-        finetuned = self.evaluate(finetuned_model, dataset, label="fine-tuned", text_column=text_column)
+        finetuned = self.evaluate(
+            finetuned_model, dataset, label="fine-tuned", text_column=text_column
+        )
         report = BenchmarkReport(baseline=baseline, finetuned=finetuned)
         self.logger.info("\n" + report.summary())
         return report

@@ -2,7 +2,7 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, ScrollableContainer, Vertical
+from textual.containers import Horizontal, ScrollableContainer
 from textual.screen import Screen
 from textual.validation import Length
 from textual.widgets import Button, Footer, Header, Input, Label, Select
@@ -155,14 +155,18 @@ class MergeScreen(Screen):
             return
 
         command = [
-            "xlmtec", "merge",
+            "xlmtec",
+            "merge",
             adapter,
             output,
-            "--base-model", base,
-            "--dtype", str(dtype),
+            "--base-model",
+            base,
+            "--dtype",
+            str(dtype),
         ]
 
         from xlmtec.tui.screens.running import RunningScreen
+
         self.app.switch_screen(
             RunningScreen(
                 command=command,

@@ -27,21 +27,25 @@ try:
         print_trending,
     )
 except ImportError:
-    print_model_info = None      # type: ignore[assignment]
+    print_model_info = None  # type: ignore[assignment]
     print_search_results = None  # type: ignore[assignment]
-    print_trending = None        # type: ignore[assignment]
+    print_trending = None  # type: ignore[assignment]
 
 
 @app.command("search")
 def search(
     query: str = typer.Argument(..., help='Search query e.g. "bert" or "llama"'),
     task: Optional[str] = typer.Option(
-        None, "--task", "-t",
+        None,
+        "--task",
+        "-t",
         help="Filter by task e.g. text-classification, text-generation",
     ),
     limit: int = typer.Option(10, "--limit", "-n", help="Number of results (max 100)"),
     sort: str = typer.Option(
-        "downloads", "--sort", "-s",
+        "downloads",
+        "--sort",
+        "-s",
         help="Sort by: downloads | likes | lastModified",
     ),
 ) -> None:
@@ -68,9 +72,7 @@ def search(
 
 @app.command("info")
 def info(
-    model_id: str = typer.Argument(
-        ..., help='Model ID e.g. "google/bert-base-uncased"'
-    ),
+    model_id: str = typer.Argument(..., help='Model ID e.g. "google/bert-base-uncased"'),
 ) -> None:
     """Show detailed info for a specific model.
 

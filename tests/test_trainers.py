@@ -5,10 +5,7 @@ HuggingFace Trainer and PEFT are mocked so tests run without GPU
 or large model downloads.
 """
 
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Optional
-from unittest.mock import MagicMock, PropertyMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
@@ -16,7 +13,6 @@ from datasets import Dataset, DatasetDict
 from xlmtec.core.exceptions import MissingConfigError
 from xlmtec.core.types import LoRAConfig, ModelConfig, TrainingConfig, TrainingMethod
 from xlmtec.trainers import TrainerFactory, TrainingResult
-from xlmtec.trainers.base import BaseTrainer
 from xlmtec.trainers.factory import TrainerFactory
 from xlmtec.trainers.lora_trainer import LoRATrainer
 
@@ -48,11 +44,13 @@ def model_config() -> ModelConfig:
 
 @pytest.fixture
 def small_dataset() -> Dataset:
-    return Dataset.from_dict({
-        "input_ids": [[1, 2, 3, 4]] * 8,
-        "attention_mask": [[1, 1, 1, 1]] * 8,
-        "labels": [[1, 2, 3, 4]] * 8,
-    })
+    return Dataset.from_dict(
+        {
+            "input_ids": [[1, 2, 3, 4]] * 8,
+            "attention_mask": [[1, 1, 1, 1]] * 8,
+            "labels": [[1, 2, 3, 4]] * 8,
+        }
+    )
 
 
 @pytest.fixture
@@ -117,7 +115,9 @@ class TestTrainerFactory:
             tr_cfg = TrainingConfig(method=method, output_dir=tmp_output_dir)
             try:
                 TrainerFactory.create(
-                    mock_model, mock_tokenizer, tr_cfg,
+                    mock_model,
+                    mock_tokenizer,
+                    tr_cfg,
                     lora_config=lora_cfg,
                     model_config=qlora_model_cfg,
                 )
@@ -126,7 +126,9 @@ class TestTrainerFactory:
             except NotImplementedError as e:
                 pytest.fail(f"Implemented method {method} raised NotImplementedError: {e}")
 
-    def test_qlora_requires_model_config(self, mock_model, mock_tokenizer, lora_config, tmp_output_dir):
+    def test_qlora_requires_model_config(
+        self, mock_model, mock_tokenizer, lora_config, tmp_output_dir
+    ):
         cfg = TrainingConfig(method=TrainingMethod.QLORA, output_dir=tmp_output_dir)
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(

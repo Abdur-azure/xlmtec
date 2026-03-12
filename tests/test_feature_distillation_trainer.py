@@ -6,7 +6,6 @@ No GPU, no real model downloads. Absolute imports per lessons.md.
 """
 
 import warnings
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -86,11 +85,13 @@ def training_config(tmp_output_dir) -> TrainingConfig:
 
 @pytest.fixture
 def small_dataset() -> Dataset:
-    return Dataset.from_dict({
-        "input_ids": [[1, 2, 3, 4]] * 8,
-        "attention_mask": [[1, 1, 1, 1]] * 8,
-        "labels": [[1, 2, 3, 4]] * 8,
-    })
+    return Dataset.from_dict(
+        {
+            "input_ids": [[1, 2, 3, 4]] * 8,
+            "attention_mask": [[1, 1, 1, 1]] * 8,
+            "labels": [[1, 2, 3, 4]] * 8,
+        }
+    )
 
 
 @pytest.fixture
@@ -163,9 +164,7 @@ class TestFactoryDispatch:
         )
         assert isinstance(trainer, FeatureDistillationTrainer)
 
-    def test_missing_config_raises(
-        self, mock_model, mock_tokenizer, training_config
-    ):
+    def test_missing_config_raises(self, mock_model, mock_tokenizer, training_config):
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(
                 model=mock_model,
@@ -181,26 +180,18 @@ class TestFactoryDispatch:
 
 
 class TestInit:
-    def test_stores_fd_config(
-        self, mock_model, mock_tokenizer, training_config, fd_config
-    ):
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+    def test_stores_fd_config(self, mock_model, mock_tokenizer, training_config, fd_config):
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         assert trainer.fd_config is fd_config
 
-    def test_vram_warning_large_model(
-        self, mock_tokenizer, training_config, fd_config
-    ):
+    def test_vram_warning_large_model(self, mock_tokenizer, training_config, fd_config):
         big_param = _make_param(numel=_VRAM_WARNING_THRESHOLD + 1)
         big_model = MagicMock()
         big_model.parameters.side_effect = lambda: iter([big_param])
 
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
-            FeatureDistillationTrainer(
-                big_model, mock_tokenizer, training_config, fd_config
-            )
+            FeatureDistillationTrainer(big_model, mock_tokenizer, training_config, fd_config)
 
         resource_warns = [w for w in caught if issubclass(w.category, ResourceWarning)]
         assert len(resource_warns) == 1
@@ -210,9 +201,7 @@ class TestInit:
     ):
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
-            FeatureDistillationTrainer(
-                mock_model, mock_tokenizer, training_config, fd_config
-            )
+            FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
 
         resource_warns = [w for w in caught if issubclass(w.category, ResourceWarning)]
         assert len(resource_warns) == 0
@@ -224,22 +213,14 @@ class TestInit:
 
 
 class TestSetupPeft:
-    def test_all_params_trainable(
-        self, mock_model, mock_tokenizer, training_config, fd_config
-    ):
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+    def test_all_params_trainable(self, mock_model, mock_tokenizer, training_config, fd_config):
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         returned = trainer._setup_peft(mock_model)
         for p in returned.parameters():
             assert p.requires_grad is True
 
-    def test_returns_same_model(
-        self, mock_model, mock_tokenizer, training_config, fd_config
-    ):
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+    def test_returns_same_model(self, mock_model, mock_tokenizer, training_config, fd_config):
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         assert trainer._setup_peft(mock_model) is mock_model
 
 
@@ -247,18 +228,14 @@ class TestSetupPeft:
 # train()
 # ============================================================================
 
-_FD_TRAINER_PATH = (
-    "xlmtec.trainers.feature_distillation_trainer._FeatureDistillationTrainer"
-)
-_AUTO_MODEL_PATH = (
-    "xlmtec.trainers.feature_distillation_trainer.AutoModelForCausalLM"
-)
+_FD_TRAINER_PATH = "xlmtec.trainers.feature_distillation_trainer._FeatureDistillationTrainer"
+_AUTO_MODEL_PATH = "xlmtec.trainers.feature_distillation_trainer.AutoModelForCausalLM"
 
 
 def _mock_teacher():
     t = MagicMock()
     t.config.num_hidden_layers = 24
-    t.to.return_value = t   # .to(device) must return the same mock
+    t.to.return_value = t  # .to(device) must return the same mock
     return t
 
 
@@ -281,9 +258,7 @@ class TestTrain:
         mock_trainer_cls.return_value = _mock_fd_trainer()
         mock_model.config.num_hidden_layers = 12
 
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         result = trainer.train(small_dataset)
 
         assert isinstance(result, TrainingResult)
@@ -307,9 +282,7 @@ class TestTrain:
         mock_trainer_cls.return_value = _mock_fd_trainer()
         mock_model.config.num_hidden_layers = 12
 
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         result = trainer.train(dataset_dict)
         assert result.eval_loss == pytest.approx(0.33)
 
@@ -331,9 +304,7 @@ class TestTrain:
         mock_trainer_cls.return_value = hf_trainer
         mock_model.config.num_hidden_layers = 12
 
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         trainer.train(small_dataset)
         hf_trainer.save_model.assert_called_once_with(str(tmp_output_dir))
 
@@ -354,9 +325,7 @@ class TestTrain:
         mock_trainer_cls.return_value = _mock_fd_trainer()
         mock_model.config.num_hidden_layers = 12
 
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         trainer.train(small_dataset)
 
         mock_auto.from_pretrained.assert_called_once_with(
@@ -378,9 +347,7 @@ class TestTrain:
         mock_auto.from_pretrained.side_effect = OSError("not found")
         mock_model.config.num_hidden_layers = 12
 
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         with pytest.raises(TrainingError):
             trainer.train(small_dataset)
 
@@ -401,8 +368,6 @@ class TestTrain:
         mock_trainer_cls.return_value = _mock_fd_trainer()
         mock_model.config.num_hidden_layers = 12
 
-        trainer = FeatureDistillationTrainer(
-            mock_model, mock_tokenizer, training_config, fd_config
-        )
+        trainer = FeatureDistillationTrainer(mock_model, mock_tokenizer, training_config, fd_config)
         result = trainer.train(small_dataset)
         assert result.output_dir == tmp_output_dir

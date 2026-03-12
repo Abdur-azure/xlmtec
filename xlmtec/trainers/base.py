@@ -13,7 +13,7 @@ from datasets import Dataset, DatasetDict
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from ..core.exceptions import TrainingError
-from ..core.types import LoRAConfig, TrainingConfig
+from ..core.types import TrainingConfig
 from ..utils.logging import get_logger
 
 # ============================================================================
@@ -109,9 +109,7 @@ class BaseTrainer(ABC):
         training_args = self._build_training_args()
 
         # Build HF Trainer
-        hf_trainer = self._build_hf_trainer(
-            training_args, train_dataset, eval_dataset
-        )
+        hf_trainer = self._build_hf_trainer(training_args, train_dataset, eval_dataset)
 
         # Train
         start = time.time()
@@ -139,7 +137,9 @@ class BaseTrainer(ABC):
             output_dir=output_dir,
             train_loss=train_output.training_loss,
             eval_loss=eval_loss,
-            epochs_completed=int(train_output.metrics.get("epoch", self.training_config.num_epochs)),
+            epochs_completed=int(
+                train_output.metrics.get("epoch", self.training_config.num_epochs)
+            ),
             steps_completed=train_output.global_step,
             training_time_seconds=elapsed,
             trainer_logs={str(i): entry for i, entry in enumerate(logs)},

@@ -13,6 +13,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from datasets import Dataset, DatasetDict
+from xlmtec.data import detect_columns, prepare_dataset, quick_load
 
 from xlmtec.core.exceptions import (
     DatasetNotFoundError,
@@ -20,7 +21,6 @@ from xlmtec.core.exceptions import (
     NoTextColumnsError,
 )
 from xlmtec.core.types import DatasetConfig, DatasetSource, TokenizationConfig
-from xlmtec.data import detect_columns, prepare_dataset, quick_load
 
 # ============================================================================
 # HELPERS
@@ -29,11 +29,13 @@ from xlmtec.data import detect_columns, prepare_dataset, quick_load
 
 def _make_tokenized_dataset(n: int = 8) -> Dataset:
     """Minimal tokenized Dataset — stands in for real pipeline output."""
-    return Dataset.from_dict({
-        "input_ids": [[1, 2, 3, 4]] * n,
-        "attention_mask": [[1, 1, 1, 1]] * n,
-        "labels": [[1, 2, 3, 4]] * n,
-    })
+    return Dataset.from_dict(
+        {
+            "input_ids": [[1, 2, 3, 4]] * n,
+            "attention_mask": [[1, 1, 1, 1]] * n,
+            "labels": [[1, 2, 3, 4]] * n,
+        }
+    )
 
 
 def _write_jsonl(path: Path, rows: list) -> Path:
@@ -65,10 +67,12 @@ class TestDetectColumns:
         assert "text" in cols
 
     def test_detects_prompt_and_response(self):
-        ds = Dataset.from_dict({
-            "prompt": ["q1", "q2"],
-            "response": ["a1", "a2"],
-        })
+        ds = Dataset.from_dict(
+            {
+                "prompt": ["q1", "q2"],
+                "response": ["a1", "a2"],
+            }
+        )
         cols = detect_columns(ds)
         assert "prompt" in cols
         assert "response" in cols
@@ -113,10 +117,13 @@ class TestDatasetErrors:
 
     def test_no_text_columns_raises(self, tmp_path):
         # JSONL with only numeric / id columns — no recognised text column
-        bad = _write_jsonl(tmp_path / "bad.jsonl", [
-            {"id": 1, "score": 0.9},
-            {"id": 2, "score": 0.8},
-        ])
+        bad = _write_jsonl(
+            tmp_path / "bad.jsonl",
+            [
+                {"id": 1, "score": 0.9},
+                {"id": 2, "score": 0.8},
+            ],
+        )
         with pytest.raises((NoTextColumnsError, Exception)):
             quick_load(str(bad), _mock_tokenizer())
 
@@ -130,9 +137,9 @@ class TestQuickLoad:
     """quick_load returns a Dataset when pipeline succeeds."""
 
     def test_returns_dataset(self, tmp_path):
-        jsonl = _write_jsonl(tmp_path / "data.jsonl", [
-            {"text": f"sentence {i}"} for i in range(10)
-        ])
+        jsonl = _write_jsonl(
+            tmp_path / "data.jsonl", [{"text": f"sentence {i}"} for i in range(10)]
+        )
         expected = _make_tokenized_dataset(10)
 
         with patch("xlmtec.data.pipeline.DataPipeline") as MockPipeline:
@@ -145,9 +152,7 @@ class TestQuickLoad:
         instance.run.assert_called_once()
 
     def test_max_samples_forwarded(self, tmp_path):
-        jsonl = _write_jsonl(tmp_path / "data.jsonl", [
-            {"text": f"s{i}"} for i in range(20)
-        ])
+        jsonl = _write_jsonl(tmp_path / "data.jsonl", [{"text": f"s{i}"} for i in range(20)])
 
         with patch("xlmtec.data.pipeline.DataPipeline") as MockPipeline:
             instance = MockPipeline.return_value
@@ -167,9 +172,9 @@ class TestPrepareDataset:
     """prepare_dataset wires DataPipeline correctly and returns the result."""
 
     def _make_cfg(self, tmp_path):
-        jsonl = _write_jsonl(tmp_path / "train.jsonl", [
-            {"text": f"example {i}"} for i in range(20)
-        ])
+        jsonl = _write_jsonl(
+            tmp_path / "train.jsonl", [{"text": f"example {i}"} for i in range(20)]
+        )
         return DatasetConfig(
             source=DatasetSource.LOCAL_FILE,
             path=str(jsonl),
@@ -189,14 +194,18 @@ class TestPrepareDataset:
 
     def test_split_kwarg_forwarded(self, tmp_path):
         cfg = self._make_cfg(tmp_path)
-        split_result = DatasetDict({"train": _make_tokenized_dataset(16), "validation": _make_tokenized_dataset(4)})
+        split_result = DatasetDict(
+            {"train": _make_tokenized_dataset(16), "validation": _make_tokenized_dataset(4)}
+        )
 
         with patch("xlmtec.data.pipeline.DataPipeline") as MockPipeline:
             instance = MockPipeline.return_value
             instance.run.return_value = split_result
 
             result = prepare_dataset(
-                cfg, TokenizationConfig(), _mock_tokenizer(),
+                cfg,
+                TokenizationConfig(),
+                _mock_tokenizer(),
                 split_for_validation=True,
                 validation_ratio=0.2,
             )
@@ -206,17 +215,21 @@ class TestPrepareDataset:
 
     def test_returns_dataset_dict_when_split(self, tmp_path):
         cfg = self._make_cfg(tmp_path)
-        split_result = DatasetDict({
-            "train": _make_tokenized_dataset(16),
-            "validation": _make_tokenized_dataset(4),
-        })
+        split_result = DatasetDict(
+            {
+                "train": _make_tokenized_dataset(16),
+                "validation": _make_tokenized_dataset(4),
+            }
+        )
 
         with patch("xlmtec.data.pipeline.DataPipeline") as MockPipeline:
             instance = MockPipeline.return_value
             instance.run.return_value = split_result
 
             result = prepare_dataset(
-                cfg, TokenizationConfig(), _mock_tokenizer(),
+                cfg,
+                TokenizationConfig(),
+                _mock_tokenizer(),
                 split_for_validation=True,
             )
 

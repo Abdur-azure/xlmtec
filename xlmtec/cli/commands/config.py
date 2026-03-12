@@ -12,7 +12,6 @@ Do not add logic here. Delete this file once you are certain nothing in your
 environment imports it directly.
 """
 
-import sys
 import warnings
 
 warnings.warn(

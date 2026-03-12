@@ -41,14 +41,15 @@ from xlmtec.utils.logging import get_logger
 # ---------------------------------------------------------------------------
 
 _DEFAULT_LAYER_TYPES = [
-    "Linear",        # PyTorch nn.Linear — all standard transformers
-    "Conv1D",        # GPT-2 style (transformers uses Conv1D for attn/mlp)
+    "Linear",  # PyTorch nn.Linear — all standard transformers
+    "Conv1D",  # GPT-2 style (transformers uses Conv1D for attn/mlp)
 ]
 
 
 # ---------------------------------------------------------------------------
 # Result type
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class WandaResult:
@@ -77,6 +78,7 @@ class WandaResult:
 # Internal helpers
 # ---------------------------------------------------------------------------
 
+
 def _collect_activation_norms(
     model: Any,
     input_ids: Any,
@@ -98,13 +100,14 @@ def _collect_activation_norms(
         def hook(module: Any, inp: Tuple, out: Any) -> None:
             x = inp[0].detach()  # (batch, seq, in_features) or (batch, in_features)
             if x.dim() == 3:
-                x = x.reshape(-1, x.shape[-1])   # flatten batch×seq
+                x = x.reshape(-1, x.shape[-1])  # flatten batch×seq
             # Accumulate sum of squared activations per input feature
-            contrib = (x ** 2).sum(dim=0)          # (in_features,)
+            contrib = (x**2).sum(dim=0)  # (in_features,)
             if layer_id in norms:
                 norms[layer_id] = norms[layer_id] + contrib
             else:
                 norms[layer_id] = contrib.clone()
+
         return hook
 
     # Register hooks on all target layer types
@@ -122,13 +125,13 @@ def _collect_activation_norms(
         for start in range(0, total, step):
             if n_done >= n_samples:
                 break
-            batch = input_ids[start: start + step]
+            batch = input_ids[start : start + step]
             if batch.shape[0] == 0:
                 break
             try:
                 model(batch)
             except Exception:
-                pass   # ignore output — we only need the hook activations
+                pass  # ignore output — we only need the hook activations
             n_done += 1
 
     for h in handles:
@@ -169,7 +172,7 @@ def _apply_wanda_mask(
     """
     import torch
 
-    scores = _wanda_score(weight, act_norm)   # (out, in)
+    scores = _wanda_score(weight, act_norm)  # (out, in)
 
     with torch.no_grad():
         if row_wise:
@@ -189,8 +192,8 @@ def _apply_wanda_mask(
             n_total = scores.numel()
             n_prune = max(1, int(n_total * sparsity))
             flat_scores = scores.flatten()
-            _, sorted_indices = flat_scores.sort()        # ascending
-            prune_flat_idx = sorted_indices[:n_prune]     # lowest n_prune
+            _, sorted_indices = flat_scores.sort()  # ascending
+            prune_flat_idx = sorted_indices[:n_prune]  # lowest n_prune
             mask = torch.ones(n_total, dtype=torch.bool, device=weight.device)
             mask[prune_flat_idx] = False
             mask = mask.reshape(weight.shape)
@@ -203,6 +206,7 @@ def _apply_wanda_mask(
 # ---------------------------------------------------------------------------
 # WandaPruner class
 # ---------------------------------------------------------------------------
+
 
 class WandaPruner:
     """
@@ -248,9 +252,7 @@ class WandaPruner:
         """
         t0 = time.monotonic()
 
-        target_names: List[str] = list(
-            self.config.layer_types or _DEFAULT_LAYER_TYPES
-        )
+        target_names: List[str] = list(self.config.layer_types or _DEFAULT_LAYER_TYPES)
 
         # Count total params up front
         total_params: int = 0
@@ -314,6 +316,7 @@ class WandaPruner:
                 if int(act_norm.shape[0]) != in_features:
                     # Resize via interpolation — handles Conv1D transposed shapes
                     import torch
+
                     act_norm = torch.nn.functional.interpolate(
                         act_norm.unsqueeze(0).unsqueeze(0),
                         size=in_features,
@@ -322,6 +325,7 @@ class WandaPruner:
                     ).squeeze()
             else:
                 import torch
+
                 act_norm = torch.ones(int(weight.shape[1]))
 
             try:
@@ -333,9 +337,7 @@ class WandaPruner:
                 )
                 total_zeroed += zeroed
                 layers_pruned += 1
-                self.logger.debug(
-                    f"  {name}: zeroed {zeroed:,} / {int(weight.numel()):,} weights"
-                )
+                self.logger.debug(f"  {name}: zeroed {zeroed:,} / {int(weight.numel()):,} weights")
             except Exception as exc:
                 self.logger.warning(f"  {name}: skipped ({exc})")
 
@@ -346,11 +348,7 @@ class WandaPruner:
         self.tokenizer.save_pretrained(str(output_dir))
 
         elapsed_f = float(time.monotonic() - t0)
-        sparsity_achieved = (
-            float(total_zeroed) / float(total_params)
-            if total_params > 0
-            else 0.0
-        )
+        sparsity_achieved = float(total_zeroed) / float(total_params) if total_params > 0 else 0.0
 
         self.logger.info(
             f"WANDA complete — zeroed {total_zeroed:,} / {total_params:,} weights "

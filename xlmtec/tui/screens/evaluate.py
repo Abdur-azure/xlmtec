@@ -2,17 +2,17 @@
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, ScrollableContainer, Vertical
+from textual.containers import Horizontal, ScrollableContainer
 from textual.screen import Screen
 from textual.validation import Length
 from textual.widgets import Button, Checkbox, Footer, Header, Input, Label
 
 _METRIC_OPTIONS = [
-    ("rouge1",      "ROUGE-1"),
-    ("rouge2",      "ROUGE-2"),
-    ("rougeL",      "ROUGE-L"),
-    ("bleu",        "BLEU"),
-    ("perplexity",  "Perplexity"),
+    ("rouge1", "ROUGE-1"),
+    ("rouge2", "ROUGE-2"),
+    ("rougeL", "ROUGE-L"),
+    ("bleu", "BLEU"),
+    ("perplexity", "Perplexity"),
 ]
 
 
@@ -184,6 +184,7 @@ class EvaluateScreen(Screen):
             command += ["--save-report", report]
 
         from xlmtec.tui.screens.running import RunningScreen
+
         self.app.switch_screen(
             RunningScreen(
                 command=command,

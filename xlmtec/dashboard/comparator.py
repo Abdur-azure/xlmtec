@@ -7,7 +7,7 @@ Picks a winner based on best available metric.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 from xlmtec.dashboard.reader import RunInfo, RunReader
@@ -16,6 +16,7 @@ from xlmtec.dashboard.reader import RunInfo, RunReader
 @dataclass
 class ComparisonResult:
     """Result of comparing multiple runs."""
+
     runs: list[RunInfo]
     winner: RunInfo | None = None
     winner_reason: str = ""
@@ -58,9 +59,7 @@ class RunComparator:
                 errors.append(str(exc))
 
         if len(runs) < 1:
-            raise ValueError(
-                f"No valid runs found.\n" + "\n".join(errors)
-            )
+            raise ValueError("No valid runs found.\n" + "\n".join(errors))
 
         winner, reason, metric = self._pick_winner(runs)
         return ComparisonResult(
@@ -70,9 +69,7 @@ class RunComparator:
             metric_used=metric,
         )
 
-    def _pick_winner(
-        self, runs: list[RunInfo]
-    ) -> tuple[RunInfo | None, str, str]:
+    def _pick_winner(self, runs: list[RunInfo]) -> tuple[RunInfo | None, str, str]:
         """Pick winner using first available metric in priority order."""
         for attr, label in self._METRIC_PRIORITY:
             values = [(r, getattr(r, attr, None)) for r in runs]

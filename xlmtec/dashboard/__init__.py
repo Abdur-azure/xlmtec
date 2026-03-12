@@ -9,10 +9,13 @@ Usage:
     print(result.winner.name)
 """
 
-from xlmtec.dashboard.reader import RunInfo, RunMetrics, RunReader
 from xlmtec.dashboard.comparator import ComparisonResult, RunComparator
+from xlmtec.dashboard.reader import RunInfo, RunMetrics, RunReader
 
 __all__ = [
-    "RunReader", "RunInfo", "RunMetrics",
-    "RunComparator", "ComparisonResult",
+    "RunReader",
+    "RunInfo",
+    "RunMetrics",
+    "RunComparator",
+    "ComparisonResult",
 ]

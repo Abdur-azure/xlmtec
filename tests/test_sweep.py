@@ -9,20 +9,19 @@ no real Optuna trials.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any, Dict
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from xlmtec.sweep.config import ParamSpec, SweepConfig
-from xlmtec.sweep.runner import SweepRunner, TrialResult, SweepResult, _apply_params
-
+from xlmtec.sweep.runner import SweepResult, SweepRunner, TrialResult, _apply_params
 
 # ============================================================================
 # Fixtures
 # ============================================================================
+
 
 @pytest.fixture
 def float_spec() -> ParamSpec:
@@ -74,6 +73,7 @@ def base_config_dict() -> Dict[str, Any]:
 
 def _write_sweep_yaml(path: Path, base: Dict, sweep: Dict) -> Path:
     import yaml
+
     cfg = {**base, "sweep": sweep}
     path.write_text(yaml.dump(cfg), encoding="utf-8")
     return path
@@ -82,6 +82,7 @@ def _write_sweep_yaml(path: Path, base: Dict, sweep: Dict) -> Path:
 # ============================================================================
 # ParamSpec
 # ============================================================================
+
 
 class TestParamSpec:
     def test_float_spec_valid(self, float_spec):
@@ -132,6 +133,7 @@ class TestParamSpec:
 # SweepConfig
 # ============================================================================
 
+
 class TestSweepConfig:
     def test_valid_config_parses(self, valid_sweep_dict):
         cfg = SweepConfig.from_dict(valid_sweep_dict)
@@ -141,9 +143,11 @@ class TestSweepConfig:
         assert len(cfg.params) == 3
 
     def test_defaults_applied(self):
-        cfg = SweepConfig.from_dict({
-            "params": {"lora.r": {"type": "int", "low": 4, "high": 32}},
-        })
+        cfg = SweepConfig.from_dict(
+            {
+                "params": {"lora.r": {"type": "int", "low": 4, "high": 32}},
+            }
+        )
         assert cfg.n_trials == 10
         assert cfg.sampler == "tpe"
         assert cfg.metric == "train_loss"
@@ -173,6 +177,7 @@ class TestSweepConfig:
 # _apply_params
 # ============================================================================
 
+
 class TestApplyParams:
     def test_nested_path_applied(self, base_config_dict):
         result = _apply_params(base_config_dict, {"training.learning_rate": 1e-4})
@@ -188,10 +193,13 @@ class TestApplyParams:
         assert result["new_section"]["key"] == "value"
 
     def test_multiple_params_applied(self, base_config_dict):
-        result = _apply_params(base_config_dict, {
-            "training.batch_size": 8,
-            "lora.r": 16,
-        })
+        result = _apply_params(
+            base_config_dict,
+            {
+                "training.batch_size": 8,
+                "lora.r": 16,
+            },
+        )
         assert result["training"]["batch_size"] == 8
         assert result["lora"]["r"] == 16
 
@@ -199,6 +207,7 @@ class TestApplyParams:
 # ============================================================================
 # SweepRunner (Optuna mocked)
 # ============================================================================
+
 
 def _make_mock_optuna(metric_value: float = 0.42):
     """Build a complete mock optuna module."""
@@ -247,18 +256,28 @@ class TestSweepRunner:
     @patch("xlmtec.sweep.runner.SweepRunner._objective")
     def test_run_calls_optimize(self, mock_obj, base_config_dict, valid_sweep_dict):
         mock_optuna, mock_study, _ = _make_mock_optuna()
-        with patch.dict("sys.modules", {"optuna": mock_optuna,
-                                        "optuna.samplers": mock_optuna.samplers,
-                                        "optuna.logging": mock_optuna.logging}):
+        with patch.dict(
+            "sys.modules",
+            {
+                "optuna": mock_optuna,
+                "optuna.samplers": mock_optuna.samplers,
+                "optuna.logging": mock_optuna.logging,
+            },
+        ):
             runner = self._make_runner(base_config_dict, valid_sweep_dict)
             runner.run(n_trials=1)
         mock_study.optimize.assert_called_once()
 
     def test_run_returns_sweep_result(self, base_config_dict, valid_sweep_dict):
         mock_optuna, mock_study, _ = _make_mock_optuna(metric_value=0.35)
-        with patch.dict("sys.modules", {"optuna": mock_optuna,
-                                        "optuna.samplers": mock_optuna.samplers,
-                                        "optuna.logging": mock_optuna.logging}):
+        with patch.dict(
+            "sys.modules",
+            {
+                "optuna": mock_optuna,
+                "optuna.samplers": mock_optuna.samplers,
+                "optuna.logging": mock_optuna.logging,
+            },
+        ):
             with patch.object(SweepRunner, "_objective", return_value=0.35):
                 runner = self._make_runner(base_config_dict, valid_sweep_dict)
                 runner._trials = [
@@ -278,9 +297,14 @@ class TestSweepRunner:
 
     def test_n_trials_override(self, base_config_dict, valid_sweep_dict):
         mock_optuna, mock_study, _ = _make_mock_optuna()
-        with patch.dict("sys.modules", {"optuna": mock_optuna,
-                                        "optuna.samplers": mock_optuna.samplers,
-                                        "optuna.logging": mock_optuna.logging}):
+        with patch.dict(
+            "sys.modules",
+            {
+                "optuna": mock_optuna,
+                "optuna.samplers": mock_optuna.samplers,
+                "optuna.logging": mock_optuna.logging,
+            },
+        ):
             with patch.object(SweepRunner, "_objective", return_value=0.5):
                 runner = self._make_runner(base_config_dict, valid_sweep_dict)
                 runner._trials = []
@@ -293,6 +317,7 @@ class TestSweepRunner:
 # ============================================================================
 # CLI: run_sweep
 # ============================================================================
+
 
 class TestRunSweep:
     def _sweep_raw(self) -> Dict[str, Any]:
@@ -323,18 +348,22 @@ class TestRunSweep:
 
     def test_dry_run_returns_0(self, tmp_path):
         from xlmtec.cli.commands.sweep import run_sweep
+
         cfg = _write_sweep_yaml(tmp_path / "sweep.yaml", self._base_raw(), self._sweep_raw())
         code = run_sweep(cfg, n_trials=None, dry_run=True)
         assert code == 0
 
     def test_missing_file_returns_1(self, tmp_path):
         from xlmtec.cli.commands.sweep import run_sweep
+
         code = run_sweep(tmp_path / "nonexistent.yaml", n_trials=None, dry_run=True)
         assert code == 1
 
     def test_missing_sweep_section_returns_1(self, tmp_path):
-        from xlmtec.cli.commands.sweep import run_sweep
         import yaml
+
+        from xlmtec.cli.commands.sweep import run_sweep
+
         path = tmp_path / "no_sweep.yaml"
         path.write_text(yaml.dump(self._base_raw()), encoding="utf-8")
         code = run_sweep(path, n_trials=None, dry_run=True)
@@ -342,26 +371,30 @@ class TestRunSweep:
 
     def test_invalid_trials_flag_returns_1(self, tmp_path):
         from xlmtec.cli.commands.sweep import run_sweep
+
         cfg = _write_sweep_yaml(tmp_path / "sweep.yaml", self._base_raw(), self._sweep_raw())
         code = run_sweep(cfg, n_trials=0, dry_run=True)
         assert code == 1
 
     def test_trials_override_applied(self, tmp_path):
         from xlmtec.cli.commands.sweep import run_sweep
+
         cfg = _write_sweep_yaml(tmp_path / "sweep.yaml", self._base_raw(), self._sweep_raw())
         # dry-run so no actual training; just verifying it doesn't crash + override accepted
         code = run_sweep(cfg, n_trials=7, dry_run=True)
         assert code == 0
 
     def test_invalid_base_config_returns_1(self, tmp_path):
-        from xlmtec.cli.commands.sweep import run_sweep
         import yaml
+
+        from xlmtec.cli.commands.sweep import run_sweep
+
         # base config with missing required 'method'
         bad_base = {
             "model": {"name": "gpt2"},
             "dataset": {"source": "local_file", "path": "./data.jsonl"},
             "tokenization": {"max_length": 128},
-            "training": {},   # missing method
+            "training": {},  # missing method
         }
         path = tmp_path / "bad.yaml"
         path.write_text(yaml.dump({**bad_base, "sweep": self._sweep_raw()}), encoding="utf-8")
@@ -370,6 +403,7 @@ class TestRunSweep:
 
     def test_invalid_yaml_returns_1(self, tmp_path):
         from xlmtec.cli.commands.sweep import run_sweep
+
         path = tmp_path / "bad.yaml"
         path.write_text("key: [unclosed", encoding="utf-8")
         code = run_sweep(path, n_trials=None, dry_run=True)

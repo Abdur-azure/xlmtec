@@ -18,10 +18,10 @@ from rich.panel import Panel
 from xlmtec.cli.ux import console, print_error, print_success
 
 try:
-    from xlmtec.export.formats import ExportFormat, FORMAT_META
     from xlmtec.export.exporter import ModelExporter
+    from xlmtec.export.formats import FORMAT_META, ExportFormat
 except ImportError:
-    ExportFormat = None   # type: ignore[assignment,misc]
+    ExportFormat = None  # type: ignore[assignment,misc]
     ModelExporter = None  # type: ignore[assignment,misc]
 
 
@@ -49,8 +49,7 @@ def export_model(
     if quantize and meta.quantize_options and quantize not in meta.quantize_options:
         print_error(
             "Invalid quantise type",
-            f"{quantize!r} is not valid for {fmt}.\n"
-            f"Options: {', '.join(meta.quantize_options)}"
+            f"{quantize!r} is not valid for {fmt}.\nOptions: {', '.join(meta.quantize_options)}",
         )
         return 1
 
@@ -65,12 +64,14 @@ def export_model(
         lines.append("\n[yellow]Dry run — no files will be written.[/yellow]")
 
     console.print()
-    console.print(Panel(
-        "\n".join(lines),
-        title="[bold cyan]Export Plan[/bold cyan]",
-        border_style="cyan",
-        padding=(1, 2),
-    ))
+    console.print(
+        Panel(
+            "\n".join(lines),
+            title="[bold cyan]Export Plan[/bold cyan]",
+            border_style="cyan",
+            padding=(1, 2),
+        )
+    )
 
     if dry_run:
         print_success("Dry run complete", "Options are valid. Remove --dry-run to export.")
@@ -95,34 +96,40 @@ def export_model(
     print_success(
         "Export complete",
         f"[bold]{result.output_path.name}[/bold]  ({size_str})\n"
-        f"Saved to: {result.output_path.parent}"
+        f"Saved to: {result.output_path.parent}",
     )
     console.print()
     return 0
 
 
 def export(
-    model_dir: Path = typer.Argument(
-        ..., help="Trained model directory (e.g. output/run1)."
-    ),
+    model_dir: Path = typer.Argument(..., help="Trained model directory (e.g. output/run1)."),
     fmt: str = typer.Option(
-        "safetensors", "--format", "-f",
+        "safetensors",
+        "--format",
+        "-f",
         help="Export format: safetensors, onnx, gguf.",
     ),
     output: Path = typer.Option(
-        Path("exported/"), "--output", "-o",
+        Path("exported/"),
+        "--output",
+        "-o",
         help="Output directory for exported files.",
     ),
     quantize: Optional[str] = typer.Option(
-        None, "--quantize", "-q",
+        None,
+        "--quantize",
+        "-q",
         help="Quantisation type (format-specific). ONNX: fp16/int8. GGUF: q4_0/q8_0/etc.",
     ),
     llama_cpp_dir: Optional[Path] = typer.Option(
-        None, "--llama-cpp-dir",
+        None,
+        "--llama-cpp-dir",
         help="Path to llama.cpp repo (GGUF only).",
     ),
     dry_run: bool = typer.Option(
-        False, "--dry-run",
+        False,
+        "--dry-run",
         help="Validate options without writing files.",
     ),
 ) -> None:

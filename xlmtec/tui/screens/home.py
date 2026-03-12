@@ -9,12 +9,42 @@ from textual.widgets import Footer, Header, Label
 from xlmtec.tui.widgets.command_card import CommandCard
 
 _COMMANDS = [
-    {"id": "train",     "label": "Train",     "description": "Fine-tune with LoRA, QLoRA, DPO and more",       "icon": "🚀"},
-    {"id": "evaluate",  "label": "Evaluate",  "description": "Score a checkpoint (ROUGE, BLEU, Perplexity)",   "icon": "📊"},
-    {"id": "benchmark", "label": "Benchmark", "description": "Compare base vs fine-tuned side-by-side",        "icon": "⚡"},
-    {"id": "upload",    "label": "Upload",    "description": "Push adapter or merged model to HF Hub",         "icon": "☁️"},
-    {"id": "merge",     "label": "Merge",     "description": "Merge LoRA adapter into standalone model",       "icon": "🔀"},
-    {"id": "recommend", "label": "Recommend", "description": "Get optimal config for your hardware",           "icon": "💡"},
+    {
+        "id": "train",
+        "label": "Train",
+        "description": "Fine-tune with LoRA, QLoRA, DPO and more",
+        "icon": "🚀",
+    },
+    {
+        "id": "evaluate",
+        "label": "Evaluate",
+        "description": "Score a checkpoint (ROUGE, BLEU, Perplexity)",
+        "icon": "📊",
+    },
+    {
+        "id": "benchmark",
+        "label": "Benchmark",
+        "description": "Compare base vs fine-tuned side-by-side",
+        "icon": "⚡",
+    },
+    {
+        "id": "upload",
+        "label": "Upload",
+        "description": "Push adapter or merged model to HF Hub",
+        "icon": "☁️",
+    },
+    {
+        "id": "merge",
+        "label": "Merge",
+        "description": "Merge LoRA adapter into standalone model",
+        "icon": "🔀",
+    },
+    {
+        "id": "recommend",
+        "label": "Recommend",
+        "description": "Get optimal config for your hardware",
+        "icon": "💡",
+    },
 ]
 
 # Grid is 3 columns x 2 rows -- arrow offsets map to that layout.
@@ -95,21 +125,27 @@ class HomeScreen(Screen):
         """Route card selection to the appropriate screen."""
         if event.command_id == "train":
             from xlmtec.tui.screens.train import TrainScreen
+
             self.app.switch_screen(TrainScreen())
         elif event.command_id == "recommend":
             from xlmtec.tui.screens.recommend import RecommendScreen
+
             self.app.switch_screen(RecommendScreen())
         elif event.command_id == "evaluate":
             from xlmtec.tui.screens.evaluate import EvaluateScreen
+
             self.app.switch_screen(EvaluateScreen())
         elif event.command_id == "benchmark":
             from xlmtec.tui.screens.benchmark import BenchmarkScreen
+
             self.app.switch_screen(BenchmarkScreen())
         elif event.command_id == "merge":
             from xlmtec.tui.screens.merge import MergeScreen
+
             self.app.switch_screen(MergeScreen())
         elif event.command_id == "upload":
             from xlmtec.tui.screens.upload import UploadScreen
+
             self.app.switch_screen(UploadScreen())
         else:
             self.app.notify(

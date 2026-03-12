@@ -10,17 +10,16 @@ from __future__ import annotations
 import csv
 import json
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
-from xlmtec.inference.data_loader import DataLoader, InferenceRecord
+from xlmtec.inference.data_loader import DataLoader
 from xlmtec.inference.writer import PredictionRecord, PredictionWriter
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
     path.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
@@ -39,6 +38,7 @@ def _write_csv(path: Path, rows: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 # DataLoader
 # ---------------------------------------------------------------------------
+
 
 class TestDataLoader:
     def test_loads_jsonl(self, tmp_path):
@@ -119,6 +119,7 @@ class TestDataLoader:
 # PredictionWriter
 # ---------------------------------------------------------------------------
 
+
 class TestPredictionWriter:
     def _records(self, n=3) -> list[PredictionRecord]:
         return [
@@ -181,6 +182,7 @@ class TestPredictionWriter:
 # run_predict CLI logic
 # ---------------------------------------------------------------------------
 
+
 class TestRunPredict:
     def _setup(self, tmp_path) -> tuple[Path, Path, Path]:
         model_dir = tmp_path / "model"
@@ -192,30 +194,39 @@ class TestRunPredict:
 
     def test_dry_run_returns_0(self, tmp_path):
         from xlmtec.cli.commands.predict import run_predict
+
         model, data, out = self._setup(tmp_path)
         code = run_predict(model, data, out, "jsonl", None, 8, 128, 1.0, "cpu", dry_run=True)
         assert code == 0
 
     def test_missing_model_returns_1(self, tmp_path):
         from xlmtec.cli.commands.predict import run_predict
+
         _, data, out = self._setup(tmp_path)
-        code = run_predict(tmp_path / "no_model", data, out, "jsonl", None, 8, 128, 1.0, "cpu", dry_run=True)
+        code = run_predict(
+            tmp_path / "no_model", data, out, "jsonl", None, 8, 128, 1.0, "cpu", dry_run=True
+        )
         assert code == 1
 
     def test_missing_data_returns_1(self, tmp_path):
         from xlmtec.cli.commands.predict import run_predict
+
         model, _, out = self._setup(tmp_path)
-        code = run_predict(model, tmp_path / "no_data.jsonl", out, "jsonl", None, 8, 128, 1.0, "cpu", dry_run=True)
+        code = run_predict(
+            model, tmp_path / "no_data.jsonl", out, "jsonl", None, 8, 128, 1.0, "cpu", dry_run=True
+        )
         assert code == 1
 
     def test_invalid_format_returns_1(self, tmp_path):
         from xlmtec.cli.commands.predict import run_predict
+
         model, data, out = self._setup(tmp_path)
         code = run_predict(model, data, out, "parquet", None, 8, 128, 1.0, "cpu", dry_run=True)
         assert code == 1
 
     def test_csv_input_dry_run(self, tmp_path):
         from xlmtec.cli.commands.predict import run_predict
+
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         data_file = tmp_path / "data.csv"

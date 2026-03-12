@@ -47,6 +47,7 @@ def sample_result() -> SuggestResult:
 # response_parser
 # ---------------------------------------------------------------------------
 
+
 class TestResponseParser:
     def test_clean_json(self):
         result = parse_response(SAMPLE_RAW)
@@ -61,7 +62,10 @@ class TestResponseParser:
         assert parse_response(f"```\n{SAMPLE_RAW}\n```").method == "lora"
 
     def test_json_embedded_in_prose(self):
-        assert parse_response(f"Here is my suggestion:\n{SAMPLE_RAW}\nHope that helps!").method == "lora"
+        assert (
+            parse_response(f"Here is my suggestion:\n{SAMPLE_RAW}\nHope that helps!").method
+            == "lora"
+        )
 
     def test_command_built_from_output_dir(self):
         result = parse_response(SAMPLE_RAW)
@@ -80,28 +84,34 @@ class TestResponseParser:
 # get_provider
 # ---------------------------------------------------------------------------
 
+
 class TestGetProvider:
     def test_returns_claude(self):
         from xlmtec.integrations import get_provider
         from xlmtec.integrations.claude import ClaudeIntegration
+
         assert isinstance(get_provider("claude", api_key="sk-test"), ClaudeIntegration)
 
     def test_returns_gemini(self):
         from xlmtec.integrations import get_provider
         from xlmtec.integrations.gemini import GeminiIntegration
+
         assert isinstance(get_provider("gemini", api_key="test"), GeminiIntegration)
 
     def test_returns_codex(self):
         from xlmtec.integrations import get_provider
         from xlmtec.integrations.codex import CodexIntegration
+
         assert isinstance(get_provider("codex", api_key="sk-test"), CodexIntegration)
 
     def test_case_insensitive(self):
         from xlmtec.integrations import get_provider
+
         assert get_provider("CLAUDE", api_key="sk-test").PROVIDER_NAME == "claude"
 
     def test_unknown_provider_raises(self):
         from xlmtec.integrations import get_provider
+
         with pytest.raises(ValueError, match="Unknown provider"):
             get_provider("grok")
 
@@ -109,6 +119,7 @@ class TestGetProvider:
 # ---------------------------------------------------------------------------
 # ClaudeIntegration
 # ---------------------------------------------------------------------------
+
 
 class TestClaudeIntegration:
     def test_suggest_returns_result(self):
@@ -127,6 +138,7 @@ class TestClaudeIntegration:
 
     def test_no_api_key_raises(self):
         from xlmtec.integrations.claude import ClaudeIntegration
+
         mock_anthropic = MagicMock()
         # Instantiate INSIDE the env-clear so __init__ sees no key
         with patch("xlmtec.integrations.claude.anthropic", mock_anthropic):
@@ -137,6 +149,7 @@ class TestClaudeIntegration:
 
     def test_missing_sdk_raises_import_error(self):
         from xlmtec.integrations.claude import ClaudeIntegration
+
         with patch("xlmtec.integrations.claude.anthropic", None):
             with pytest.raises(ImportError, match="anthropic"):
                 ClaudeIntegration(api_key="sk-test").suggest("test")
@@ -145,7 +158,9 @@ class TestClaudeIntegration:
         from xlmtec.integrations.claude import ClaudeIntegration
 
         mock_anthropic = MagicMock()
-        mock_anthropic.Anthropic.return_value.messages.create.side_effect = Exception("rate limited")
+        mock_anthropic.Anthropic.return_value.messages.create.side_effect = Exception(
+            "rate limited"
+        )
 
         with patch("xlmtec.integrations.claude.anthropic", mock_anthropic):
             with pytest.raises(RuntimeError, match="Claude API call failed"):
@@ -156,12 +171,15 @@ class TestClaudeIntegration:
 # GeminiIntegration
 # ---------------------------------------------------------------------------
 
+
 class TestGeminiIntegration:
     def test_suggest_returns_result(self):
         from xlmtec.integrations.gemini import GeminiIntegration
 
         mock_genai = MagicMock()
-        mock_genai.GenerativeModel.return_value.generate_content.return_value = MagicMock(text=SAMPLE_RAW)
+        mock_genai.GenerativeModel.return_value.generate_content.return_value = MagicMock(
+            text=SAMPLE_RAW
+        )
 
         with patch("xlmtec.integrations.gemini.genai", mock_genai):
             result = GeminiIntegration(api_key="test-key").suggest("fine-tune for classification")
@@ -171,6 +189,7 @@ class TestGeminiIntegration:
 
     def test_missing_sdk_raises_import_error(self):
         from xlmtec.integrations.gemini import GeminiIntegration
+
         with patch("xlmtec.integrations.gemini.genai", None):
             with pytest.raises(ImportError, match="google-genai"):
                 GeminiIntegration(api_key="test").suggest("test")
@@ -179,7 +198,9 @@ class TestGeminiIntegration:
         from xlmtec.integrations.gemini import GeminiIntegration
 
         mock_genai = MagicMock()
-        mock_genai.GenerativeModel.return_value.generate_content.side_effect = Exception("quota exceeded")
+        mock_genai.GenerativeModel.return_value.generate_content.side_effect = Exception(
+            "quota exceeded"
+        )
 
         with patch("xlmtec.integrations.gemini.genai", mock_genai):
             with pytest.raises(RuntimeError, match="Gemini API call failed"):
@@ -189,6 +210,7 @@ class TestGeminiIntegration:
 # ---------------------------------------------------------------------------
 # CodexIntegration
 # ---------------------------------------------------------------------------
+
 
 class TestCodexIntegration:
     def test_suggest_returns_result(self):
@@ -207,6 +229,7 @@ class TestCodexIntegration:
 
     def test_missing_sdk_raises_import_error(self):
         from xlmtec.integrations.codex import CodexIntegration
+
         with patch("xlmtec.integrations.codex.OpenAI", None):
             with pytest.raises(ImportError, match="openai"):
                 CodexIntegration(api_key="sk-test").suggest("test")
@@ -225,6 +248,7 @@ class TestCodexIntegration:
 # ---------------------------------------------------------------------------
 # SuggestResult dataclass
 # ---------------------------------------------------------------------------
+
 
 class TestSuggestResult:
     def test_fields(self, sample_result):

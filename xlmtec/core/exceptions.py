@@ -10,6 +10,7 @@ class FineTuneError(Exception):
         super().__init__(*args, **kwargs)
         try:
             from xlmtec.utils.telemetry import AppLogger
+
             AppLogger.log_error(self)
         except Exception:
             pass  # telemetry must never crash the app
@@ -18,6 +19,7 @@ class FineTuneError(Exception):
 # ============================================================================
 # CONFIGURATION ERRORS
 # ============================================================================
+
 
 class ConfigurationError(FineTuneError):
     """Base for configuration errors."""
@@ -43,6 +45,7 @@ class IncompatibleConfigError(ConfigurationError):
 # ============================================================================
 # MODEL ERRORS
 # ============================================================================
+
 
 class ModelError(FineTuneError):
     """Base for model errors."""
@@ -71,14 +74,14 @@ class CUDANotAvailableError(ModelError):
 class TargetModulesNotFoundError(ModelError):
     def __init__(self, model_name: str, patterns: List[str]):
         super().__init__(
-            f"No suitable LoRA target modules found in '{model_name}'. "
-            f"Tried patterns: {patterns}"
+            f"No suitable LoRA target modules found in '{model_name}'. Tried patterns: {patterns}"
         )
 
 
 # ============================================================================
 # DATASET ERRORS
 # ============================================================================
+
 
 class DatasetError(FineTuneError):
     """Base for dataset errors."""
@@ -108,6 +111,7 @@ class EmptyDatasetError(DatasetError):
 # TRAINING ERRORS
 # ============================================================================
 
+
 class TrainingError(FineTuneError):
     def __init__(self, method: str, reason: str = ""):
         super().__init__(f"Training failed (method={method}): {reason}")
@@ -131,8 +135,7 @@ class CheckpointError(TrainingError):
 class InsufficientVRAMError(TrainingError):
     def __init__(self, required_gb: float, available_gb: float):
         FineTuneError.__init__(
-            self,
-            f"Insufficient VRAM: need {required_gb:.1f}GB, have {available_gb:.1f}GB"
+            self, f"Insufficient VRAM: need {required_gb:.1f}GB, have {available_gb:.1f}GB"
         )
 
 
@@ -144,6 +147,7 @@ class MethodNotImplementedError(FineTuneError):
 # ============================================================================
 # EVALUATION ERRORS
 # ============================================================================
+
 
 class EvaluationError(FineTuneError):
     def __init__(self, message: str):

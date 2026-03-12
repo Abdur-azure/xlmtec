@@ -45,10 +45,8 @@ Sweep YAML format (extends a normal PipelineConfig YAML with a ``sweep:`` sectio
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Union
-
+from dataclasses import dataclass
+from typing import Any, Dict, List, Literal, Optional
 
 # ---------------------------------------------------------------------------
 # ParamSpec — one searchable hyper-parameter
@@ -56,9 +54,9 @@ from typing import Any, Dict, List, Literal, Optional, Union
 
 ParamType = Literal["float", "int", "categorical"]
 Direction = Literal["minimize", "maximize"]
-Sampler   = Literal["tpe", "random", "grid"]
+Sampler = Literal["tpe", "random", "grid"]
 
-_VALID_SAMPLERS   = {"tpe", "random", "grid"}
+_VALID_SAMPLERS = {"tpe", "random", "grid"}
 _VALID_DIRECTIONS = {"minimize", "maximize"}
 _VALID_PARAM_TYPES = {"float", "int", "categorical"}
 
@@ -77,9 +75,9 @@ class ParamSpec:
     """
 
     type: ParamType
-    low: Optional[float] = None       # float / int
-    high: Optional[float] = None      # float / int
-    log: bool = False                 # float only — log-scale sampling
+    low: Optional[float] = None  # float / int
+    high: Optional[float] = None  # float / int
+    log: bool = False  # float only — log-scale sampling
     choices: Optional[List[Any]] = None  # categorical
 
     # ------------------------------------------------------------------
@@ -185,10 +183,7 @@ class SweepConfig:
         if not isinstance(params_raw, dict):
             raise ValueError("SweepConfig: 'params' must be a mapping")
 
-        params = {
-            name: ParamSpec.from_dict(name, spec)
-            for name, spec in params_raw.items()
-        }
+        params = {name: ParamSpec.from_dict(name, spec) for name, spec in params_raw.items()}
 
         cfg = cls(
             n_trials=int(d.get("n_trials", 10)),

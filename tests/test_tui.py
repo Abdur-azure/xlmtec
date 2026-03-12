@@ -56,8 +56,12 @@ class TestHomeScreen:
     @pytest.mark.asyncio
     async def test_all_expected_card_ids_present(self):
         expected_ids = {
-            "card-train", "card-evaluate", "card-benchmark",
-            "card-upload", "card-merge", "card-recommend",
+            "card-train",
+            "card-evaluate",
+            "card-benchmark",
+            "card-upload",
+            "card-merge",
+            "card-recommend",
         }
         app = xlmtecApp()
         async with app.run_test(size=(120, 40)) as pilot:
@@ -194,7 +198,6 @@ from textual.widgets import Checkbox  # noqa: E402
 
 from xlmtec.tui.screens.recommend import RecommendScreen  # noqa: E402
 from xlmtec.tui.screens.result import ResultScreen  # noqa: E402
-from xlmtec.tui.screens.running import RunningScreen  # noqa: E402
 from xlmtec.tui.screens.train import TrainScreen  # noqa: E402
 
 
@@ -346,10 +349,12 @@ class TestResultScreen:
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
-            app.switch_screen(ResultScreen(
-                success=True,
-                metrics={"Status": "✅ Success", "Duration": "00:12"},
-            ))
+            app.switch_screen(
+                ResultScreen(
+                    success=True,
+                    metrics={"Status": "✅ Success", "Duration": "00:12"},
+                )
+            )
             await pilot.pause()
             assert isinstance(app.screen, ResultScreen)
 
@@ -359,10 +364,12 @@ class TestResultScreen:
         async with app.run_test(size=(120, 40)) as pilot:
             await pilot.pause()
             await pilot.pause()
-            app.switch_screen(ResultScreen(
-                success=False,
-                metrics={"Status": "❌ Failed", "Error": "test error"},
-            ))
+            app.switch_screen(
+                ResultScreen(
+                    success=False,
+                    metrics={"Status": "❌ Failed", "Error": "test error"},
+                )
+            )
             await pilot.pause()
             assert isinstance(app.screen, ResultScreen)
 
@@ -592,7 +599,7 @@ class TestMergeScreen:
 # Sprint 28 — Upload screen + all 6 cards reachable
 # ============================================================================
 
-from textual.widgets import Input, Switch  # noqa: E402
+from textual.widgets import Input  # noqa: E402
 
 from xlmtec.tui.screens.upload import UploadScreen  # noqa: E402
 
@@ -697,11 +704,11 @@ class TestAllSixCardsReachable:
     @pytest.mark.asyncio
     async def test_all_six_cards_navigate_to_distinct_screens(self):
         expected = {
-            "#card-train":     TrainScreen,
-            "#card-evaluate":  EvaluateScreen,
+            "#card-train": TrainScreen,
+            "#card-evaluate": EvaluateScreen,
             "#card-benchmark": BenchmarkScreen,
-            "#card-upload":    UploadScreen,
-            "#card-merge":     MergeScreen,
+            "#card-upload": UploadScreen,
+            "#card-merge": MergeScreen,
             "#card-recommend": RecommendScreen,
         }
         for card_id, screen_cls in expected.items():
@@ -711,5 +718,6 @@ class TestAllSixCardsReachable:
                 await pilot.pause()
                 await pilot.click(card_id)
                 await pilot.pause()
-                assert isinstance(app.screen, screen_cls), \
+                assert isinstance(app.screen, screen_cls), (
                     f"{card_id} should open {screen_cls.__name__}, got {type(app.screen).__name__}"
+                )

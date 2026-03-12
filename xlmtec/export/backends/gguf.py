@@ -105,6 +105,7 @@ def export_gguf(
 # Internal helpers
 # ---------------------------------------------------------------------------
 
+
 def _find_convert_script(llama_cpp_dir: Path | None) -> Path | None:
     """Search common locations for llama.cpp convert script."""
     candidates = []
@@ -126,7 +127,15 @@ def _find_convert_script(llama_cpp_dir: Path | None) -> Path | None:
 
 
 def _run_convert(script: Path, model_dir: Path, out_file: Path) -> None:
-    cmd = [sys.executable, str(script), str(model_dir), "--outfile", str(out_file), "--outtype", "f16"]
+    cmd = [
+        sys.executable,
+        str(script),
+        str(model_dir),
+        "--outfile",
+        str(out_file),
+        "--outtype",
+        "f16",
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
         raise RuntimeError(f"GGUF conversion failed:\n{result.stderr}")

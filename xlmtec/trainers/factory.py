@@ -39,13 +39,22 @@ from .base import BaseTrainer, TrainingResult
 # ---------------------------------------------------------------------------
 
 _REGISTRY: dict[TrainingMethod, tuple[str, str]] = {
-    TrainingMethod.LORA:                 ("xlmtec.trainers.lora_trainer",                    "LoRATrainer"),
-    TrainingMethod.QLORA:                ("xlmtec.trainers.qlora_trainer",                   "QLoRATrainer"),
-    TrainingMethod.FULL_FINETUNING:      ("xlmtec.trainers.full_trainer",                    "FullFineTuner"),
-    TrainingMethod.INSTRUCTION_TUNING:   ("xlmtec.trainers.instruction_trainer",             "InstructionTrainer"),
-    TrainingMethod.DPO:                  ("xlmtec.trainers.dpo_trainer",                     "DPOTrainer"),
-    TrainingMethod.VANILLA_DISTILLATION: ("xlmtec.trainers.response_distillation_trainer",   "ResponseDistillationTrainer"),
-    TrainingMethod.FEATURE_DISTILLATION: ("xlmtec.trainers.feature_distillation_trainer",    "FeatureDistillationTrainer"),
+    TrainingMethod.LORA: ("xlmtec.trainers.lora_trainer", "LoRATrainer"),
+    TrainingMethod.QLORA: ("xlmtec.trainers.qlora_trainer", "QLoRATrainer"),
+    TrainingMethod.FULL_FINETUNING: ("xlmtec.trainers.full_trainer", "FullFineTuner"),
+    TrainingMethod.INSTRUCTION_TUNING: (
+        "xlmtec.trainers.instruction_trainer",
+        "InstructionTrainer",
+    ),
+    TrainingMethod.DPO: ("xlmtec.trainers.dpo_trainer", "DPOTrainer"),
+    TrainingMethod.VANILLA_DISTILLATION: (
+        "xlmtec.trainers.response_distillation_trainer",
+        "ResponseDistillationTrainer",
+    ),
+    TrainingMethod.FEATURE_DISTILLATION: (
+        "xlmtec.trainers.feature_distillation_trainer",
+        "FeatureDistillationTrainer",
+    ),
 }
 
 # Methods that require lora_config
@@ -61,12 +70,10 @@ def _load_trainer_class(method: TrainingMethod):
     """Import and return the trainer class for *method*."""
     if method not in _REGISTRY:
         known = ", ".join(m.value for m in _REGISTRY)
-        raise NotImplementedError(
-            f"No trainer registered for '{method.value}'. "
-            f"Supported: {known}"
-        )
+        raise NotImplementedError(f"No trainer registered for '{method.value}'. Supported: {known}")
     module_path, class_name = _REGISTRY[method]
     import importlib
+
     module = importlib.import_module(module_path)
     return getattr(module, class_name)
 

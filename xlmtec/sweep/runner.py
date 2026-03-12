@@ -87,13 +87,9 @@ def _suggest_params(trial: Any, sweep_cfg: SweepConfig) -> Dict[str, Any]:
     suggested: Dict[str, Any] = {}
     for name, spec in sweep_cfg.params.items():
         if spec.type == "float":
-            suggested[name] = trial.suggest_float(
-                name, spec.low, spec.high, log=spec.log
-            )
+            suggested[name] = trial.suggest_float(name, spec.low, spec.high, log=spec.log)
         elif spec.type == "int":
-            suggested[name] = trial.suggest_int(
-                name, int(spec.low), int(spec.high)
-            )
+            suggested[name] = trial.suggest_int(name, int(spec.low), int(spec.high))
         elif spec.type == "categorical":
             suggested[name] = trial.suggest_categorical(name, spec.choices)
     return suggested
@@ -217,8 +213,8 @@ class SweepRunner:
 
         try:
             from ..core.config import PipelineConfig
-            from ..models.loader import load_model_and_tokenizer
             from ..data import prepare_dataset
+            from ..models.loader import load_model_and_tokenizer
             from ..trainers import TrainerFactory
 
             pipeline_cfg = PipelineConfig(**cfg_dict)
@@ -245,22 +241,26 @@ class SweepRunner:
                     f"Available: train_loss, eval_loss, steps_completed, epochs_completed."
                 )
 
-            self._trials.append(TrialResult(
-                trial_number=trial.number,
-                params=suggested,
-                metric_value=float(metric_value),
-                output_dir=trial_dir,
-            ))
+            self._trials.append(
+                TrialResult(
+                    trial_number=trial.number,
+                    params=suggested,
+                    metric_value=float(metric_value),
+                    output_dir=trial_dir,
+                )
+            )
             return float(metric_value)
 
         except Exception as exc:
             logger.warning(f"Trial {trial.number} failed: {exc}")
-            self._trials.append(TrialResult(
-                trial_number=trial.number,
-                params=suggested,
-                metric_value=float("inf"),
-                output_dir=trial_dir,
-                failed=True,
-                error=str(exc),
-            ))
+            self._trials.append(
+                TrialResult(
+                    trial_number=trial.number,
+                    params=suggested,
+                    metric_value=float("inf"),
+                    output_dir=trial_dir,
+                    failed=True,
+                    error=str(exc),
+                )
+            )
             raise optuna.TrialPruned() from exc

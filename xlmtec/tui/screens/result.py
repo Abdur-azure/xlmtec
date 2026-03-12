@@ -90,8 +90,12 @@ class ResultScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
 
-        banner_class = "result-banner result-success" if self._success else "result-banner result-failure"
-        banner_text = "✅  Command completed successfully" if self._success else "❌  Command failed"
+        banner_class = (
+            "result-banner result-success" if self._success else "result-banner result-failure"
+        )
+        banner_text = (
+            "✅  Command completed successfully" if self._success else "❌  Command failed"
+        )
         yield Label(banner_text, classes=banner_class)
 
         with Vertical(classes="result-body"):

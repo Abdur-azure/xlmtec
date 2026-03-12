@@ -43,8 +43,8 @@ def export_safetensors(
         raise FileNotFoundError(f"Model directory not found: {model_dir}")
 
     try:
-        from transformers import AutoModelForCausalLM, AutoTokenizer
         from safetensors.torch import save_file
+        from transformers import AutoModelForCausalLM, AutoTokenizer
     except ImportError as exc:
         raise ImportError(
             f"safetensors export requires transformers and safetensors.\n"

@@ -55,10 +55,7 @@ def validate_config(config_path: Path, strict: bool = False) -> int:
         errors = exc.errors()
         print_error(
             f"Validation failed — {len(errors)} error(s)",
-            "\n".join(
-                f"  {' → '.join(str(l) for l in e['loc'])}: {e['msg']}"
-                for e in errors
-            ),
+            "\n".join(f"  {' → '.join(str(loc_part) for loc_part in e['loc'])}: {e['msg']}" for e in errors),
         )
         return 1
     except Exception as exc:

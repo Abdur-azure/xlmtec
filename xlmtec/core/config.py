@@ -37,9 +37,9 @@ from .types import (
 # PYDANTIC MODELS  (internal — used by PipelineConfig only)
 # ============================================================================
 
-_VALID_DTYPES  = {"float32", "float16", "bfloat16", "auto"}
+_VALID_DTYPES = {"float32", "float16", "bfloat16", "auto"}
 _VALID_PADDING = {"max_length", "longest", "do_not_pad"}
-_VALID_BIAS    = {"none", "all", "lora_only"}
+_VALID_BIAS = {"none", "all", "lora_only"}
 
 
 class ModelConfigModel(BaseModel):
@@ -68,8 +68,11 @@ class ModelConfigModel(BaseModel):
 
     def to_config(self) -> ModelConfig:
         return ModelConfig(
-            name=self.name, device=self.device, torch_dtype=self.torch_dtype,
-            load_in_8bit=self.load_in_8bit, load_in_4bit=self.load_in_4bit,
+            name=self.name,
+            device=self.device,
+            torch_dtype=self.torch_dtype,
+            load_in_8bit=self.load_in_8bit,
+            load_in_4bit=self.load_in_4bit,
             use_flash_attention=self.use_flash_attention,
             trust_remote_code=self.trust_remote_code,
             revision=self.revision,
@@ -91,10 +94,16 @@ class DatasetConfigModel(BaseModel):
 
     def to_config(self) -> DatasetConfig:
         return DatasetConfig(
-            source=self.source, path=self.path, split=self.split,
-            config_name=self.config_name, data_files=self.data_files,
-            text_columns=self.text_columns, max_samples=self.max_samples,
-            streaming=self.streaming, shuffle=self.shuffle, seed=self.seed,
+            source=self.source,
+            path=self.path,
+            split=self.split,
+            config_name=self.config_name,
+            data_files=self.data_files,
+            text_columns=self.text_columns,
+            max_samples=self.max_samples,
+            streaming=self.streaming,
+            shuffle=self.shuffle,
+            seed=self.seed,
         )
 
 
@@ -114,8 +123,10 @@ class TokenizationConfigModel(BaseModel):
 
     def to_config(self) -> TokenizationConfig:
         return TokenizationConfig(
-            max_length=self.max_length, truncation=self.truncation,
-            padding=self.padding, add_special_tokens=self.add_special_tokens,
+            max_length=self.max_length,
+            truncation=self.truncation,
+            padding=self.padding,
+            add_special_tokens=self.add_special_tokens,
             return_attention_mask=self.return_attention_mask,
         )
 
@@ -138,9 +149,13 @@ class LoRAConfigModel(BaseModel):
 
     def to_config(self) -> LoRAConfig:
         return LoRAConfig(
-            r=self.r, lora_alpha=self.lora_alpha, lora_dropout=self.lora_dropout,
-            target_modules=self.target_modules, bias=self.bias,  # type: ignore[arg-type]
-            fan_in_fan_out=self.fan_in_fan_out, init_lora_weights=self.init_lora_weights,  # type: ignore[arg-type]
+            r=self.r,
+            lora_alpha=self.lora_alpha,
+            lora_dropout=self.lora_dropout,
+            target_modules=self.target_modules,
+            bias=self.bias,  # type: ignore[arg-type]
+            fan_in_fan_out=self.fan_in_fan_out,
+            init_lora_weights=self.init_lora_weights,  # type: ignore[arg-type]
         )
 
 
@@ -206,7 +221,8 @@ class EvaluationConfigModel(BaseModel):
 
     def to_config(self) -> EvaluationConfig:
         return EvaluationConfig(
-            metrics=self.metrics, batch_size=self.batch_size,
+            metrics=self.metrics,
+            batch_size=self.batch_size,
             num_samples=self.num_samples,
             generation_max_length=self.generation_max_length,
             generation_temperature=self.generation_temperature,

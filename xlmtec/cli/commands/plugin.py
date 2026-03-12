@@ -7,11 +7,10 @@ CLI commands: xlmtec plugin add-template / add-provider / list / remove
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 import typer
-from rich.table import Table
 from rich import box
+from rich.table import Table
 
 from xlmtec.cli.ux import console, print_error, print_success
 
@@ -31,6 +30,7 @@ def add_template(
     """
     try:
         from xlmtec.plugins.store import register_template
+
         plugin = register_template(name, source)
     except (FileNotFoundError, ValueError) as exc:
         print_error("Registration failed", str(exc))
@@ -38,8 +38,7 @@ def add_template(
 
     print_success(
         "Template registered",
-        f"[bold]{name}[/bold] → {plugin.source}\n"
-        f"Run [cyan]xlmtec template list[/cyan] to confirm."
+        f"[bold]{name}[/bold] → {plugin.source}\nRun [cyan]xlmtec template list[/cyan] to confirm.",
     )
     console.print()
 
@@ -49,7 +48,9 @@ def add_provider(
     name: str = typer.Argument(..., help="Provider name e.g. 'my_provider'"),
     source: Path = typer.Argument(..., help="Path to a .py file containing the provider class."),
     class_name: str = typer.Option(
-        ..., "--class", "-c",
+        ...,
+        "--class",
+        "-c",
         help="Name of the AIIntegration subclass in the file.",
     ),
 ) -> None:
@@ -62,6 +63,7 @@ def add_provider(
     """
     try:
         from xlmtec.plugins.store import register_provider
+
         plugin = register_provider(name, source, class_name)
     except (FileNotFoundError, ValueError) as exc:
         print_error("Registration failed", str(exc))
@@ -70,7 +72,7 @@ def add_provider(
     print_success(
         "Provider registered",
         f"[bold]{name}[/bold] ({class_name}) → {plugin.source}\n"
-        f"Use with [cyan]xlmtec ai-suggest --provider {name}[/cyan]"
+        f"Use with [cyan]xlmtec ai-suggest --provider {name}[/cyan]",
     )
     console.print()
 

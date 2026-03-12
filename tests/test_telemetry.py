@@ -10,23 +10,22 @@ from __future__ import annotations
 import json
 import time
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
 from xlmtec.utils.telemetry import (
-    AppLogger,
     Session,
     _AppLogger,
-    _sanitize_args,
     _safe_basename,
+    _sanitize_args,
     track,
 )
-
 
 # ============================================================================
 # Helpers
 # ============================================================================
+
 
 def _fresh_logger(tmp_path: Path) -> _AppLogger:
     """Return a brand-new _AppLogger instance (not the module singleton)."""
@@ -49,6 +48,7 @@ def _read_events(session: Session) -> list[dict]:
 # _safe_basename
 # ============================================================================
 
+
 class TestSafeBasename:
     def test_strips_unix_path(self):
         assert _safe_basename("/home/user/data/train.jsonl") == "train.jsonl"
@@ -69,6 +69,7 @@ class TestSafeBasename:
 # ============================================================================
 # _sanitize_args
 # ============================================================================
+
 
 class TestSanitizeArgs:
     def test_redacts_api_key(self):
@@ -96,6 +97,7 @@ class TestSanitizeArgs:
 # ============================================================================
 # Session
 # ============================================================================
+
 
 class TestSession:
     def test_open_creates_file(self, tmp_path):
@@ -130,12 +132,13 @@ class TestSession:
     def test_write_does_not_raise_if_file_closed(self, tmp_path):
         s = Session(cmd="train", log_dir=tmp_path).open()
         s.close()
-        s.write({"event": "late"})   # should not raise
+        s.write({"event": "late"})  # should not raise
 
 
 # ============================================================================
 # _AppLogger
 # ============================================================================
+
 
 class TestAppLogger:
     def test_start_creates_session(self, tmp_path):
@@ -198,14 +201,15 @@ class TestAppLogger:
         assert "elapsed_s" in end
 
     def test_log_before_start_does_not_raise(self):
-        logger = _AppLogger()   # no start() called
-        logger.log("orphan.event")   # should not raise
+        logger = _AppLogger()  # no start() called
+        logger.log("orphan.event")  # should not raise
         logger.log_error(ValueError("x"))
 
 
 # ============================================================================
 # @track decorator
 # ============================================================================
+
 
 class TestTrackDecorator:
     def test_complete_event_written(self, tmp_path):
@@ -263,6 +267,7 @@ class TestTrackDecorator:
 # CrashReporter
 # ============================================================================
 
+
 class TestCrashReporter:
     def _make_session(self, tmp_path: Path, cmd: str = "train") -> Session:
         s = Session(cmd=cmd, log_dir=tmp_path).open()
@@ -272,6 +277,7 @@ class TestCrashReporter:
 
     def test_write_creates_file(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         session = self._make_session(tmp_path)
         try:
             raise ValueError("test crash")
@@ -282,6 +288,7 @@ class TestCrashReporter:
 
     def test_crash_file_contains_error_type(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         session = self._make_session(tmp_path)
         try:
             raise RuntimeError("dataset not found")
@@ -294,6 +301,7 @@ class TestCrashReporter:
 
     def test_crash_file_contains_session_id(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         session = self._make_session(tmp_path)
         sid = session.session_id
         try:
@@ -305,6 +313,7 @@ class TestCrashReporter:
 
     def test_latest_returns_most_recent(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         session = self._make_session(tmp_path)
         try:
             raise OSError("disk full")
@@ -320,10 +329,12 @@ class TestCrashReporter:
 
     def test_latest_returns_none_when_no_crashes(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         assert CrashReporter.latest(log_dir=tmp_path) is None
 
     def test_list_recent_returns_correct_count(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         session = self._make_session(tmp_path)
         for _ in range(3):
             try:
@@ -336,6 +347,7 @@ class TestCrashReporter:
 
     def test_write_does_not_raise_on_none_session(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         try:
             raise ValueError("no session")
         except ValueError as exc:
@@ -344,6 +356,7 @@ class TestCrashReporter:
 
     def test_crash_file_contains_github_link(self, tmp_path):
         from xlmtec.utils.crash_report import CrashReporter
+
         session = self._make_session(tmp_path)
         try:
             raise ValueError("x")
@@ -357,14 +370,17 @@ class TestCrashReporter:
 # run_report CLI logic
 # ============================================================================
 
+
 class TestRunReport:
     def test_no_log_dir_returns_0(self, tmp_path):
         from xlmtec.cli.commands.report import run_report
+
         code = run_report(log_dir=tmp_path / "nonexistent")
         assert code == 0
 
     def test_no_crashes_returns_0(self, tmp_path):
         from xlmtec.cli.commands.report import run_report
+
         tmp_path.mkdir(exist_ok=True)
         code = run_report(log_dir=tmp_path)
         assert code == 0
@@ -373,6 +389,7 @@ class TestRunReport:
         from xlmtec.cli.commands.report import run_report
         from xlmtec.utils.crash_report import CrashReporter
         from xlmtec.utils.telemetry import Session
+
         s = Session(cmd="train", log_dir=tmp_path).open()
         try:
             raise ValueError("test")
@@ -385,6 +402,7 @@ class TestRunReport:
     def test_sessions_flag_lists_session_files(self, tmp_path):
         from xlmtec.cli.commands.report import run_report
         from xlmtec.utils.telemetry import Session
+
         s = Session(cmd="sweep", log_dir=tmp_path).open()
         s.close()
         code = run_report(sessions=True, last=5, log_dir=tmp_path)

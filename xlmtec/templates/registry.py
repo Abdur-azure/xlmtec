@@ -16,6 +16,7 @@ from typing import Any
 @dataclass
 class Template:
     """A named starter config for a common fine-tuning task."""
+
     name: str
     description: str
     task: str
@@ -31,6 +32,7 @@ class Template:
         E.g. overrides={"model": {"name": "gpt2"}} replaces just the model name.
         """
         import copy
+
         result = copy.deepcopy(self.config)
         if overrides:
             for key, value in overrides.items():
@@ -43,6 +45,7 @@ class Template:
     def to_yaml(self, overrides: dict[str, Any] | None = None) -> str:
         """Return config as a YAML string."""
         import yaml
+
         return yaml.dump(self.as_dict(overrides), default_flow_style=False, sort_keys=False)
 
 
@@ -51,7 +54,6 @@ class Template:
 # ---------------------------------------------------------------------------
 
 _TEMPLATES: dict[str, Template] = {
-
     "sentiment": Template(
         name="sentiment",
         description="Sentiment analysis (positive/negative/neutral) on text.",
@@ -88,7 +90,6 @@ _TEMPLATES: dict[str, Template] = {
             },
         },
     ),
-
     "classification": Template(
         name="classification",
         description="Multi-class text classification for any number of categories.",
@@ -125,7 +126,6 @@ _TEMPLATES: dict[str, Template] = {
             },
         },
     ),
-
     "qa": Template(
         name="qa",
         description="Question answering — extract answers from a context passage.",
@@ -161,7 +161,6 @@ _TEMPLATES: dict[str, Template] = {
             },
         },
     ),
-
     "summarisation": Template(
         name="summarisation",
         description="Abstractive text summarisation — condense long documents.",
@@ -198,7 +197,6 @@ _TEMPLATES: dict[str, Template] = {
             },
         },
     ),
-
     "code": Template(
         name="code",
         description="Code generation and completion on a custom codebase.",
@@ -235,7 +233,6 @@ _TEMPLATES: dict[str, Template] = {
             },
         },
     ),
-
     "chat": Template(
         name="chat",
         description="Instruction-tuned conversational assistant.",
@@ -272,7 +269,6 @@ _TEMPLATES: dict[str, Template] = {
             },
         },
     ),
-
     "dpo": Template(
         name="dpo",
         description="Direct Preference Optimisation — train from human preference pairs.",
@@ -317,6 +313,7 @@ _TEMPLATES: dict[str, Template] = {
 # Public API
 # ---------------------------------------------------------------------------
 
+
 def list_templates() -> list[Template]:
     """Return all available templates sorted by name."""
     return sorted(_TEMPLATES.values(), key=lambda t: t.name)
@@ -331,7 +328,5 @@ def get_template(name: str) -> Template:
     name = name.lower().strip()
     if name not in _TEMPLATES:
         available = ", ".join(sorted(_TEMPLATES))
-        raise ValueError(
-            f"Template {name!r} not found. Available: {available}"
-        )
+        raise ValueError(f"Template {name!r} not found. Available: {available}")
     return _TEMPLATES[name]

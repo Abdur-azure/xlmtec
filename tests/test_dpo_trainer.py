@@ -4,7 +4,6 @@ Unit tests for DPOTrainer.
 All HF / TRL / PEFT ops are mocked — no GPU, no downloads, no trl install required.
 """
 
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -17,6 +16,7 @@ from xlmtec.trainers.dpo_trainer import DPOTrainer, validate_dpo_dataset
 # ============================================================================
 # FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def training_config(tmp_path):
@@ -58,18 +58,20 @@ def lora_config():
 @pytest.fixture
 def dpo_dataset():
     """Minimal valid DPO dataset with required columns."""
-    return Dataset.from_list([
-        {
-            "prompt": "What is the capital of France?",
-            "chosen": "The capital of France is Paris.",
-            "rejected": "I don't know.",
-        },
-        {
-            "prompt": "Explain gravity.",
-            "chosen": "Gravity is a fundamental force that attracts objects with mass.",
-            "rejected": "Gravity is magic.",
-        },
-    ])
+    return Dataset.from_list(
+        [
+            {
+                "prompt": "What is the capital of France?",
+                "chosen": "The capital of France is Paris.",
+                "rejected": "I don't know.",
+            },
+            {
+                "prompt": "Explain gravity.",
+                "chosen": "Gravity is a fundamental force that attracts objects with mass.",
+                "rejected": "Gravity is magic.",
+            },
+        ]
+    )
 
 
 @pytest.fixture
@@ -94,8 +96,8 @@ def mock_tokenizer():
 # validate_dpo_dataset
 # ============================================================================
 
-class TestValidateDpoDataset:
 
+class TestValidateDpoDataset:
     def test_valid_dataset_passes(self, dpo_dataset):
         """No exception raised for a valid dataset."""
         validate_dpo_dataset(dpo_dataset)  # should not raise
@@ -125,8 +127,8 @@ class TestValidateDpoDataset:
 # DPOTrainer
 # ============================================================================
 
-class TestDPOTrainer:
 
+class TestDPOTrainer:
     def _make_trainer(self, mock_model, mock_tokenizer, training_config, lora_config):
         return DPOTrainer(mock_model, mock_tokenizer, training_config, lora_config)
 
@@ -185,7 +187,9 @@ class TestDPOTrainer:
 
         with patch.dict("sys.modules", {"trl": mock_trl_module}):
             with patch("xlmtec.trainers.lora_trainer.get_peft_model", return_value=mock_model):
-                with patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"]):
+                with patch(
+                    "xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"]
+                ):
                     result = trainer.train(dpo_dataset)
 
         assert result.train_loss == pytest.approx(0.42)
@@ -196,14 +200,21 @@ class TestDPOTrainer:
         self, mock_model, mock_tokenizer, training_config, lora_config
     ):
         trainer = self._make_trainer(mock_model, mock_tokenizer, training_config, lora_config)
-        with patch("xlmtec.trainers.lora_trainer.get_peft_model", return_value=mock_model) as mock_gpm:
-            with patch("xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"]):
+        with patch(
+            "xlmtec.trainers.lora_trainer.get_peft_model", return_value=mock_model
+        ) as mock_gpm:
+            with patch(
+                "xlmtec.trainers.lora_trainer.detect_target_modules", return_value=["q_proj"]
+            ):
                 trainer._setup_peft(mock_model)
         mock_gpm.assert_called_once()
 
-    def test_factory_creates_dpo_trainer(self, mock_model, mock_tokenizer, training_config, lora_config):
+    def test_factory_creates_dpo_trainer(
+        self, mock_model, mock_tokenizer, training_config, lora_config
+    ):
         """TrainerFactory.create() returns a DPOTrainer for method=dpo."""
         from xlmtec.trainers.factory import TrainerFactory
+
         trainer = TrainerFactory.create(
             model=mock_model,
             tokenizer=mock_tokenizer,
@@ -216,6 +227,7 @@ class TestDPOTrainer:
         """TrainerFactory.create() raises MissingConfigError if lora_config is None."""
         from xlmtec.core.exceptions import MissingConfigError
         from xlmtec.trainers.factory import TrainerFactory
+
         with pytest.raises(MissingConfigError):
             TrainerFactory.create(
                 model=mock_model,

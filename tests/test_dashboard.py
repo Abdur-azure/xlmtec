@@ -12,13 +12,13 @@ from pathlib import Path
 
 import pytest
 
-from xlmtec.dashboard.reader import RunInfo, RunMetrics, RunReader
-from xlmtec.dashboard.comparator import ComparisonResult, RunComparator
-
+from xlmtec.dashboard.comparator import RunComparator
+from xlmtec.dashboard.reader import RunMetrics, RunReader
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_run(
     tmp_path: Path,
@@ -39,7 +39,8 @@ def _make_run(
         "best_metric_key": "eval_loss" if best_metric else "",
         "train_runtime": 120.0,
         "train_samples_per_second": 42.0,
-        "log_history": log_history or [
+        "log_history": log_history
+        or [
             {"step": 50, "epoch": 0.5, "loss": 2.5, "learning_rate": 2e-4},
             {"step": 100, "epoch": 1.0, "eval_loss": 1.8, "eval_rouge1": 0.35},
         ],
@@ -48,6 +49,7 @@ def _make_run(
 
     if config:
         import yaml
+
         (run_dir / "config.yaml").write_text(yaml.dump(config), encoding="utf-8")
 
     return run_dir
@@ -56,6 +58,7 @@ def _make_run(
 # ---------------------------------------------------------------------------
 # RunReader
 # ---------------------------------------------------------------------------
+
 
 class TestRunReader:
     def test_reads_basic_fields(self, tmp_path):
@@ -119,6 +122,7 @@ class TestRunReader:
 # RunComparator
 # ---------------------------------------------------------------------------
 
+
 class TestRunComparator:
     def test_compare_two_runs(self, tmp_path):
         r1 = _make_run(tmp_path, "run1", best_metric=0.85)
@@ -136,7 +140,7 @@ class TestRunComparator:
 
     def test_winner_by_eval_loss_when_no_metric(self, tmp_path):
         history_good = [{"step": 100, "epoch": 1.0, "eval_loss": 1.2}]
-        history_bad  = [{"step": 100, "epoch": 1.0, "eval_loss": 2.5}]
+        history_bad = [{"step": 100, "epoch": 1.0, "eval_loss": 2.5}]
         r1 = _make_run(tmp_path, "run1", log_history=history_good)
         r2 = _make_run(tmp_path, "run2", log_history=history_bad)
         result = RunComparator().compare([r1, r2])
@@ -176,6 +180,7 @@ class TestRunComparator:
 # diff_configs
 # ---------------------------------------------------------------------------
 
+
 class TestDiffConfigs:
     def test_detects_different_model(self, tmp_path):
         r1 = _make_run(tmp_path, "run1", config={"model": {"name": "gpt2"}})
@@ -205,6 +210,7 @@ class TestDiffConfigs:
 # ---------------------------------------------------------------------------
 # ComparisonResult
 # ---------------------------------------------------------------------------
+
 
 class TestComparisonResult:
     def test_run_names(self, tmp_path):

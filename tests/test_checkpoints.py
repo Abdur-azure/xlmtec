@@ -9,19 +9,19 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
-
 from xlmtec.checkpoints.manager import CheckpointInfo, CheckpointManager
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _make_checkpoint(parent: Path, step: int, epoch: float = 1.0, best_metric: float | None = None) -> Path:
+
+def _make_checkpoint(
+    parent: Path, step: int, epoch: float = 1.0, best_metric: float | None = None
+) -> Path:
     """Create a fake HF Trainer checkpoint directory."""
     ckpt = parent / f"checkpoint-{step}"
     ckpt.mkdir()
@@ -52,9 +52,12 @@ VALID_CONFIG = {
 # CheckpointInfo
 # ---------------------------------------------------------------------------
 
+
 class TestCheckpointInfo:
     def test_str_with_metric(self, tmp_path):
-        ckpt = CheckpointInfo(path=tmp_path / "checkpoint-500", step=500, epoch=1.0, best_metric=0.92)
+        ckpt = CheckpointInfo(
+            path=tmp_path / "checkpoint-500", step=500, epoch=1.0, best_metric=0.92
+        )
         assert "500" in str(ckpt)
         assert "0.9200" in str(ckpt)
 
@@ -66,6 +69,7 @@ class TestCheckpointInfo:
 # ---------------------------------------------------------------------------
 # CheckpointManager.list_checkpoints
 # ---------------------------------------------------------------------------
+
 
 class TestListCheckpoints:
     def test_returns_sorted_by_step(self, tmp_path):
@@ -116,6 +120,7 @@ class TestListCheckpoints:
 # CheckpointManager.latest
 # ---------------------------------------------------------------------------
 
+
 class TestLatest:
     def test_returns_highest_step(self, tmp_path):
         out = _make_output_dir(tmp_path, [100, 200, 500])
@@ -131,6 +136,7 @@ class TestLatest:
 # ---------------------------------------------------------------------------
 # CheckpointManager.get
 # ---------------------------------------------------------------------------
+
 
 class TestGet:
     def test_get_by_name(self, tmp_path):
@@ -153,6 +159,7 @@ class TestGet:
 # CheckpointManager.summary
 # ---------------------------------------------------------------------------
 
+
 class TestSummary:
     def test_summary_contains_steps(self, tmp_path):
         out = _make_output_dir(tmp_path, [100, 200])
@@ -170,6 +177,7 @@ class TestSummary:
 # resume_training (direct logic test)
 # ---------------------------------------------------------------------------
 
+
 class TestResumeTraining:
     def _make_env(self, tmp_path) -> tuple[Path, Path]:
         out = _make_output_dir(tmp_path, [100, 500])
@@ -179,29 +187,34 @@ class TestResumeTraining:
 
     def test_dry_run_returns_0(self, tmp_path):
         from xlmtec.cli.commands.resume import resume_training
+
         out, cfg = self._make_env(tmp_path)
         code = resume_training(out, cfg, None, None, dry_run=True)
         assert code == 0
 
     def test_missing_output_dir_returns_1(self, tmp_path):
         from xlmtec.cli.commands.resume import resume_training
+
         code = resume_training(tmp_path / "nonexistent", None, None, None, dry_run=True)
         assert code == 1
 
     def test_specific_checkpoint_dry_run(self, tmp_path):
         from xlmtec.cli.commands.resume import resume_training
+
         out, cfg = self._make_env(tmp_path)
         code = resume_training(out, cfg, "checkpoint-100", None, dry_run=True)
         assert code == 0
 
     def test_bad_checkpoint_returns_1(self, tmp_path):
         from xlmtec.cli.commands.resume import resume_training
+
         out, cfg = self._make_env(tmp_path)
         code = resume_training(out, cfg, "checkpoint-999", None, dry_run=True)
         assert code == 1
 
     def test_missing_config_returns_1(self, tmp_path):
         from xlmtec.cli.commands.resume import resume_training
+
         out = _make_output_dir(tmp_path, [100])
         # No config.yaml in output dir
         code = resume_training(out, None, None, None, dry_run=True)
@@ -209,6 +222,7 @@ class TestResumeTraining:
 
     def test_explicit_config_path(self, tmp_path):
         from xlmtec.cli.commands.resume import resume_training
+
         out = _make_output_dir(tmp_path, [100])
         cfg = tmp_path / "my_config.yaml"
         cfg.write_text(yaml.dump(VALID_CONFIG), encoding="utf-8")

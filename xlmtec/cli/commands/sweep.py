@@ -28,9 +28,9 @@ def run_sweep(
     dry_run: bool,
 ) -> int:
     """Core sweep logic. Returns exit code 0/1. Separated for testability."""
+    from rich import box
     from rich.panel import Panel
     from rich.table import Table
-    from rich import box
 
     if not config_path.exists():
         print_error("Config not found", str(config_path))
@@ -58,12 +58,13 @@ def run_sweep(
     if sweep_raw is None:
         print_error(
             "Missing 'sweep' section",
-            "Add a 'sweep:' block to your config. See examples/configs/sweep_lora_gpt2.yaml"
+            "Add a 'sweep:' block to your config. See examples/configs/sweep_lora_gpt2.yaml",
         )
         return 1
 
     try:
         from xlmtec.sweep.config import SweepConfig
+
         sweep_cfg = SweepConfig.from_dict(sweep_raw)
     except (ValueError, KeyError) as exc:
         print_error("Invalid sweep config", str(exc))
@@ -87,6 +88,7 @@ def run_sweep(
     # Validate base config structure
     try:
         from xlmtec.core.config import PipelineConfig
+
         PipelineConfig(**raw)
     except Exception as exc:
         print_error("Invalid base config", str(exc))
@@ -108,23 +110,25 @@ def run_sweep(
         table.add_row(name, spec.type, space)
 
     console.print()
-    console.print(Panel(
-        f"[bold]Config:[/bold]    {config_path}\n"
-        f"[bold]Trials:[/bold]    {sweep_cfg.n_trials}\n"
-        f"[bold]Metric:[/bold]    {sweep_cfg.metric}  ({sweep_cfg.direction})\n"
-        f"[bold]Sampler:[/bold]   {sweep_cfg.sampler}\n"
-        f"[bold]Output:[/bold]    {sweep_cfg.output_dir}",
-        title="[bold cyan]Sweep Plan[/bold cyan]",
-        border_style="cyan",
-        padding=(1, 2),
-    ))
+    console.print(
+        Panel(
+            f"[bold]Config:[/bold]    {config_path}\n"
+            f"[bold]Trials:[/bold]    {sweep_cfg.n_trials}\n"
+            f"[bold]Metric:[/bold]    {sweep_cfg.metric}  ({sweep_cfg.direction})\n"
+            f"[bold]Sampler:[/bold]   {sweep_cfg.sampler}\n"
+            f"[bold]Output:[/bold]    {sweep_cfg.output_dir}",
+            title="[bold cyan]Sweep Plan[/bold cyan]",
+            border_style="cyan",
+            padding=(1, 2),
+        )
+    )
     console.print(table)
 
     if dry_run:
         print_success(
             "Dry run complete",
             f"Config valid — {len(sweep_cfg.params)} param(s), "
-            f"{sweep_cfg.n_trials} trials planned. Remove --dry-run to start."
+            f"{sweep_cfg.n_trials} trials planned. Remove --dry-run to start.",
         )
         console.print()
         return 0
@@ -143,10 +147,7 @@ def run_sweep(
         )
         result = runner.run()
     except ImportError as exc:
-        print_error(
-            "optuna not installed",
-            f"{exc}\nInstall with: pip install xlmtec[sweep]"
-        )
+        print_error("optuna not installed", f"{exc}\nInstall with: pip install xlmtec[sweep]")
         return 1
     except Exception as exc:
         print_error("Sweep failed", str(exc))
@@ -155,24 +156,25 @@ def run_sweep(
     # Print results
     console.print()
     rows = [
-        ("Best trial",    str(result.best_trial)),
-        ("Best metric",   f"{result.best_metric:.6f}"),
-        ("Completed",     str(result.n_completed)),
-        ("Failed",        str(result.n_failed)),
+        ("Best trial", str(result.best_trial)),
+        ("Best metric", f"{result.best_metric:.6f}"),
+        ("Completed", str(result.n_completed)),
+        ("Failed", str(result.n_failed)),
     ]
     for k, v in result.best_params.items():
         rows.append((f"  {k}", str(v)))
 
-    console.print(Panel(
-        "\n".join(f"[bold]{k}:[/bold]  {v}" for k, v in rows),
-        title="[bold green]Sweep Results[/bold green]",
-        border_style="green",
-        padding=(1, 2),
-    ))
+    console.print(
+        Panel(
+            "\n".join(f"[bold]{k}:[/bold]  {v}" for k, v in rows),
+            title="[bold green]Sweep Results[/bold green]",
+            border_style="green",
+            padding=(1, 2),
+        )
+    )
     print_success(
         "Sweep complete",
-        f"Best {sweep_cfg.metric} = {result.best_metric:.6f} "
-        f"(trial {result.best_trial})"
+        f"Best {sweep_cfg.metric} = {result.best_metric:.6f} (trial {result.best_trial})",
     )
     console.print()
     return 0
@@ -184,11 +186,14 @@ def sweep(
         help="Path to a sweep YAML config (base PipelineConfig + 'sweep:' section).",
     ),
     trials: Optional[int] = typer.Option(
-        None, "--trials", "-t",
+        None,
+        "--trials",
+        "-t",
         help="Number of trials. Overrides the value in the config file.",
     ),
     dry_run: bool = typer.Option(
-        False, "--dry-run",
+        False,
+        "--dry-run",
         help="Validate config and show the sweep plan without running any trials.",
     ),
 ) -> None:

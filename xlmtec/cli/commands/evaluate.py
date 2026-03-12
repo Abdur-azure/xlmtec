@@ -13,7 +13,6 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ...core.types import EvaluationConfig, EvaluationMetric
-from ...data import prepare_dataset
 from ...evaluation import ReportGenerator, benchmark_models, evaluate_model
 from ...models.loader import load_model_and_tokenizer
 from ...utils.logging import LogLevel, setup_logger
@@ -31,27 +30,22 @@ console = Console()
 def run(
     # Model
     model_path: Path = typer.Option(..., "--model", "-m", help="Model path or name"),
-
     # Dataset
     dataset_path: str = typer.Option(..., "--dataset", "-d", help="Test dataset path"),
     max_samples: Optional[int] = typer.Option(None, "--max-samples", help="Limit samples"),
-
     # Metrics
     metrics: List[str] = typer.Option(
-        ["rouge1", "rouge2", "rougeL"],
-        "--metric",
-        help="Metrics to compute (can specify multiple)"
+        ["rouge1", "rouge2", "rougeL"], "--metric", help="Metrics to compute (can specify multiple)"
     ),
-
     # Generation parameters
     max_length: int = typer.Option(100, "--max-length", help="Max generation length"),
     temperature: float = typer.Option(0.7, "--temperature", help="Generation temperature"),
     batch_size: int = typer.Option(8, "--batch-size", "-b", help="Batch size"),
-
     # Output
     save_report: Optional[Path] = typer.Option(None, "--report", help="Save report to file"),
-    report_format: str = typer.Option("markdown", "--format", help="Report format: markdown, json, html"),
-
+    report_format: str = typer.Option(
+        "markdown", "--format", help="Report format: markdown, json, html"
+    ),
     # Logging
     log_level: str = typer.Option("INFO", "--log-level", help="Logging level"),
 ):
@@ -65,15 +59,17 @@ def run(
     logger = setup_logger("evaluate", level=LogLevel[log_level.upper()])
 
     # Display info
-    console.print(Panel.fit(
-        f"[bold cyan]Evaluation Configuration[/bold cyan]\n\n"
-        f"[yellow]Model:[/yellow] {model_path}\n"
-        f"[yellow]Dataset:[/yellow] {dataset_path}\n"
-        f"[yellow]Metrics:[/yellow] {', '.join(metrics)}\n"
-        f"[yellow]Samples:[/yellow] {max_samples or 'all'}",
-        title="📊 Evaluation",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Evaluation Configuration[/bold cyan]\n\n"
+            f"[yellow]Model:[/yellow] {model_path}\n"
+            f"[yellow]Dataset:[/yellow] {dataset_path}\n"
+            f"[yellow]Metrics:[/yellow] {', '.join(metrics)}\n"
+            f"[yellow]Samples:[/yellow] {max_samples or 'all'}",
+            title="📊 Evaluation",
+            border_style="cyan",
+        )
+    )
 
     try:
         # Build evaluation config
@@ -93,29 +89,27 @@ def run(
             batch_size=batch_size,
             num_samples=max_samples,
             generation_max_length=max_length,
-            generation_temperature=temperature
+            generation_temperature=temperature,
         )
 
         # Load model
         with console.status("[bold green]Loading model..."):
             from ...core.types import ModelConfig
+
             model_config = ModelConfig(name=str(model_path))
             model, tokenizer = load_model_and_tokenizer(model_config)
             console.print("[green]✓[/green] Model loaded")
 
         # Load dataset
         with console.status("[bold green]Loading dataset..."):
-            from ...core.types import DatasetConfig, DatasetSource, TokenizationConfig
+            from ...core.types import DatasetConfig, DatasetSource
 
             dataset_config = DatasetConfig(
-                source=DatasetSource.LOCAL_FILE,
-                path=dataset_path,
-                max_samples=max_samples
+                source=DatasetSource.LOCAL_FILE, path=dataset_path, max_samples=max_samples
             )
 
-            tokenization_config = TokenizationConfig(max_length=512)
-
             from ...data import load_dataset_from_config
+
             test_dataset = load_dataset_from_config(dataset_config)
             console.print(f"[green]✓[/green] Dataset loaded: {len(test_dataset)} samples")
 
@@ -140,7 +134,7 @@ def run(
 
         # Save report if requested
         if save_report:
-            console.print(f"\n[bold cyan]Saving report...[/bold cyan]")
+            console.print("\n[bold cyan]Saving report...[/bold cyan]")
 
             # Create comparison result for report
             from datetime import datetime
@@ -151,14 +145,11 @@ def run(
                 base_metrics={},
                 finetuned_metrics=result.metrics,
                 improvements={},
-                timestamp=datetime.now()
+                timestamp=datetime.now(),
             )
 
             ReportGenerator.save_report(
-                comparison,
-                save_report,
-                format=report_format,
-                title="Model Evaluation Report"
+                comparison, save_report, format=report_format, title="Model Evaluation Report"
             )
             console.print(f"[green]✓[/green] Report saved to {save_report}")
 
@@ -180,22 +171,18 @@ def benchmark(
     # Models
     base_model: str = typer.Option(..., "--base", help="Base model name or path"),
     finetuned_model: Path = typer.Option(..., "--finetuned", "-f", help="Fine-tuned model path"),
-
     # Dataset
     dataset_path: str = typer.Option(..., "--dataset", "-d", help="Test dataset path"),
     max_samples: Optional[int] = typer.Option(100, "--max-samples", help="Limit samples"),
-
     # Metrics
     metrics: List[str] = typer.Option(
-        ["rouge1", "rouge2", "rougeL"],
-        "--metric",
-        help="Metrics to compute"
+        ["rouge1", "rouge2", "rougeL"], "--metric", help="Metrics to compute"
     ),
-
     # Output
-    report_path: Path = typer.Option("./benchmark_report.md", "--report", "-r", help="Report output path"),
+    report_path: Path = typer.Option(
+        "./benchmark_report.md", "--report", "-r", help="Report output path"
+    ),
     report_format: str = typer.Option("markdown", "--format", help="Report format"),
-
     # Logging
     log_level: str = typer.Option("INFO", "--log-level", help="Logging level"),
 ):
@@ -208,28 +195,27 @@ def benchmark(
 
     logger = setup_logger("benchmark", level=LogLevel[log_level.upper()])
 
-    console.print(Panel.fit(
-        f"[bold cyan]Benchmarking Configuration[/bold cyan]\n\n"
-        f"[yellow]Base Model:[/yellow] {base_model}\n"
-        f"[yellow]Fine-tuned:[/yellow] {finetuned_model}\n"
-        f"[yellow]Dataset:[/yellow] {dataset_path}\n"
-        f"[yellow]Metrics:[/yellow] {', '.join(metrics)}",
-        title="🔬 Benchmark",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Benchmarking Configuration[/bold cyan]\n\n"
+            f"[yellow]Base Model:[/yellow] {base_model}\n"
+            f"[yellow]Fine-tuned:[/yellow] {finetuned_model}\n"
+            f"[yellow]Dataset:[/yellow] {dataset_path}\n"
+            f"[yellow]Metrics:[/yellow] {', '.join(metrics)}",
+            title="🔬 Benchmark",
+            border_style="cyan",
+        )
+    )
 
     try:
         # Build config
         metric_enums = [EvaluationMetric(m) for m in metrics]
-        eval_config = EvaluationConfig(
-            metrics=metric_enums,
-            batch_size=8,
-            num_samples=max_samples
-        )
+        eval_config = EvaluationConfig(metrics=metric_enums, batch_size=8, num_samples=max_samples)
 
         # Load models
         with console.status("[bold green]Loading base model..."):
             from ...core.types import ModelConfig
+
             base_config = ModelConfig(name=base_model)
             base_model_obj, tokenizer = load_model_and_tokenizer(base_config)
             console.print("[green]✓[/green] Base model loaded")
@@ -242,12 +228,12 @@ def benchmark(
         # Load dataset
         with console.status("[bold green]Loading dataset..."):
             from ...core.types import DatasetConfig, DatasetSource
+
             dataset_config = DatasetConfig(
-                source=DatasetSource.LOCAL_FILE,
-                path=dataset_path,
-                max_samples=max_samples
+                source=DatasetSource.LOCAL_FILE, path=dataset_path, max_samples=max_samples
             )
             from ...data import load_dataset_from_config
+
             test_dataset = load_dataset_from_config(dataset_config)
             console.print(f"[green]✓[/green] Dataset loaded: {len(test_dataset)} samples")
 
@@ -260,7 +246,7 @@ def benchmark(
             tokenizer=tokenizer,
             dataset=test_dataset,
             config=eval_config,
-            save_report=report_path
+            save_report=report_path,
         )
 
         # Display results
@@ -278,18 +264,12 @@ def benchmark(
             improvement = result.improvements[metric]
 
             comparison_table.add_row(
-                metric,
-                f"{base_score:.4f}",
-                f"{ft_score:.4f}",
-                f"{improvement:+.2f}%"
+                metric, f"{base_score:.4f}", f"{ft_score:.4f}", f"{improvement:+.2f}%"
             )
 
         comparison_table.add_row("", "", "", "", end_section=True)
         comparison_table.add_row(
-            "[bold]Average",
-            "",
-            "",
-            f"[bold]{result.get_average_improvement():+.2f}%"
+            "[bold]Average", "", "", f"[bold]{result.get_average_improvement():+.2f}%"
         )
 
         console.print(comparison_table)
@@ -328,5 +308,5 @@ def quick(
         model_path=model,
         dataset_path=dataset,
         metrics=["rouge1", "rouge2", "rougeL"],
-        max_samples=100
+        max_samples=100,
     )

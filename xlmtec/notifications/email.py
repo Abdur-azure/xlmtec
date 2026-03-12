@@ -26,11 +26,11 @@ class EmailNotifier(Notifier):
     name = "email"
 
     ENV_DEFAULTS = {
-        "to":       "XLMTEC_EMAIL_TO",
-        "from_":    "XLMTEC_EMAIL_FROM",
-        "host":     "XLMTEC_SMTP_HOST",
-        "port":     "XLMTEC_SMTP_PORT",
-        "user":     "XLMTEC_SMTP_USER",
+        "to": "XLMTEC_EMAIL_TO",
+        "from_": "XLMTEC_EMAIL_FROM",
+        "host": "XLMTEC_SMTP_HOST",
+        "port": "XLMTEC_SMTP_PORT",
+        "user": "XLMTEC_SMTP_USER",
         "password": "XLMTEC_SMTP_PASSWORD",
     }
 
@@ -43,11 +43,11 @@ class EmailNotifier(Notifier):
         user: str | None = None,
         password: str | None = None,
     ) -> None:
-        self.to       = to       or os.environ.get(self.ENV_DEFAULTS["to"])
-        self.from_    = from_    or os.environ.get(self.ENV_DEFAULTS["from_"], "xlmtec@localhost")
-        self.host     = host     or os.environ.get(self.ENV_DEFAULTS["host"], "localhost")
-        self.port     = port     or int(os.environ.get(self.ENV_DEFAULTS["port"], "587"))
-        self.user     = user     or os.environ.get(self.ENV_DEFAULTS["user"])
+        self.to = to or os.environ.get(self.ENV_DEFAULTS["to"])
+        self.from_ = from_ or os.environ.get(self.ENV_DEFAULTS["from_"], "xlmtec@localhost")
+        self.host = host or os.environ.get(self.ENV_DEFAULTS["host"], "localhost")
+        self.port = port or int(os.environ.get(self.ENV_DEFAULTS["port"], "587"))
+        self.user = user or os.environ.get(self.ENV_DEFAULTS["user"])
         self.password = password or os.environ.get(self.ENV_DEFAULTS["password"])
 
         if not self.to:
@@ -62,8 +62,8 @@ class EmailNotifier(Notifier):
 
         msg = MIMEText("\n".join(lines))
         msg["Subject"] = payload.title
-        msg["From"]    = self.from_
-        msg["To"]      = self.to
+        msg["From"] = self.from_
+        msg["To"] = self.to
 
         try:
             with smtplib.SMTP(self.host, self.port, timeout=10) as server:
