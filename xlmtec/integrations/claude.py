@@ -44,7 +44,16 @@ class ClaudeIntegration(AIIntegration):
                 system=SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": build_user_prompt(prompt)}],
             )
-            raw = message.content[0].text
+            # FIX line 47: message.content[0] is a Union of many block types
+            # (TextBlock, ThinkingBlock, ToolUseBlock, etc.) — not all have .text.
+            # Use getattr with a fallback so mypy is satisfied and runtime is safe.
+            first_block = message.content[0]
+            raw: str = getattr(first_block, "text", None) or ""
+            if not raw:
+                raise RuntimeError(
+                    f"Claude response first block has no text. "
+                    f"Block type: {type(first_block).__name__}"
+                )
         except Exception as exc:
             raise RuntimeError(f"Claude API call failed: {exc}") from exc
 

@@ -122,10 +122,14 @@ class TokenizationConfigModel(BaseModel):
         return v
 
     def to_config(self) -> TokenizationConfig:
+        from typing import Literal, cast
         return TokenizationConfig(
             max_length=self.max_length,
             truncation=self.truncation,
-            padding=self.padding,
+            padding=cast(
+                Literal["max_length", "longest", "do_not_pad"],
+                self.padding,
+            ),
             add_special_tokens=self.add_special_tokens,
             return_attention_mask=self.return_attention_mask,
         )

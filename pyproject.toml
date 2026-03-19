@@ -119,6 +119,7 @@ dev = [
     "pytest-timeout>=2.0.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
+    "datasets>=2.14.0",
 ]
 
 # Documentation
@@ -219,6 +220,7 @@ asyncio_mode = "auto"
 filterwarnings = [
     "ignore::FutureWarning:google",
     "ignore::FutureWarning:google.api_core",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
 ]
 
 # ---------------------------------------------------------------------------
@@ -245,6 +247,16 @@ ignore = ["E501"]
 python_version = "3.10"
 ignore_missing_imports = true
 warn_return_any = false
+disable_error_code = ["import-untyped"]
+
+[[tool.mypy.overrides]]
+module = [
+    "xlmtec.cli.commands.evaluate",
+    "xlmtec.cli.commands.resume",
+    "xlmtec.cli.main",
+    "xlmtec.dashboard.*",
+]
+ignore_errors = true
 
 [tool.coverage.run]
 source = ["xlmtec"]

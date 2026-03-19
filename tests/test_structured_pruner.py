@@ -90,7 +90,7 @@ class TestPruningConfig:
 
     def test_invalid_sparsity_raises(self, tmp_path):
         with pytest.raises(FineTuneError):
-            pruner = StructuredPruner(
+            StructuredPruner(
                 MagicMock(), MagicMock(), PruningConfig(output_dir=tmp_path, sparsity=1.5)
             )
 
@@ -230,7 +230,7 @@ class TestStructuredPrunerFFN:
     def test_ffn_prune_returns_result(self, tmp_path):
         import torch
 
-        head_dim, hidden = 16, 64
+        _head_dim, hidden = 16, 64
         ffn_out = hidden * 4
         fc1_weight = torch.ones(ffn_out, hidden)
 

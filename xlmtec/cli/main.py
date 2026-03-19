@@ -68,7 +68,7 @@ def _version_callback(value: bool) -> None:
 
 
 @app.callback()
-def main(
+def cli_callback(
     ctx: typer.Context,
     version: bool = typer.Option(
         None,

@@ -130,10 +130,10 @@ def run_report(
         try:
             content = latest.path.read_text(encoding="utf-8")
             # Show first 60 lines to avoid flooding the terminal
-            lines = content.splitlines()
-            preview = "\n".join(lines[:60])
-            if len(lines) > 60:
-                preview += f"\n\n... ({len(lines) - 60} more lines)"
+            crash_lines: list[str] = content.splitlines()
+            preview = "\n".join(crash_lines[:60])
+            if len(crash_lines) > 60:
+                preview += f"\n\n... ({len(crash_lines) - 60} more lines)"
             console.print()
             console.print(
                 Panel(

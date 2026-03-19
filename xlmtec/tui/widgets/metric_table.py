@@ -30,7 +30,8 @@ class MetricTable(Widget):
     """
 
     def compose(self) -> ComposeResult:
-        table = DataTable(show_cursor=False, id="metric-data-table")
+        # FIX line 33: explicit type annotation required by mypy [var-annotated]
+        table: DataTable = DataTable(show_cursor=False, id="metric-data-table")
         table.add_columns("Metric", "Value")
         yield table
 

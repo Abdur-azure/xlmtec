@@ -11,7 +11,6 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
-from datasets import Dataset
 
 # Ensure repo root is on sys.path for absolute imports in tests/
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -49,6 +48,7 @@ def mock_tokenizer():
 
 @pytest.fixture
 def tiny_dataset():
+    Dataset = pytest.importorskip("datasets").Dataset
     texts = ["The quick brown fox jumps over the lazy dog."] * 10
     return Dataset.from_dict({"text": texts})
 

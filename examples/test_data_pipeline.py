@@ -18,9 +18,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from transformers import AutoTokenizer
-
-from xlmtec.core.config import ConfigBuilder
-from xlmtec.core.types import DatasetConfig, DatasetSource, ModelConfig, TokenizationConfig
 from xlmtec.data import (
     DataPipeline,
     DatasetAnalyzer,
@@ -28,7 +25,9 @@ from xlmtec.data import (
     prepare_dataset,
     quick_load,
 )
-from xlmtec.models.loader import load_model_and_tokenizer
+
+from xlmtec.core.config import ConfigBuilder
+from xlmtec.core.types import DatasetConfig, DatasetSource, TokenizationConfig
 from xlmtec.utils.logging import LogLevel, setup_logger
 
 
@@ -218,7 +217,7 @@ def example_4_custom_pipeline():
     pipeline = DataPipeline(dataset_config, tokenization_config, tokenizer)
 
     # Run pipeline
-    dataset = pipeline.run(split_for_validation=False)
+    pipeline.run(split_for_validation=False)
 
     # Get statistics
     stats = pipeline.get_statistics()

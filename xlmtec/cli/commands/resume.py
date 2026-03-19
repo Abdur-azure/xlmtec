@@ -79,7 +79,9 @@ def resume_training(
     # ── Resume training ──────────────────────────────────────────────────
     try:
         import yaml
+
         from xlmtec.core.config import PipelineConfig
+
     except ImportError as exc:
         print_error("Missing dependency", str(exc))
         return 1

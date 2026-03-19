@@ -180,7 +180,7 @@ class TestDesktopNotifier:
         ):
             with patch(
                 "xlmtec.notifications.desktop.DesktopNotifier.send", return_value=True
-            ) as mock_send:
+            ):
                 n = DesktopNotifier()
                 result = n._safe_send(_payload())
                 # _safe_send calls send() which is mocked to True

@@ -87,12 +87,12 @@ def main() -> None:
         remaining = [l for l in final.stdout.splitlines() if l.strip() and not l.startswith("  ")]
         count = sum(int(l.split()[0]) for l in remaining if l.split() and l.split()[0].isdigit())
         print(f"\n{YELLOW}{BOLD}  {count} ruff error(s) remain that need manual fixes:{RESET}")
-        print(f"\n  Run:  ruff check xlmtec/ --output-format=text")
-        print(f"  Then fix each remaining error manually.\n")
-        print(f"\n  Common manual fixes:")
-        print(f"    E501  Line too long   → break the line or add # noqa: E501 (already ignored by config)")
-        print(f"    F821  Undefined name  → add missing import")
-        print(f"    E741  Ambiguous name  → rename variable (l → ln, O → obj, etc.)")
+        print("\n  Run:  ruff check xlmtec/ --output-format=text")
+        print("  Then fix each remaining error manually.\n")
+        print("\n  Common manual fixes:")
+        print("    E501  Line too long   → break the line or add # noqa: E501 (already ignored by config)")
+        print("    F821  Undefined name  → add missing import")
+        print("    E741  Ambiguous name  → rename variable (l → ln, O → obj, etc.)")
         print()
         sys.exit(1)
 

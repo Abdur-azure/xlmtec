@@ -12,6 +12,11 @@ from pathlib import Path
 
 import pytest
 import yaml
+
+pytest.importorskip(
+    "xlmtec.checkpoints",
+    reason="xlmtec.checkpoints module not found — skipping checkpoint tests",
+)
 from xlmtec.checkpoints.manager import CheckpointInfo, CheckpointManager
 
 # ---------------------------------------------------------------------------

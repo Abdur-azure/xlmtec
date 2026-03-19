@@ -85,7 +85,7 @@ def _collect_activation_norms(
     target_names: List[str],
     n_samples: int,
     seq_len: int,
-) -> Dict[str, Any]:
+) -> Dict[int, Any]:
     """
     Run forward passes and accumulate squared activation norms per input feature.
 

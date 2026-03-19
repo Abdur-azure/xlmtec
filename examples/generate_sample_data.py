@@ -20,7 +20,6 @@ Run this once before executing any example config:
 
 import json
 import random
-import sys
 from pathlib import Path
 
 # Always run from repo root

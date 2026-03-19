@@ -37,8 +37,9 @@ class SlackNotifier(Notifier):
                 lines.append(f"• {k}: `{v}`")
 
         body = json.dumps({"text": "\n".join(lines)}).encode()
+        url: str = self.webhook_url or ""   # ← narrow to str first
         req = urllib.request.Request(
-            self.webhook_url,
+            url,
             data=body,
             headers={"Content-Type": "application/json"},
             method="POST",

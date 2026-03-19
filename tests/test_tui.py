@@ -38,7 +38,7 @@ class TestAppMount:
     @pytest.mark.asyncio
     async def test_app_title_set(self):
         app = xlmtecApp()
-        async with app.run_test(size=(120, 40)) as pilot:
+        async with app.run_test(size=(120, 40)):
             assert app.TITLE == "xlmtec"
 
 

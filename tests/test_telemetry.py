@@ -318,7 +318,7 @@ class TestCrashReporter:
         try:
             raise OSError("disk full")
         except OSError as exc:
-            p1 = CrashReporter.write(session, exc, log_dir=tmp_path)
+            CrashReporter.write(session, exc, log_dir=tmp_path)
         try:
             raise KeyError("missing")
         except KeyError as exc:

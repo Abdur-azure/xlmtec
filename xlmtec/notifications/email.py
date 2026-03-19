@@ -26,11 +26,11 @@ class EmailNotifier(Notifier):
     name = "email"
 
     ENV_DEFAULTS = {
-        "to": "XLMTEC_EMAIL_TO",
-        "from_": "XLMTEC_EMAIL_FROM",
-        "host": "XLMTEC_SMTP_HOST",
-        "port": "XLMTEC_SMTP_PORT",
-        "user": "XLMTEC_SMTP_USER",
+        "to":       "XLMTEC_EMAIL_TO",
+        "from_":    "XLMTEC_EMAIL_FROM",
+        "host":     "XLMTEC_SMTP_HOST",
+        "port":     "XLMTEC_SMTP_PORT",
+        "user":     "XLMTEC_SMTP_USER",
         "password": "XLMTEC_SMTP_PASSWORD",
     }
 
@@ -43,11 +43,11 @@ class EmailNotifier(Notifier):
         user: str | None = None,
         password: str | None = None,
     ) -> None:
-        self.to = to or os.environ.get(self.ENV_DEFAULTS["to"])
-        self.from_ = from_ or os.environ.get(self.ENV_DEFAULTS["from_"], "xlmtec@localhost")
-        self.host = host or os.environ.get(self.ENV_DEFAULTS["host"], "localhost")
-        self.port = port or int(os.environ.get(self.ENV_DEFAULTS["port"], "587"))
-        self.user = user or os.environ.get(self.ENV_DEFAULTS["user"])
+        self.to       = to       or os.environ.get(self.ENV_DEFAULTS["to"])
+        self.from_    = from_    or os.environ.get(self.ENV_DEFAULTS["from_"], "xlmtec@localhost")
+        self.host     = host     or os.environ.get(self.ENV_DEFAULTS["host"], "localhost")
+        self.port     = port     or int(os.environ.get(self.ENV_DEFAULTS["port"], "587"))
+        self.user     = user     or os.environ.get(self.ENV_DEFAULTS["user"])
         self.password = password or os.environ.get(self.ENV_DEFAULTS["password"])
 
         if not self.to:
@@ -62,17 +62,22 @@ class EmailNotifier(Notifier):
 
         msg = MIMEText("\n".join(lines))
         msg["Subject"] = payload.title
-        msg["From"] = self.from_
-        msg["To"] = self.to
+        # FIX line 66: narrow str|None → str (from_ has a default so never None)
+        msg["From"]    = self.from_ or "xlmtec@localhost"
+        # self.to is guaranteed non-None by __init__ validator above
+        msg["To"]      = self.to or ""
 
         try:
-            with smtplib.SMTP(self.host, self.port, timeout=10) as server:
+            with smtplib.SMTP(self.host or "localhost", self.port or 587, timeout=10) as server:
                 server.ehlo()
-                if self.port == 587:
+                if (self.port or 587) == 587:
                     server.starttls()
                 if self.user and self.password:
                     server.login(self.user, self.password)
-                server.sendmail(self.from_, [self.to], msg.as_string())
+                # FIX line 75: narrow both str|None → str before passing to sendmail
+                from_addr: str = self.from_ or "xlmtec@localhost"
+                to_addr: str   = self.to or ""
+                server.sendmail(from_addr, [to_addr], msg.as_string())
             return True
         except (smtplib.SMTPException, OSError):
             return False

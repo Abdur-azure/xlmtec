@@ -180,7 +180,7 @@ class TestWandaPrunerNoCalibraton:
         cfg = _make_wanda_config(tmp_path, sparsity=0.0)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
-            result = WandaPruner(model, MagicMock(), cfg).prune()
+            WandaPruner(model, MagicMock(), cfg).prune()
         assert any("sparsity=0.0" in str(warning.message) for warning in w)
 
     def test_result_has_timing(self, tmp_path):
@@ -247,7 +247,7 @@ class TestWandaPrunerWithCalibration:
             calibration_seq_len=4,
         )
         # No calibration — magnitude-only but checks sparsity holds
-        result = WandaPruner(model, MagicMock(), cfg).prune()
+        WandaPruner(model, MagicMock(), cfg).prune()
 
         zero_frac = float((linear.weight == 0).sum()) / float(linear.weight.numel())
         assert zero_frac >= cfg.sparsity - 0.05  # allow small rounding tolerance
